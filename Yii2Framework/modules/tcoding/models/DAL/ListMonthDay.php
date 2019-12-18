@@ -5,22 +5,22 @@ namespace app\modules\tcoding\models\DAL;
 use Yii;
 
 /**
- * This is the model class for table "list_genders".
+ * This is the model class for table "list_month_day".
  *
  * @property int $id
  * @property string $title
  *
- * @property OrganizationsPositions[] $organizationsPositions
  * @property Users[] $users
+ * @property Users[] $users0
  */
-class ListGenders extends \yii\db\ActiveRecord
+class ListMonthDay extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'list_genders';
+        return 'list_month_day';
     }
 
     /**
@@ -48,16 +48,16 @@ class ListGenders extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getOrganizationsPositions()
+    public function getUsers()
     {
-        return $this->hasMany(OrganizationsPositions::className(), ['gender_id' => 'id']);
+        return $this->hasMany(Users::className(), ['from_day_id' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUsers()
+    public function getUsers0()
     {
-        return $this->hasMany(Users::className(), ['gender_id' => 'id']);
+        return $this->hasMany(Users::className(), ['to_day_id' => 'id']);
     }
 }

@@ -9,6 +9,8 @@ use Yii;
  *
  * @property int $id
  * @property string $title
+ *
+ * @property OrganizationsPositionsColumns[] $organizationsPositionsColumns
  */
 class OrganizationsPositionsListColumns extends \yii\db\ActiveRecord
 {
@@ -40,5 +42,13 @@ class OrganizationsPositionsListColumns extends \yii\db\ActiveRecord
             'id' => Yii::t('organizations', 'ID'),
             'title' => Yii::t('organizations', 'Title'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrganizationsPositionsColumns()
+    {
+        return $this->hasMany(OrganizationsPositionsColumns::className(), ['column_id' => 'id']);
     }
 }

@@ -128,7 +128,7 @@ use app\config\widgets\ActiveForm;
             </div>
         </div>
         
-        <?= Html::a(Yii::t('app', 'Return'), ['index'], ['class' => 'btn btn-sm btn-warning']) ?>
+        <?= Html::a(Yii::t('app', 'Return'), ['view', 'id' => $model->id], ['class' => 'btn btn-sm btn-warning']) ?>
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-sm btn-success']) ?>
         <?php ActiveForm::end(); ?>
     </div>

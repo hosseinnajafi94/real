@@ -12,6 +12,7 @@ use app\modules\geo\models\DAL\GeoCities;
  *
  * @property int $id
  * @property int|null $organization_id
+ * @property int|null $parent_id
  * @property string|null $name نام
  * @property int|null $manager_id مدیر
  * @property int|null $province_id استان
@@ -28,6 +29,8 @@ use app\modules\geo\models\DAL\GeoCities;
  * @property string|null $unit_description توضیحات
  *
  * @property Users $manager
+ * @property OrganizationsUnits $parent
+ * @property OrganizationsUnits[] $organizationsUnits
  * @property GeoProvinces $province
  * @property GeoCities $city
  * @property OrganizationsUnitsListAcl $acl
@@ -36,6 +39,7 @@ use app\modules\geo\models\DAL\GeoCities;
  * @property OrganizationsUnitsListTaxAcc $taxAcc
  * @property OrganizationsUnitsListInsuranceAcc $insuranceAcc
  * @property Organizations $organization
+ * @property OrganizationsUnitsPositions[] $organizationsUnitsPositions
  */
 class OrganizationsUnits extends \yii\db\ActiveRecord
 {
@@ -53,10 +57,11 @@ class OrganizationsUnits extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['organization_id', 'manager_id', 'province_id', 'city_id', 'acl_id', 'acl_category_id', 'work_place_status_id', 'insurance_acc_id', 'tax_acc_id', 'darsad1', 'darsad2'], 'integer'],
+            [['organization_id', 'parent_id', 'manager_id', 'province_id', 'city_id', 'acl_id', 'acl_category_id', 'work_place_status_id', 'insurance_acc_id', 'tax_acc_id', 'darsad1', 'darsad2'], 'integer'],
             [['unit_description'], 'string'],
             [['name', 'ws_code', 'tfn'], 'string', 'max' => 255],
             [['manager_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['manager_id' => 'id']],
+            [['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrganizationsUnits::className(), 'targetAttribute' => ['parent_id' => 'id']],
             [['province_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeoProvinces::className(), 'targetAttribute' => ['province_id' => 'id']],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeoCities::className(), 'targetAttribute' => ['city_id' => 'id']],
             [['acl_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrganizationsUnitsListAcl::className(), 'targetAttribute' => ['acl_id' => 'id']],
@@ -76,6 +81,7 @@ class OrganizationsUnits extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('organizations', 'ID'),
             'organization_id' => Yii::t('organizations', 'Organization ID'),
+            'parent_id' => Yii::t('organizations', 'Parent ID'),
             'name' => Yii::t('organizations', 'Name'),
             'manager_id' => Yii::t('organizations', 'Manager ID'),
             'province_id' => Yii::t('organizations', 'Province ID'),
@@ -99,6 +105,22 @@ class OrganizationsUnits extends \yii\db\ActiveRecord
     public function getManager()
     {
         return $this->hasOne(Users::className(), ['id' => 'manager_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParent()
+    {
+        return $this->hasOne(OrganizationsUnits::className(), ['id' => 'parent_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrganizationsUnits()
+    {
+        return $this->hasMany(OrganizationsUnits::className(), ['parent_id' => 'id']);
     }
 
     /**
@@ -163,5 +185,13 @@ class OrganizationsUnits extends \yii\db\ActiveRecord
     public function getOrganization()
     {
         return $this->hasOne(Organizations::className(), ['id' => 'organization_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrganizationsUnitsPositions()
+    {
+        return $this->hasMany(OrganizationsUnitsPositions::className(), ['unit_id' => 'id']);
     }
 }

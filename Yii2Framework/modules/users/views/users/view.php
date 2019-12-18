@@ -24,21 +24,21 @@ $model = $model->model;
         <ul class="nav nav-tabs">
             <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#page01">پرونده</a></li>
             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page02">اطلاعات تکمیلی</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page17">اطلاعات کاربری</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page07">احکام / قراردادها</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page03">خانوار</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page04">معرفین</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page05">تحصیلات / مهارت</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page06">سوابق کاری</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page08">عناوین و افتخارات</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page09">تالیفات</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page10">علایق</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page11">توضیحات اداری</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page12">توضیحات اداری</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page13">توضیحات محرمانه</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page14">دسترسی ها</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page15">دسترسی مرخصی / ماموریت</a></li>
-            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page16">مدارک</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page03">اطلاعات کاربری</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page04">احکام / قراردادها</a></li>
+            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page05">خانوار</a></li>-->
+            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page06">معرفین</a></li>-->
+            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page07">تحصیلات / مهارت</a></li>-->
+            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page08">سوابق کاری</a></li>-->
+            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page09">عناوین و افتخارات</a></li>-->
+            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page10">تالیفات</a></li>-->
+            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page11">علایق</a></li>-->
+            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page12">توضیحات اداری</a></li>-->
+            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page13">توضیحات اداری</a></li>-->
+            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page14">توضیحات محرمانه</a></li>-->
+            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page15">دسترسی ها</a></li>-->
+            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page16">دسترسی مرخصی / ماموریت</a></li>-->
+            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page17">مدارک</a></li>-->
         </ul>
         <div class="tab-content px-1">
             <div class="tab-pane active show" id="page01">
@@ -100,13 +100,13 @@ $model = $model->model;
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-4"><?= $model->getAttributeLabel('birthplace_province_id') ?>:</label>
-                            <div class="col-md-8"><?= $model->birthplace_province_id ? $model->birthplace_province_id : '---' ?></div>
+                            <div class="col-md-8"><?= $model->birthplaceProvince ? $model->birthplaceProvince->title : '---' ?></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-4"><?= $model->getAttributeLabel('birthplace_city_id') ?>:</label>
-                            <div class="col-md-8"><?= $model->birthplace_city_id ? $model->birthplace_city_id : '---' ?></div>
+                            <div class="col-md-8"><?= $model->birthplaceCity ? $model->birthplaceCity->title : '---' ?></div>
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@ $model = $model->model;
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-4"><?= $model->getAttributeLabel('marital_status_id') ?>:</label>
-                            <div class="col-md-8"><?= $model->marital_status_id ? $model->marital_status_id : '---' ?></div>
+                            <div class="col-md-8"><?= $model->maritalStatus ? $model->maritalStatus->title : '---' ?></div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -142,13 +142,13 @@ $model = $model->model;
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-4"><?= $model->getAttributeLabel('military_service_status_id') ?>:</label>
-                            <div class="col-md-8"><?= $model->military_service_status_id ? $model->military_service_status_id : '---' ?></div>
+                            <div class="col-md-8"><?= $model->militaryServiceStatus ? $model->militaryServiceStatus->title : '---' ?></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-4"><?= $model->getAttributeLabel('gender_id') ?>:</label>
-                            <div class="col-md-8"><?= $model->gender_id ? $model->gender_id : '---' ?></div>
+                            <div class="col-md-8"><?= $model->gender ? $model->gender->title : '---' ?></div>
                         </div>
                     </div>
                 </div>
@@ -156,13 +156,13 @@ $model = $model->model;
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-4"><?= $model->getAttributeLabel('employment_status_id') ?>:</label>
-                            <div class="col-md-8"><?= $model->employment_status_id ? $model->employment_status_id : '---' ?></div>
+                            <div class="col-md-8"><?= $model->employmentStatus ? $model->employmentStatus->title : '---' ?></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-4"><?= $model->getAttributeLabel('requested_salary') ?>:</label>
-                            <div class="col-md-8"><?= $model->requested_salary ? $model->requested_salary : '---' ?></div>
+                            <div class="col-md-8"><?= $model->requested_salary ? functions::toman($model->requested_salary) : '---' ?></div>
                         </div>
                     </div>
                 </div>
@@ -184,13 +184,13 @@ $model = $model->model;
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-4"><?= $model->getAttributeLabel('account_type_id') ?>:</label>
-                            <div class="col-md-8"><?= $model->account_type_id ? $model->account_type_id : '---' ?></div>
+                            <div class="col-md-8"><?= $model->accountType ? $model->accountType->title : '---' ?></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-4"><?= $model->getAttributeLabel('type_id') ?>:</label>
-                            <div class="col-md-8"><?= $model->type_id ? $model->type_id : '---' ?></div>
+                            <div class="col-md-8"><?= $model->type ? $model->type->title : '---' ?></div>
                         </div>
                     </div>
                 </div>
@@ -204,7 +204,7 @@ $model = $model->model;
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-4"><?= $model->getAttributeLabel('force_rollcall') ?>:</label>
-                            <div class="col-md-8"><?= $model->force_rollcall ? $model->force_rollcall : '---' ?></div>
+                            <div class="col-md-8"><i class="fa fa-<?= $model->force_rollcall ? 'check text-success' : 'times text-danger' ?>"></i></div>
                         </div>
                     </div>
                 </div>
@@ -230,13 +230,13 @@ $model = $model->model;
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-4"><?= $model->getAttributeLabel('province_id') ?>:</label>
-                            <div class="col-md-8"><?= $model->province_id ? $model->province_id : '---' ?></div>
+                            <div class="col-md-8"><?= $model->province ? $model->province->title : '---' ?></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-4"><?= $model->getAttributeLabel('city_id') ?>:</label>
-                            <div class="col-md-8"><?= $model->city_id ? $model->city_id : '---' ?></div>
+                            <div class="col-md-8"><?= $model->city ? $model->city->title : '---' ?></div>
                         </div>
                     </div>
                 </div>
@@ -272,7 +272,7 @@ $model = $model->model;
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-4"><?= $model->getAttributeLabel('avatar') ?>:</label>
-                            <div class="col-md-8"><?= $model->avatar ? $model->avatar : '---' ?></div>
+                            <div class="col-md-8"><?= $model->avatar ? Html::img("@web/uploads/users/$model->avatar", ['style' => 'max-width: 100%;max-height: 100px']) : '---' ?></div>
                         </div>
                     </div>
                 </div>
@@ -361,7 +361,7 @@ $model = $model->model;
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-5"><?= $model->getAttributeLabel('physical_cond_id') ?>:</label>
-                            <div class="col-md-7"><?= $model->physical_cond_id ? $model->physical_cond_id : '---' ?></div>
+                            <div class="col-md-7"><?= $model->physicalCond ? $model->physicalCond->title : '---' ?></div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -385,25 +385,25 @@ $model = $model->model;
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-5"><?= $model->getAttributeLabel('personnel_share_id') ?>:</label>
-                            <div class="col-md-7"><?= $model->personnel_share_id ? $model->personnel_share_id : '---' ?></div>
+                            <div class="col-md-7"><?= $model->personnelShare ? $model->personnelShare->title : '---' ?></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-5"><?= $model->getAttributeLabel('insurance_type_id') ?>:</label>
-                            <div class="col-md-7"><?= $model->insurance_type_id ? $model->insurance_type_id : '---' ?></div>
+                            <div class="col-md-7"><?= $model->insuranceType ? $model->insuranceType->title : '---' ?></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-5"><?= $model->getAttributeLabel('employment_type_id') ?>:</label>
-                            <div class="col-md-7"><?= $model->employment_type_id ? $model->employment_type_id : '---' ?></div>
+                            <div class="col-md-7"><?= $model->employmentType ? $model->employmentType->title : '---' ?></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-5"><?= $model->getAttributeLabel('contract_type_id') ?>:</label>
-                            <div class="col-md-7"><?= $model->contract_type_id ? $model->contract_type_id : '---' ?></div>
+                            <div class="col-md-7"><?= $model->contractType ? $model->contractType->title : '---' ?></div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -412,25 +412,130 @@ $model = $model->model;
                             <div class="col-md-7"><?= $model->insurance_start_date ? functions::tojdate($model->insurance_start_date) : '---' ?></div>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-5"><?= $model->getAttributeLabel('has_machin_id') ?>:</label>
-                            <div class="col-md-7"><?= $model->has_machin_id ? $model->has_machin_id : '---' ?></div>
+                            <div class="col-md-7"><?= $model->hasMachin ? $model->hasMachin->title : '---' ?></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
                             <label class="col-md-5"><?= $model->getAttributeLabel('is_owner_id') ?>:</label>
-                            <div class="col-md-7"><?= $model->is_owner_id ? $model->is_owner_id : '---' ?></div>
+                            <div class="col-md-7"><?= $model->isOwner ? $model->isOwner->title : '---' ?></div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="tab-pane" id="page03">
-                <h3 class="text-center">در دست اقدام</h3>
+                <p>
+                    <?= Html::a(Yii::t('app', 'Update'), ['user', 'id' => $model->id], ['class' => 'btn btn-sm btn-primary']) ?>
+                </p>
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-5"><?= $model->getAttributeLabel('expiration') ?>:</label>
+                            <div class="col-md-7"><?= $model->expiration ? functions::tojdate($model->expiration) : '---' ?></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-5"><?= $model->getAttributeLabel('language_id') ?>:</label>
+                            <div class="col-md-7"><?= $model->language ? $model->language->title : '---' ?></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-5"><?= $model->getAttributeLabel('calendar_type_id') ?>:</label>
+                            <div class="col-md-7"><?= $model->calendarType ? $model->calendarType->title : '---' ?></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-5"><?= $model->getAttributeLabel('date_type_id') ?>:</label>
+                            <div class="col-md-7"><?= $model->dateType ? $model->dateType->title : '---' ?></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-5"><?= $model->getAttributeLabel('first_day_in_week_id') ?>:</label>
+                            <div class="col-md-7"><?= $model->firstDayInWeek ? $model->firstDayInWeek->title : '---' ?></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-5"><?= $model->getAttributeLabel('number_format_id') ?>:</label>
+                            <div class="col-md-7"><?= $model->numberFormat ? $model->numberFormat->title : '---' ?></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-5"><?= $model->getAttributeLabel('daylight_state_id') ?>:</label>
+                            <div class="col-md-7"><?= $model->daylightState ? $model->daylightState->title : '---' ?></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-5"><?= $model->getAttributeLabel('timezone_id') ?>:</label>
+                            <div class="col-md-7"><?= $model->timezone ? $model->timezone->title : '---' ?></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-5"><?= $model->getAttributeLabel('from_month_id') ?>:</label>
+                            <div class="col-md-7"><?= $model->fromMonth ? $model->fromMonth->title : '---' ?></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-5"><?= $model->getAttributeLabel('from_day_id') ?>:</label>
+                            <div class="col-md-7"><?= $model->fromDay ? $model->fromDay->title : '---' ?></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-5"><?= $model->getAttributeLabel('to_month_id') ?>:</label>
+                            <div class="col-md-7"><?= $model->toMonth ? $model->toMonth->title : '---' ?></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-5"><?= $model->getAttributeLabel('to_day_id') ?>:</label>
+                            <div class="col-md-7"><?= $model->toDay ? $model->toDay->title : '---' ?></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-md-5"><?= $model->getAttributeLabel('rtl') ?>:</label>
+                            <div class="col-md-7"><i class="fa fa-<?= $model->rtl ? 'check text-success' : 'times text-danger' ?>"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border p-2 mb-1">
+                    <label><?= $model->getAttributeLabel('use_sip') ?>: <i class="fa fa-<?= $model->use_sip ? 'check text-success' : 'times text-danger' ?>"></i></label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label class="col-md-5"><?= $model->getAttributeLabel('mode_use_sip_id') ?>:</label>
+                                <div class="col-md-7"><?= $model->modeUseSip ? $model->modeUseSip->title : '---' ?></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border p-2">
+                    <label><?= $model->getAttributeLabel('show_lang') ?>: <i class="fa fa-<?= $model->show_lang ? 'check text-success' : 'times text-danger' ?>"></i></label><br/>
+                    <small class="text-danger">با انتخاب این گزینه کلماتی که قابلیت ترجمه مجدد دارند بصورت مجزا نمایش داده می شوند.</small>
+                </div>
             </div>
             <div class="tab-pane" id="page04">
-                <h3 class="text-center">در دست اقدام</h3>
+                <p>
+                    <?= Html::a(Yii::t('app', 'Create'), ['create'], ['class' => 'btn btn-sm btn-success']) ?>
+                </p>
             </div>
             <div class="tab-pane" id="page05">
                 <h3 class="text-center">در دست اقدام</h3>
@@ -439,10 +544,7 @@ $model = $model->model;
                 <h3 class="text-center">در دست اقدام</h3>
             </div>
             <div class="tab-pane" id="page07">
-                <p>
-                    <?= Html::a(Yii::t('app', 'Create'), ['create'], ['class' => 'btn btn-sm btn-success']) ?>
-                </p>
-                
+                <h3 class="text-center">در دست اقدام</h3>
             </div>
             <div class="tab-pane" id="page08">
                 <h3 class="text-center">در دست اقدام</h3>

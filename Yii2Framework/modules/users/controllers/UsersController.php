@@ -62,6 +62,17 @@ class UsersController extends Controller {
         $model->loaditems();
         return $this->renderView($model);
     }
+    public function actionUser($id) {
+        $model = UsersVML::find($id);
+        if ($model === null) {
+            return functions::httpNotFound();
+        }
+        if ($model->save(Yii::$app->request->post())) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+        $model->loaditems();
+        return $this->renderView($model);
+    }
     public function actionDelete($id) {
         $data = UsersVML::find($id);
         if ($data === null) {

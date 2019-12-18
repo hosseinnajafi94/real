@@ -14,18 +14,7 @@ use app\config\widgets\ActiveForm;
             <p><?= Yii::t('app', $model->id ? 'Update' : 'Create') ?></p>
         </div>
         <div class="card-block">
-            <?php $form = ActiveForm::begin([
-                'layout'      => 'horizontal',
-                'fieldConfig' => [
-                    'horizontalCssClasses' => [
-                        'label'   => 'col-sm-3 control-label',
-                        'wrapper' => 'col-sm-7',
-                    ],
-                    'labelOptions'         => [
-                        'style' => 'text-align: left;font-weight: bold;'
-                    ]
-                ],
-            ]) ?>
+            <?php $form = ActiveForm::begin(['layout' => 'horizontal', 'fieldConfig' => ['horizontalCssClasses' => ['label' => 'col-sm-3 control-label', 'wrapper' => 'col-sm-7'], 'labelOptions' => ['style' => 'text-align: left;font-weight: bold;']]]) ?>
             <ul class="nav nav-tabs">
                 <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#page1">شرح وظایف اصلی</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page2">شرح وظایف فرعی</a></li>
@@ -47,15 +36,7 @@ use app\config\widgets\ActiveForm;
                             <?= $form->field($model, 'hiring_enable')->checkbox() ?>
                         </div>
                     </div>
-                    <?= $form->field($model, 'description', [
-                        'horizontalCssClasses' => [
-                            'label'   => 'col-sm-12 control-label',
-                            'wrapper' => 'col-sm-12',
-                        ],
-                        'labelOptions'         => [
-                            'style' => 'text-align: right;font-weight: bold;'
-                        ]
-                    ])->ckeditor() ?>
+                    <?= $form->field($model, 'description', ['horizontalCssClasses' => ['label' => 'col-sm-12 control-label', 'wrapper' => 'col-sm-12'], 'labelOptions' => ['style' => 'text-align: right;font-weight: bold;']])->ckeditor() ?>
                     <div class="row">
                         <div class="col-md-6">
                             <?= $form->field($model, 'form_id')->dropDownList($model->forms) ?>
@@ -63,15 +44,7 @@ use app\config\widgets\ActiveForm;
                     </div>
                 </div>
                 <div class="tab-pane" id="page2">
-                    <?= $form->field($model, 'extra_description', [
-                        'horizontalCssClasses' => [
-                            'label'   => 'col-sm-12 control-label',
-                            'wrapper' => 'col-sm-12',
-                        ],
-                        'labelOptions'         => [
-                            'style' => 'text-align: right;font-weight: bold;'
-                        ]
-                    ])->ckeditor() ?>
+                    <?= $form->field($model, 'extra_description', ['horizontalCssClasses' => ['label' => 'col-sm-12 control-label', 'wrapper' => 'col-sm-12'], 'labelOptions' => ['style' => 'text-align: right;font-weight: bold;']])->ckeditor() ?>
                 </div>
                 <div class="tab-pane" id="page3">
                     <div class="row">
@@ -88,43 +61,19 @@ use app\config\widgets\ActiveForm;
                             <?= $form->field($model, 'resume_deadline')->textInput(['readonly' => true, 'style' => 'direction: ltr;text-align: center;']) ?>
                         </div>
                     </div>
-                    <?= $form->field($model, 'skills', [
-                        'horizontalCssClasses' => [
-                            'label'   => 'col-sm-12 control-label',
-                            'wrapper' => 'col-sm-12',
-                        ],
-                        'labelOptions'         => [
-                            'style' => 'text-align: right;font-weight: bold;'
-                        ]
-                    ])->ckeditor() ?>
+                    <?= $form->field($model, 'skills', ['horizontalCssClasses' => ['label' => 'col-sm-12 control-label', 'wrapper' => 'col-sm-12'], 'labelOptions' => ['style' => 'text-align: right;font-weight: bold;']])->ckeditor() ?>
                     <div class="row">
                         <div class="col-md-6">
-                            <?= $form->field($model, 'position_skills', [
-                                'horizontalCssClasses' => [
-                                    'label'   => 'col-sm-4 control-label',
-                                    'wrapper' => 'col-sm-8',
-                                ],
-                                'labelOptions'         => [
-                                    'style' => 'text-align: left;font-weight: bold;'
-                                ]
-                            ])->checkboxList($model->list_skills) ?>
+                            <?= $form->field($model, 'position_skills', ['horizontalCssClasses' => ['label' => 'col-sm-4 control-label', 'wrapper' => 'col-sm-8'], 'labelOptions' => ['style' => 'text-align: left;font-weight: bold;']])->checkboxList($model->list_skills, ['style' => 'max-height: 200px;overflow-x: hidden;overflow-y: auto;']) ?>
                         </div>
                         <div class="col-md-6">
-                            <?= $form->field($model, 'view_in_portal', [
-                                'horizontalCssClasses' => [
-                                    'label'   => 'col-sm-4 control-label',
-                                    'wrapper' => 'col-sm-8',
-                                ],
-                                'labelOptions'         => [
-                                    'style' => 'text-align: left;font-weight: bold;'
-                                ]
-                            ])->checkboxList($model->list_columns) ?>
+                            <?= $form->field($model, 'view_in_portal', ['horizontalCssClasses' => ['label' => 'col-sm-4 control-label', 'wrapper' => 'col-sm-8'], 'labelOptions' => ['style' => 'text-align: left;font-weight: bold;']])->checkboxList($model->list_columns, ['style' => 'max-height: 200px;overflow-x: hidden;overflow-y: auto;']) ?>
                         </div>
                     </div>
                 </div>
             </div>
-            <?= Html::a(Yii::t('app', 'Return'), ['/organizations/organizations/view', 'id' => $model->organization_id], ['class' => 'btn btn-sm btn-warning']) ?>
-            <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-sm btn-success']) ?>
+            <?= Html::a(Yii::t('app', 'Return'), ['/organizations/organizations/view', 'id' => $model->organization_id], ['class' => 'btn btn-sm btn-warning mb-0']) ?>
+            <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-sm btn-success mb-0']) ?>
             <?php ActiveForm::end(); ?>
         </div>
     </div>

@@ -13,6 +13,7 @@ use app\modules\organizations\models\SRL\OrganizationsUnitsListInsuranceAccSRL;
 use app\modules\organizations\models\SRL\OrganizationsUnitsListWorkPlaceStatusSRL;
 class OrganizationsUnitsVML extends Model {
     public $id;
+    public $parent_id;
     public $organization_id;
     public $name;
     public $manager_id;
@@ -89,8 +90,9 @@ class OrganizationsUnitsVML extends Model {
         $this->id = $model->id;
         return true;
     }
-    public static function newInstance($org_id) {
+    public static function newInstance($org_id, $parent_id = null) {
         $data                  = new static();
+        $data->parent_id       = $parent_id;
         $data->organization_id = $org_id;
         $data->model           = new OrganizationsUnits();
         return $data;
@@ -107,6 +109,7 @@ class OrganizationsUnitsVML extends Model {
     }
     public static function populate($dest, $source) {
         $dest->id                   = $source->id;
+        $dest->parent_id            = $source->parent_id;
         $dest->organization_id      = $source->organization_id;
         $dest->name                 = $source->name;
         $dest->manager_id           = $source->manager_id;

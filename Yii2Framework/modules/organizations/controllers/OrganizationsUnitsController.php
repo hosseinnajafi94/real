@@ -23,8 +23,8 @@ class OrganizationsUnitsController extends Controller {
         }
         return $this->renderView($data);
     }
-    public function actionCreate($org_id) {
-        $data = OrganizationsUnitsVML::newInstance($org_id);
+    public function actionCreate($org_id, $parent_id = null) {
+        $data = OrganizationsUnitsVML::newInstance($org_id, $parent_id);
         if ($data->save(Yii::$app->request->post())) {
             return $this->redirect(['view', 'id' => $data->id]);
         }

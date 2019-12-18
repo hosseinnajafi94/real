@@ -4,10 +4,12 @@ use Yii;
 use yii\filters\VerbFilter;
 use app\config\widgets\Controller;
 use app\config\components\functions;
+use app\modules\organizations\models\DAL\OrganizationsUnits;
 use app\modules\organizations\models\VML\OrganizationsVML;
 use app\modules\organizations\models\VML\OrganizationsSearchVML;
 use app\modules\organizations\models\VML\OrganizationsUnitsSearchVML;
 use app\modules\organizations\models\VML\OrganizationsPositionsSearchVML;
+use app\modules\organizations\models\VML\OrganizationsPositionsListSkillsSearchVML;
 class OrganizationsController extends Controller {
     public function behaviors() {
         return [
@@ -33,18 +35,26 @@ class OrganizationsController extends Controller {
             return functions::httpNotFound();
         }
 
-        $searchModel1  = new OrganizationsPositionsSearchVML();
-        $dataProvider1 = $searchModel1->search($model->id, Yii::$app->request->queryParams);
-
         $searchModel2  = new OrganizationsUnitsSearchVML();
         $dataProvider2 = $searchModel2->search($model->id, Yii::$app->request->queryParams);
 
+        $searchModel3  = new OrganizationsPositionsSearchVML();
+        $dataProvider3 = $searchModel3->search($model->id, Yii::$app->request->queryParams);
+
+        $searchModel4  = new OrganizationsPositionsListSkillsSearchVML();
+        $dataProvider4 = $searchModel4->search($model->id, Yii::$app->request->queryParams);
+
+        $units = OrganizationsUnits::find()->where(['organization_id' => $model->id])->all();
+
         return $this->renderView([
                     'model'         => $model,
-                    'searchModel1'  => $searchModel1,
-                    'dataProvider1' => $dataProvider1,
                     'searchModel2'  => $searchModel2,
                     'dataProvider2' => $dataProvider2,
+                    'searchModel3'  => $searchModel3,
+                    'dataProvider3' => $dataProvider3,
+                    'searchModel4'  => $searchModel4,
+                    'dataProvider4' => $dataProvider4,
+                    'units'         => $this->units($units, null),
         ]);
     }
     public function actionCreate() {
@@ -73,5 +83,18 @@ class OrganizationsController extends Controller {
         }
         $data->model->delete();
         return $this->redirect(['index']);
+    }
+    private function units($arr, $parentId) {
+        $output = [];
+        foreach ($arr as $row) {
+            if ($row->parent_id === $parentId) {
+                $output[] = [
+                    'id'       => $row->id,
+                    'text'     => $row->name,
+                    'children' => $this->units($arr, $row->id)
+                ];
+            }
+        }
+        return $output;
     }
 }

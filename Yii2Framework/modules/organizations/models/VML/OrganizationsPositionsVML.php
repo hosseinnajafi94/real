@@ -69,7 +69,7 @@ class OrganizationsPositionsVML extends Model {
         $this->forms        = OrganizationsPositionsListFormsSRL::getItems();
         $this->degrees      = ListDegreeSRL::getItems();
         $this->genders      = ListGendersSRL::getItems();
-        $this->list_skills  = OrganizationsPositionsListSkillsSRL::getItems();
+        $this->list_skills  = OrganizationsPositionsListSkillsSRL::getItems(['organization_id' => $this->organization_id]);
         $this->list_columns = OrganizationsPositionsListColumnsSRL::getItems();
     }
     public function save($post) {

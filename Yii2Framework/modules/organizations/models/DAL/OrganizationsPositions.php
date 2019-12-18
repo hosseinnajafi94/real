@@ -4,7 +4,7 @@ namespace app\modules\organizations\models\DAL;
 
 use Yii;
 use app\modules\tcoding\models\DAL\ListDegree; 
-use app\modules\tcoding\models\DAL\ListGenders; 
+use app\modules\tcoding\models\DAL\ListGenders;
 
 /**
  * This is the model class for table "organizations_positions".
@@ -30,6 +30,7 @@ use app\modules\tcoding\models\DAL\ListGenders;
  * @property ListGenders $gender
  * @property OrganizationsPositionsColumns[] $organizationsPositionsColumns
  * @property OrganizationsPositionsSkills[] $organizationsPositionsSkills
+ * @property OrganizationsUnitsPositions[] $organizationsUnitsPositions
  */
 class OrganizationsPositions extends \yii\db\ActiveRecord
 {
@@ -128,5 +129,13 @@ class OrganizationsPositions extends \yii\db\ActiveRecord
     public function getOrganizationsPositionsSkills()
     {
         return $this->hasMany(OrganizationsPositionsSkills::className(), ['position_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrganizationsUnitsPositions()
+    {
+        return $this->hasMany(OrganizationsUnitsPositions::className(), ['position_id' => 'id']);
     }
 }

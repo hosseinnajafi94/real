@@ -21,6 +21,16 @@ use app\modules\users\models\SRL\UsersListEmploymentTypeSRL;
 use app\modules\users\models\SRL\UsersListContractTypeSRL;
 use app\modules\users\models\SRL\UsersListHasMachinSRL;
 use app\modules\users\models\SRL\UsersListIsOwnerSRL;
+use app\modules\users\models\SRL\UsersListLanguagesSRL;
+use app\modules\users\models\SRL\UsersListCalendarTypeSRL;
+use app\modules\users\models\SRL\UsersListDateTypeSRL;
+use app\modules\users\models\SRL\UsersListFirstDayInWeekSRL;
+use app\modules\users\models\SRL\UsersListNumberFormatSRL;
+use app\modules\users\models\SRL\UsersListDaylightStateSRL;
+use app\modules\users\models\SRL\UsersListTimezoneSRL;
+use app\modules\tcoding\models\SRL\ListMonthSRL;
+use app\modules\tcoding\models\SRL\ListMonthDaySRL;
+use app\modules\users\models\SRL\UsersListModeUseSipSRL;
 class UsersVML extends Model {
     public $id;
     public $organization_id;
@@ -85,6 +95,22 @@ class UsersVML extends Model {
     public $insurance_start_date;
     public $has_machin_id;
     public $is_owner_id;
+    public $expiration;
+    public $language_id;
+    public $rtl;
+    public $calendar_type_id;
+    public $date_type_id;
+    public $first_day_in_week_id;
+    public $number_format_id;
+    public $daylight_state_id;
+    public $timezone_id;
+    public $from_month_id;
+    public $from_day_id;
+    public $to_month_id;
+    public $to_day_id;
+    public $use_sip;
+    public $mode_use_sip_id;
+    public $show_lang;
     //
     public $statuses                  = [];
     public $groups                    = [];
@@ -107,13 +133,26 @@ class UsersVML extends Model {
     public $is_owners                 = [];
     public $organizations             = [];
     //
+    public $languages                 = [];
+    public $calendar_types            = [];
+    public $date_types                = [];
+    public $first_day_in_weeks        = [];
+    public $number_formats            = [];
+    public $daylight_states           = [];
+    public $timezones                 = [];
+    public $from_monthes              = [];
+    public $from_days                 = [];
+    public $to_monthes                = [];
+    public $to_days                   = [];
+    public $mode_use_sip              = [];
+    //
     public $model;
     public function rules() {
         return [
-                [['organization_id', 'group_id', 'status_id', 'birthplace_province_id', 'birthplace_city_id', 'marital_status_id', 'military_service_status_id', 'gender_id', 'employment_status_id', 'requested_salary', 'total_work_history', 'account_type_id', 'type_id', 'province_id', 'city_id', 'physical_cond_id', 'personnel_share_id', 'insurance_type_id', 'employment_type_id', 'contract_type_id', 'has_machin_id', 'is_owner_id'], 'integer'],
-                [['birthday', 'date_start', 'start_date', 'issuance_date', 'insurance_start_date'], 'safe'],
+                [['organization_id', 'group_id', 'status_id', 'birthplace_province_id', 'birthplace_city_id', 'marital_status_id', 'military_service_status_id', 'gender_id', 'employment_status_id', 'requested_salary', 'total_work_history', 'account_type_id', 'type_id', 'province_id', 'city_id', 'physical_cond_id', 'personnel_share_id', 'insurance_type_id', 'employment_type_id', 'contract_type_id', 'has_machin_id', 'is_owner_id', 'language_id', 'calendar_type_id', 'date_type_id', 'first_day_in_week_id', 'number_format_id', 'daylight_state_id', 'timezone_id', 'from_month_id', 'from_day_id', 'to_month_id', 'to_day_id', 'mode_use_sip_id'], 'integer'],
+                [['birthday', 'date_start', 'start_date', 'issuance_date', 'insurance_start_date', 'expiration'], 'safe'],
                 [['head_line', 'address'], 'string'],
-                [['force_rollcall'], 'boolean'],
+                [['force_rollcall', 'rtl', 'use_sip', 'show_lang'], 'boolean'],
                 [['username', 'password_hash', 'password_reset_token', 'code', 'fname', 'lname', 'card_num', 'father_name', 'religion', 'mobile', 'phone', 'email', 'facebook', 'telegram', 'instagram', 'avatar', 'place_of_issue', 'insurance_no', 'mother_birth_place', 'father_birth_place', 'mother_first_name', 'prev_last_name', 'mother_last_name', 'passport_no', 'info_work_place', 'emergency_phone', 'call_receiver', 'physical_desc', 'nationality'], 'string', 'max' => 255],
                 [['auth_key'], 'string', 'max' => 32],
                 [['codemelli'], 'string', 'max' => 10],
@@ -188,6 +227,22 @@ class UsersVML extends Model {
             'insurance_start_date'       => Yii::t('users', 'Insurance Start Date'),
             'has_machin_id'              => Yii::t('users', 'Has Machin ID'),
             'is_owner_id'                => Yii::t('users', 'Is Owner ID'),
+            'expiration'                 => Yii::t('users', 'Expiration'),
+            'language_id'                => Yii::t('users', 'Language ID'),
+            'rtl'                        => Yii::t('users', 'Rtl'),
+            'calendar_type_id'           => Yii::t('users', 'Calendar Type ID'),
+            'date_type_id'               => Yii::t('users', 'Date Type ID'),
+            'first_day_in_week_id'       => Yii::t('users', 'First Day In Week ID'),
+            'number_format_id'           => Yii::t('users', 'Number Format ID'),
+            'daylight_state_id'          => Yii::t('users', 'Daylight State ID'),
+            'timezone_id'                => Yii::t('users', 'Timezone ID'),
+            'from_month_id'              => Yii::t('users', 'From Month ID'),
+            'from_day_id'                => Yii::t('users', 'From Day ID'),
+            'to_month_id'                => Yii::t('users', 'To Month ID'),
+            'to_day_id'                  => Yii::t('users', 'To Day ID'),
+            'use_sip'                    => Yii::t('users', 'Use Sip'),
+            'mode_use_sip_id'            => Yii::t('users', 'Mode Use Sip ID'),
+            'show_lang'                  => Yii::t('users', 'Show Lang'),
         ];
     }
     public function loaditems() {
@@ -203,6 +258,7 @@ class UsersVML extends Model {
         $this->employment_statuses       = UsersListEmploymentStatusSRL::getItems();
         $this->account_types             = UsersListAccountTypeSRL::getItems();
         $this->types                     = UsersListTypeSRL::getItems();
+        //
         $this->physical_conds            = UsersListPhysicalCondSRL::getItems();
         $this->personnel_shares          = UsersListPersonnelShareSRL::getItems();
         $this->insurance_types           = UsersListInsuranceTypeSRL::getItems();
@@ -211,6 +267,19 @@ class UsersVML extends Model {
         $this->has_machins               = UsersListHasMachinSRL::getItems();
         $this->is_owners                 = UsersListIsOwnerSRL::getItems();
         $this->organizations             = OrganizationsSRL::getItems();
+        //
+        $this->languages                 = UsersListLanguagesSRL::getItems();
+        $this->calendar_types            = UsersListCalendarTypeSRL::getItems();
+        $this->date_types                = UsersListDateTypeSRL::getItems();
+        $this->first_day_in_weeks        = UsersListFirstDayInWeekSRL::getItems();
+        $this->number_formats            = UsersListNumberFormatSRL::getItems();
+        $this->daylight_states           = UsersListDaylightStateSRL::getItems();
+        $this->timezones                 = UsersListTimezoneSRL::getItems();
+        $this->from_monthes              = ListMonthSRL::getItems();
+        $this->from_days                 = ListMonthDaySRL::getItems();
+        $this->to_monthes                = $this->from_monthes;
+        $this->to_days                   = $this->from_days;
+        $this->mode_use_sip              = UsersListModeUseSipSRL::getItems();
     }
     public function save($post) {
         if (!$this->load($post)) {
@@ -221,6 +290,7 @@ class UsersVML extends Model {
         $this->start_date           = functions::togdate($this->start_date);
         $this->issuance_date        = functions::togdate($this->issuance_date);
         $this->insurance_start_date = functions::togdate($this->insurance_start_date);
+        $this->expiration           = functions::togdate($this->expiration);
         if (!$this->validate()) {
             return false;
         }
@@ -250,6 +320,7 @@ class UsersVML extends Model {
         $data->start_date           = functions::tojdate($data->start_date);
         $data->issuance_date        = functions::tojdate($data->issuance_date);
         $data->insurance_start_date = functions::tojdate($data->insurance_start_date);
+        $data->expiration           = functions::tojdate($data->expiration);
         return $data;
     }
     public static function populate($dest, $source) {
@@ -316,6 +387,22 @@ class UsersVML extends Model {
         $dest->insurance_start_date       = $source->insurance_start_date;
         $dest->has_machin_id              = $source->has_machin_id;
         $dest->is_owner_id                = $source->is_owner_id;
+        $dest->expiration                 = $source->expiration;
+        $dest->language_id                = $source->language_id;
+        $dest->rtl                        = $source->rtl;
+        $dest->calendar_type_id           = $source->calendar_type_id;
+        $dest->date_type_id               = $source->date_type_id;
+        $dest->first_day_in_week_id       = $source->first_day_in_week_id;
+        $dest->number_format_id           = $source->number_format_id;
+        $dest->daylight_state_id          = $source->daylight_state_id;
+        $dest->timezone_id                = $source->timezone_id;
+        $dest->from_month_id              = $source->from_month_id;
+        $dest->from_day_id                = $source->from_day_id;
+        $dest->to_month_id                = $source->to_month_id;
+        $dest->to_day_id                  = $source->to_day_id;
+        $dest->use_sip                    = $source->use_sip;
+        $dest->mode_use_sip_id            = $source->mode_use_sip_id;
+        $dest->show_lang                  = $source->show_lang;
     }
 //    save
 //        $this->avatar = UploadedFile::getInstance($this, 'avatar');
