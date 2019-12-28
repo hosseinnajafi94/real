@@ -8,7 +8,7 @@ use yii\helpers\Url;
 use yii\bootstrap4\BaseHtml;
 //use app\config\widgets\ArrayHelper;
 //use unclead\multipleinput\MultipleInput;
-//use kartik\select2\Select2;
+use kartik\select2\Select2;
 class ActiveField extends \yii\bootstrap4\ActiveField {
     protected function createLayoutConfig($instanceConfig) {
         $config                          = parent::createLayoutConfig($instanceConfig);
@@ -54,6 +54,20 @@ class ActiveField extends \yii\bootstrap4\ActiveField {
         }
         return parent::dropDownList($items, $options);
     }
+    public function select2($data, $options = [], $pluginOptions = []) {
+        return $this->widget(Select2::classname(), [
+            'data' => $data,
+            'options' => ArrayHelper::merge([
+                'placeholder' => Yii::t('app', 'Please Select')
+            ], $options),
+            'pluginOptions' => ArrayHelper::merge([
+                'dir' => 'rtl',
+                'allowClear' => true,
+                //'containerCssClass' => ':all:',
+                //'containerCssClass' => 'form-control form-control-sm',
+            ], $pluginOptions),
+        ]);
+    }
 //    public function fileInput($options = []) {
 //        if (!isset($this->form->options['enctype'])) {
 //            $this->form->options['enctype'] = 'multipart/form-data';
@@ -65,17 +79,5 @@ class ActiveField extends \yii\bootstrap4\ActiveField {
 //        $this->adjustLabelFor($options);
 //        $this->parts['{input}'] = Html::activeFileInput($this->model, $this->attribute, $options);
 //        return $this;
-//    }
-//    public function select2($data) {
-//        return $this->widget(Select2::classname(), [
-//            'data' => $data,
-//            'options' => ['placeholder' => Yii::t('app', 'Please Select')],
-//            'pluginOptions' => [
-//                'dir' => 'rtl',
-//                'allowClear' => true,
-//                //'containerCssClass' => ':all:',
-//                //'containerCssClass' => 'form-control input-sm',
-//            ],
-//        ]);
 //    }
 }

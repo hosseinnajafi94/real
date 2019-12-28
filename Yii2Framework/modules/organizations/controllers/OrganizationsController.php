@@ -8,6 +8,7 @@ use app\modules\organizations\models\DAL\OrganizationsUnits;
 use app\modules\organizations\models\VML\OrganizationsVML;
 use app\modules\organizations\models\VML\OrganizationsSearchVML;
 use app\modules\organizations\models\VML\OrganizationsUnitsSearchVML;
+use app\modules\organizations\models\VML\OrganizationsPlanningSearchVML;
 use app\modules\organizations\models\VML\OrganizationsPositionsSearchVML;
 use app\modules\organizations\models\VML\OrganizationsPositionsListSkillsSearchVML;
 class OrganizationsController extends Controller {
@@ -44,17 +45,22 @@ class OrganizationsController extends Controller {
         $searchModel4  = new OrganizationsPositionsListSkillsSearchVML();
         $dataProvider4 = $searchModel4->search($model->id, Yii::$app->request->queryParams);
 
+        $searchModel5  = new OrganizationsPlanningSearchVML();
+        $dataProvider5 = $searchModel5->search($model->id, Yii::$app->request->queryParams);
+
         $units = OrganizationsUnits::find()->where(['organization_id' => $model->id])->all();
 
         return $this->renderView([
-                    'model'         => $model,
-                    'searchModel2'  => $searchModel2,
-                    'dataProvider2' => $dataProvider2,
-                    'searchModel3'  => $searchModel3,
-                    'dataProvider3' => $dataProvider3,
-                    'searchModel4'  => $searchModel4,
-                    'dataProvider4' => $dataProvider4,
-                    'units'         => $this->units($units, null),
+            'model'         => $model,
+            'searchModel2'  => $searchModel2,
+            'dataProvider2' => $dataProvider2,
+            'searchModel3'  => $searchModel3,
+            'dataProvider3' => $dataProvider3,
+            'searchModel4'  => $searchModel4,
+            'dataProvider4' => $dataProvider4,
+            'searchModel5'  => $searchModel5,
+            'dataProvider5' => $dataProvider5,
+            'units'         => $this->units($units, null),
         ]);
     }
     public function actionCreate() {

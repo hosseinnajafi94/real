@@ -37,6 +37,7 @@ use app\modules\users\models\DAL\Users;
  * @property Organizations $parent
  * @property Organizations[] $organizations
  * @property Users $manager
+ * @property OrganizationsPlanning[] $organizationsPlannings
  * @property OrganizationsPositions[] $organizationsPositions
  * @property OrganizationsPositionsListSkills[] $organizationsPositionsListSkills
  * @property OrganizationsUnits[] $organizationsUnits
@@ -136,6 +137,14 @@ class Organizations extends \yii\db\ActiveRecord
     public function getManager()
     {
         return $this->hasOne(Users::className(), ['id' => 'manager_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrganizationsPlannings()
+    {
+        return $this->hasMany(OrganizationsPlanning::className(), ['organization_id' => 'id']);
     }
 
     /**

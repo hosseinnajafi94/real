@@ -6,7 +6,8 @@ use yii\bootstrap4\Html;
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('organizations', 'Organizations Units'), 'url' => ['index']];
 //$this->params['breadcrumbs'][] = $this->title;
 //\yii\web\YiiAsset::register($this);
-$model = $model->model;
+$data = $model;
+$model = $data->model;
 ?>
 <div class="organizations-units-view">
     <div class="card">
@@ -39,19 +40,22 @@ $model = $model->model;
                 <div class="col-md-8"><?= $model->city ? $model->city->title : '---' ?></div>
             </div>
             <div class="row form-group">
-                <label class="control-label col-md-4"><?= $model->getAttributeLabel('acl_id') ?>:</label>
-                <div class="col-md-8"><?= $model->acl ? $model->acl->title : '---' ?></div>
-            </div>
-            <?php
-            if ($model->acl_id == 2) {
-                ?>
-                <div class="row form-group">
-                    <label class="control-label col-md-4"><?= $model->getAttributeLabel('acl_category_id') ?>:</label>
-                    <div class="col-md-8"><?= $model->aclCategory ? $model->aclCategory->title : '---' ?></div>
+                <label class="control-label col-md-4"><?= $data->getAttributeLabel('positions') ?>:</label>
+                <div class="col-md-8">
+                    <?php
+                    if ($model->organizationsUnitsPositions) {
+                        $names = [];
+                        foreach ($model->organizationsUnitsPositions as $row) {
+                            $names[] = $row->position->name;
+                        }
+                        echo implode(' / ', $names);
+                    }
+                    else {
+                        echo '---';
+                    }
+                    ?>
                 </div>
-                <?php
-            }
-            ?>
+            </div>
             <div class="row form-group">
                 <label class="control-label col-md-4"><?= $model->getAttributeLabel('work_place_status_id') ?>:</label>
                 <div class="col-md-8"><?= $model->workPlaceStatus ? $model->workPlaceStatus->title : '---' ?></div>

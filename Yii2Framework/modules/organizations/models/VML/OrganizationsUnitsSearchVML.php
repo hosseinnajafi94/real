@@ -7,7 +7,7 @@ class OrganizationsUnitsSearchVML extends OrganizationsUnits {
     public $myPageSize = 10;
     public function rules() {
         return [
-                [['id', 'manager_id', 'province_id', 'city_id', 'acl_id', 'acl_category_id', 'work_place_status_id', 'insurance_acc_id', 'tax_acc_id', 'darsad1', 'darsad2', 'myPageSize'], 'integer'],
+                [['id', 'manager_id', 'province_id', 'city_id', 'work_place_status_id', 'insurance_acc_id', 'tax_acc_id', 'darsad1', 'darsad2', 'myPageSize'], 'integer'],
                 [['name', 'ws_code', 'tfn', 'unit_description'], 'safe'],
         ];
     }
@@ -32,8 +32,6 @@ class OrganizationsUnitsSearchVML extends OrganizationsUnits {
             'manager_id'           => $this->manager_id,
             'province_id'          => $this->province_id,
             'city_id'              => $this->city_id,
-            'acl_id'               => $this->acl_id,
-            'acl_category_id'      => $this->acl_category_id,
             'work_place_status_id' => $this->work_place_status_id,
             'insurance_acc_id'     => $this->insurance_acc_id,
             'tax_acc_id'           => $this->tax_acc_id,

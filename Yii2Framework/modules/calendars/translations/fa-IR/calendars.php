@@ -1,0 +1,20 @@
+<?php
+return [
+    'Extensions: {exts}' => 'پسوند های مجاز: {exts}',
+    'Calendars'          => 'تقویم',
+    'ID'                 => 'شناسه',
+    'Title'              => 'عنوان',
+    'Favcolor'           => 'رنگ پس زمینه',
+    'Type ID'            => 'نوع تقویم',
+    'Status ID'          => 'وضعیت',
+    'Location'           => 'موقعیت',
+    'Start Date'         => 'تاریخ شروع',
+    'End Date'           => 'تاریخ پایان',
+    'Start Time'         => 'ساعت شروع',
+    'End Time'           => 'ساعت پایان',
+    'Time ID'            => 'زمان هشدار',
+    'Period ID'          => 'سیکل تکرار',
+    'Alarm Type ID'      => 'نوع اعلان',
+    'Description'        => 'توضیحات',
+    'File'               => 'فایل ضمیمه',
+];

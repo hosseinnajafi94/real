@@ -30,10 +30,7 @@ use app\config\widgets\ActiveForm;
             <?= $form->field($model, 'manager_id')->dropDownList($model->managers) ?>
             <?= $form->field($model, 'province_id')->dropDownList($model->provinces) ?>
             <?= $form->field($model, 'city_id')->dropDownList($model->cities) ?>
-            <?= $form->field($model, 'acl_id')->dropDownList($model->acls) ?>
-            <div id="acl_category_id" style="<?= $model->acl_id === 2 ? 'display: block;' : 'display: none;' ?>">
-                <?= $form->field($model, 'acl_category_id')->dropDownList($model->aclcategories) ?>
-            </div>
+            <?= $form->field($model, 'positions')->select2($model->list_positions, ['multiple' => true]) ?>
             <?= $form->field($model, 'work_place_status_id')->dropDownList($model->workplacestatuses) ?>
             <?= $form->field($model, 'ws_code')->textInput(['maxlength' => true]) ?>
             <?= $form->field($model, 'tfn')->textInput(['maxlength' => true]) ?>
@@ -48,12 +45,3 @@ use app\config\widgets\ActiveForm;
         </div>
     </div>
 </div>
-<?php
-$this->registerJs("
-$('#organizationsunitsvml-acl_id').change(function () {
-    $('#acl_category_id').hide();
-    if ($(this).val() == 2) {
-        $('#acl_category_id').show();
-    }
-});
-");

@@ -1,102 +1,25 @@
-/*-webkit-animation: move .53s cubic-bezier(.785,.135,.15,.86) infinite alternate;
-animation: move .53s cubic-bezier(.785,.135,.15,.86) infinite alternate;*/
-
-/*.AMInstallButton-loader-container 
-.AMInstallButton-loader-ball*/
-
-
-/*[dir="ltr"] .AMInstallButton .AMInstallButton-loading-button--puffy .AMInstallButton-loader-container {
-    margin-left: 16px;
-}
-[dir="ltr"] .AMInstallButton .AMInstallButton-loader .AMInstallButton-loader-container {
-    margin-left: 8px;
-}
-.AMInstallButton .AMInstallButton-loader .AMInstallButton-loader-container {
-    -webkit-animation: move .53s cubic-bezier(.785,.135,.15,.86) infinite alternate;
-    animation: move .53s cubic-bezier(.785,.135,.15,.86) infinite alternate;
-    height: 4px;
-    width: 4px;
-}
-*, ::after, ::before {
-    -webkit-box-sizing: inherit;
-    box-sizing: inherit;
-    word-wrap: break-word;
-}
-.Card-contents {
-    font-size: 12px;
-}
-body {
-    font-family: Fira Sans,sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    color: 
-    #1d1d1d;
-    font-size: 14px;
-    line-height: 19px;
-}
-html {
-    line-height: 1.15;
-    -webkit-text-size-adjust: 100%;
-}*/
-
-/*.AMInstallButton .AMInstallButton-loader .AMInstallButton-loader-ball {
-    -webkit-animation: squash .53s ease-in-out infinite alternate;
-    animation: squash .53s ease-in-out infinite alternate;
-    background: 
-    #0060df;
-    border-radius: 50%;
-    height: 4px;
-    width: 4px;
-}
-*, ::after, ::before {
-    -webkit-box-sizing: inherit;
-    box-sizing: inherit;
-    word-wrap: break-word;
-}
-.Card-contents {
-    font-size: 12px;
-}
-body {
-    font-family: Fira Sans,sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    color: 
-    #1d1d1d;
-    font-size: 14px;
-    line-height: 19px;
-}
-html {
-    line-height: 1.15;
-    -webkit-text-size-adjust: 100%;
-}*/
-.alert-dismissible .close {right: auto;}
-.card .card-header {padding: 1.5rem 1.5rem 0rem;}
 p {margin: 0;}
 thead th,thead td {padding: 5px !important;}
-
+.alert-dismissible .close {right: auto;}
+.card .card-header {padding: 1.5rem 1.5rem 0rem;}
 .note-editor .btn {margin: 0;}
-.note-editor .card-header {
-    padding: 0 0 5px 5px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+.note-editor .card-header {padding: 0 0 5px 5px;border-top-left-radius: 8px;border-top-right-radius: 8px;}
+.pagination-sm .page-item:first-child .page-link {border-top-right-radius: 0.2rem;border-bottom-right-radius: 0.2rem;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+.pagination-sm .page-item:last-child .page-link {border-top-right-radius: 0;border-bottom-right-radius: 0;border-top-left-radius: 0.2rem;border-bottom-left-radius: 0.2rem;}
+.mds-bootstrap-persian-datetime-picker-popover .dropdown-toggle::after {display: none;}
+.select2-container--krajee[dir="rtl"] .select2-search--inline {float: right;}
+.select2-container--krajee[dir="rtl"] .select2-selection--multiple .select2-selection__choice {margin: 5px 5px 5px 0px;line-height: 20px;height: 22px;}
+.select2-container--krajee[dir="rtl"] .select2-selection--multiple .select2-selection__choice__remove {margin: 1px 3px 0 0;cursor: pointer;}
+.select2-container--krajee .select2-selection__clear {top: 0.2rem;cursor: pointer;}
+.vakata-context li > a {line-height: 2 !important;height: 35px !important;}
+.vakata-context li > a > i:empty {line-height: 2 !important;}
+.vakata-context li > a .vakata-contextmenu-sep {height: 2em !important;}
+@media print {
+    * {border-radius: 0 !important;}
+    .hidden-print {display: none;}
+    .main-panel {margin-top: 0;}
 }
-
-.pagination-sm .page-item:first-child .page-link {
-    border-top-right-radius: 0.2rem;
-    border-bottom-right-radius: 0.2rem;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-.pagination-sm .page-item:last-child .page-link {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-top-left-radius: 0.2rem;
-    border-bottom-left-radius: 0.2rem;
-}
-.mds-bootstrap-persian-datetime-picker-popover .dropdown-toggle::after {
-    display: none;
-}
-
+/*
 @-webkit-keyframes move {
     0% {
         -webkit-transform:translateX(0);
@@ -177,3 +100,74 @@ thead th,thead td {padding: 5px !important;}
         transform:scale(1)
     }
 }
+-webkit-animation: move .53s cubic-bezier(.785,.135,.15,.86) infinite alternate;
+animation: move .53s cubic-bezier(.785,.135,.15,.86) infinite alternate;*/
+
+/*.AMInstallButton-loader-container 
+.AMInstallButton-loader-ball*/
+
+
+/*[dir="ltr"] .AMInstallButton .AMInstallButton-loading-button--puffy .AMInstallButton-loader-container {
+    margin-left: 16px;
+}
+[dir="ltr"] .AMInstallButton .AMInstallButton-loader .AMInstallButton-loader-container {
+    margin-left: 8px;
+}
+.AMInstallButton .AMInstallButton-loader .AMInstallButton-loader-container {
+    -webkit-animation: move .53s cubic-bezier(.785,.135,.15,.86) infinite alternate;
+    animation: move .53s cubic-bezier(.785,.135,.15,.86) infinite alternate;
+    height: 4px;
+    width: 4px;
+}
+*, ::after, ::before {
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+    word-wrap: break-word;
+}
+.Card-contents {
+    font-size: 12px;
+}
+body {
+    font-family: Fira Sans,sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    color: 
+    #1d1d1d;
+    font-size: 14px;
+    line-height: 19px;
+}
+html {
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+}*/
+
+/*.AMInstallButton .AMInstallButton-loader .AMInstallButton-loader-ball {
+    -webkit-animation: squash .53s ease-in-out infinite alternate;
+    animation: squash .53s ease-in-out infinite alternate;
+    background: 
+    #0060df;
+    border-radius: 50%;
+    height: 4px;
+    width: 4px;
+}
+*, ::after, ::before {
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+    word-wrap: break-word;
+}
+.Card-contents {
+    font-size: 12px;
+}
+body {
+    font-family: Fira Sans,sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    color: 
+    #1d1d1d;
+    font-size: 14px;
+    line-height: 19px;
+}
+html {
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+}*/

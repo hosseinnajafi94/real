@@ -1,89 +1,18 @@
 <?php
-use app\config\components\functions;
-use app\config\widgets\ActionColumn;
-use yii\helpers\Url;
-use yii\bootstrap4\Html;
-use app\config\widgets\GridView;
-use yii\widgets\Pjax;
 /* @var $this yii\web\View */
-/* @var $model app\modules\organizations\models\VML\OrganizationsVML */
-//$this->title = $model->name;
+/* @var $model \app\modules\organizations\models\VML\OrganizationsVML */
+/* @var $searchModel2 \app\modules\organizations\models\VML\OrganizationsUnitsSearchVML */
+/* @var $dataProvider2 \yii\data\ActiveDataProvider */
+/* @var $searchModel3 \app\modules\organizations\models\VML\OrganizationsPositionsSearchVML */
+/* @var $dataProvider3 \yii\data\ActiveDataProvider */
+/* @var $searchModel4 \app\modules\organizations\models\VML\OrganizationsPositionsListSkillsSearchVML */
+/* @var $dataProvider4 \yii\data\ActiveDataProvider */
+/* @var $searchModel5 \app\modules\organizations\models\VML\OrganizationsPlanningSearchVML */
+/* @var $dataProvider5 \yii\data\ActiveDataProvider */
+/* @var $units array */
+$this->title = $model->name;
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('organizations', 'Organizations'), 'url' => ['index']];
 //$this->params['breadcrumbs'][] = $this->title;
-$model = $model->model;
-$urlCreate = Url::to(['/organizations/organizations-units/create', 'org_id' => $model->id, 'parent_id' => '000']);
-$urlView = Url::to(['/organizations/organizations-units/view', 'id' => '000']);
-$urlUpdate = Url::to(['/organizations/organizations-units/update', 'id' => '000']);
-$urlDelete = Url::to(['/organizations/organizations-units/delete', 'id' => '000']);
-$this->registerCssFile('@web/themes/custom/libs/jstree/themes/default/style.min.css', ['depends' => app\assets\AdminAsset::class]);
-$this->registerJsFile('@web/themes/custom/libs/jstree/jstree.min.js', ['depends' => app\assets\AdminAsset::class]);
-$this->registerJs("
-$('#jstree').jstree({
-    'plugins' : ['search', 'types', 'contextmenu'], // , 'sort'
-    'types' : {
-        'default' : {
-            'icon' : 'fa fa-sitemap'
-        }
-    },
-    contextmenu: {
-        items: function () {
-            return {
-                'create': {
-                    icon: 'fa fa-plus text-success',
-                    label : 'افزودن زیر مجموعه',
-                    action: function (data) {
-                        var inst = $.jstree.reference(data.reference);
-                        var obj = inst.get_node(data.reference);
-                        window.location = '$urlCreate'.replace('000', obj.id);
-                    }
-                },
-                'view': {
-                    icon: 'fa fa-eye text-info',
-                    label : 'جزئیات',
-                    action: function (data) {
-                        var inst = $.jstree.reference(data.reference);
-                        var obj = inst.get_node(data.reference);
-                        window.location = '$urlView'.replace('000', obj.id);
-                    }
-                },
-                'update': {
-                    icon: 'fa fa-pencil text-primary',
-                    label : 'ویرایش',
-                    action: function (data) {
-                        var inst = $.jstree.reference(data.reference);
-                        var obj = inst.get_node(data.reference);
-                        window.location = '$urlUpdate'.replace('000', obj.id);
-                    }
-                },
-                'delete': {
-                    icon: 'fa fa-times text-danger',
-                    label : 'حذف',
-                    action: function (data) {
-                        var inst = $.jstree.reference(data.reference);
-                        var obj = inst.get_node(data.reference);
-                        $('<a></a>')
-                            .attr('data-method', 'post')
-                            .attr('data-confirm', '" . Yii::t('app', 'Are you sure you want to delete this item?') . "')
-                            .attr('href', '$urlDelete'.replace('000', obj.id))
-                            .appendTo('body')
-                            .trigger('click')
-                            .remove();
-                    }
-                }
-            };
-        }
-    },
-    'core' : {
-        'data' : " . json_encode($units) . "
-    }
-}).on('loaded.jstree', function() {
-    $(this).jstree('open_all');
-});
-$('#input').on('input', function(e) {
-    e.preventDefault();
-    $('#jstree').jstree(true).search($(this).val());
-});
-");
 ?>
 <div class="organizations-view">
     <div class="card">
@@ -99,311 +28,42 @@ $('#input').on('input', function(e) {
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page2"><?= Yii::t('organizations', 'Organizations Units') ?></a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page3"><?= Yii::t('organizations', 'Organizations Positions') ?></a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page4"><?= Yii::t('organizations', 'Organizations Positions List Skills') ?></a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page5"><?= Yii::t('organizations', 'برنامه ریزی') ?></a></li>
             </ul>
             <div class="tab-content px-1">
                 <div class="tab-pane active show" id="page1">
-                    <p>
-                        <?= Html::a(Yii::t('app', 'Return'), ['index'], ['class' => 'btn btn-sm btn-warning']) ?>
-                        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-sm btn-primary']) ?>
-                        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], ['class' => 'btn btn-sm btn-danger', 'data' => ['confirm' => Yii::t('app', 'Are you sure you want to delete this item?'), 'method' => 'post']]) ?>
-                    </p>
-                    <div class="row border-bottom mb-3">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('name') ?>:</label>
-                                <div class="col-md-8"><?= $model->name ? $model->name : '---' ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <?php $manager  = $model->manager; ?>
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('manager_id') ?>:</label>
-                                <div class="col-md-8"><?= $manager ? $manager->fname . ' ' . $manager->lname : '---' ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('register_id') ?>:</label>
-                                <div class="col-md-8"><?= $model->register_id ? $model->register_id : '---' ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('register_number') ?>:</label>
-                                <div class="col-md-8"><?= $model->register_number ? $model->register_number : '---' ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('date_start') ?>:</label>
-                                <div class="col-md-8"><?= $model->date_start ? functions::tojdate($model->date_start) : '---' ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('activity_subject') ?>:</label>
-                                <div class="col-md-8"><?= $model->activity_subject ? $model->activity_subject : '---' ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <?php $parent   = $model->parent; ?>
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('parent_id') ?>:</label>
-                                <div class="col-md-8"><?= $parent ? $parent->name : '---' ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('ws_code') ?>:</label>
-                                <div class="col-md-8"><?= $model->ws_code ? $model->ws_code : '---' ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('tfn') ?>:</label>
-                                <div class="col-md-8"><?= $model->tfn ? $model->tfn : '---' ?></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('code') ?>:</label>
-                                <div class="col-md-8"><?= $model->code ? $model->code : '---' ?></div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('license') ?>:</label>
-                                <div class="col-md-8"><?= $model->license ? $model->license : '---' ?></div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('phone') ?>:</label>
-                                <div class="col-md-8"><?= $model->phone ? $model->phone : '---' ?></div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('fax') ?>:</label>
-                                <div class="col-md-8"><?= $model->fax ? $model->fax : '---' ?></div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('email') ?>:</label>
-                                <div class="col-md-8"><?= $model->email ? $model->email : '---' ?></div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('post') ?>:</label>
-                                <div class="col-md-8"><?= $model->post ? $model->post : '---' ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('logo') ?>:</label>
-                                <div class="col-md-8">
-                                    <img src="<?= Yii::getAlias('@web/uploads/organizations/' . $model->logo) ?>" style="max-width: 300px;width: 100%;max-height: 200px;"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <?php $province = $model->province; ?>
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('province_id') ?>:</label>
-                                <div class="col-md-8"><?= $province ? $province->title : '---' ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <?php $city     = $model->city; ?>
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('city_id') ?>:</label>
-                                <div class="col-md-8"><?= $city ? $city->title : '---' ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('address') ?>:</label>
-                                <div class="col-md-8"><?= $model->address ? $model->address : '---' ?></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label col-md-4"><?= $model->getAttributeLabel('detail') ?>:</label>
-                                <div class="col-md-8"><?= $model->detail ? $model->detail : '---' ?></div>
-                            </div>
-                        </div>
-                    </div>
+                    <?= $this->render('view_page1', [
+                        'data' => $model
+                    ]) ?>
                 </div>
                 <div class="tab-pane" id="page2">
-                    <p>
-                        <?= Html::a(Yii::t('app', 'Create'), ['/organizations/organizations-units/create', 'org_id' => $model->id], ['class' => 'btn btn-sm btn-success']) ?>
-                    </p>
-                    <label>جستجو:</label>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <input class="form-control form-control-sm" id="input"/>
-                        </div>
-                    </div>
-                    <br/>
-                    <div id="jstree"></div>
-                    <div class="d-none">
-                        <br/>
-                        <?php Pjax::begin(); ?>
-                        <?=
-                        GridView::widget([
-                            'layout'         => '
-                                {items}
-                                <div class="pull-right" style="margin-left: 15px;">
-                                    <label>تعداد نمایش: </label>
-                                    ' . Html::activeDropDownList($searchModel2, 'myPageSize', [10 => 10, 20 => 20, 50 => 50, 100 => 100], ['id' => 'myPageSize2', 'class' => 'form-control form-control-sm', 'style' => 'width: auto;display: inline-block;']) . '
-                                </div>
-                                {summary}
-                                {pager}
-                            ',
-                            'filterSelector' => '#myPageSize2',
-                            'summaryOptions' => ['class' => 'summary pull-right'],
-                            'pager'          => [
-                                'options'                       => ['class' => 'pagination pagination-sm pull-left', 'style' => 'margin-left: 2px;'],
-                                'linkContainerOptions'          => ['class' => 'page-item'],
-                                'linkOptions'                   => ['class' => 'page-link'],
-                                'disabledListItemSubTagOptions' => ['class' => 'page-link disabled']
-                            ],
-                            'dataProvider'   => $dataProvider2,
-                            'filterModel'    => $searchModel2,
-                            'columns'        => [
-                                    ['class' => 'yii\grid\SerialColumn'],
-                                'name',
-                                //'manager_id',
-                                //'province_id',
-                                //'city_id',
-                                //'acl_id',
-                                //'acl_category_id',
-                                //'work_place_status_id',
-                                //'ws_code',
-                                //'tfn',
-                                //'insurance_acc_id',
-                                //'tax_acc_id',
-                                //'darsad1',
-                                //'darsad2',
-                                //'description:ntext',
-                                [
-                                    'class'      => ActionColumn::class,
-                                    'urlCreator' => function ($action, $model) {
-                                        if ($action === 'view') {
-                                            return Url::to(['/organizations/organizations-units/view', 'id' => $model->id]);
-                                        }
-                                        if ($action === 'update') {
-                                            return Url::to(['/organizations/organizations-units/update', 'id' => $model->id]);
-                                        }
-                                        if ($action === 'delete') {
-                                            return Url::to(['/organizations/organizations-units/delete', 'id' => $model->id]);
-                                        }
-                                    },
-                                ],
-                            ],
-                        ]);
-                        ?>
-                        <?php Pjax::end(); ?>
-                    </div>
+                    <?= $this->render('view_page2', [
+                        'data' => $model,
+                        'searchModel' => $searchModel2,
+                        'dataProvider' => $dataProvider2,
+                        'units' => $units,
+                    ]) ?>
                 </div>
                 <div class="tab-pane" id="page3">
-                    <p>
-                        <?= Html::a(Yii::t('app', 'Create'), ['/organizations/organizations-positions/create', 'org_id' => $model->id], ['class' => 'btn btn-sm btn-success']) ?>
-                    </p>
-                    <?php Pjax::begin(); ?>
-                    <?=
-                    GridView::widget([
-                        'layout'         => '
-                            {items}
-                            <div class="pull-right" style="margin-left: 15px;">
-                                <label>تعداد نمایش: </label>
-                                ' . Html::activeDropDownList($searchModel3, 'myPageSize', [10 => 10, 20 => 20, 50 => 50, 100 => 100], ['id' => 'myPageSize3', 'class' => 'form-control form-control-sm', 'style' => 'width: auto;display: inline-block;']) . '
-                            </div>
-                            {summary}
-                            {pager}
-                        ',
-                        'filterSelector' => '#myPageSize3',
-                        'summaryOptions' => ['class' => 'summary pull-right'],
-                        'pager'          => [
-                            'options'                       => ['class' => 'pagination pagination-sm pull-left', 'style' => 'margin-left: 2px;'],
-                            'linkContainerOptions'          => ['class' => 'page-item'],
-                            'linkOptions'                   => ['class' => 'page-link'],
-                            'disabledListItemSubTagOptions' => ['class' => 'page-link disabled']
-                        ],
-                        'dataProvider'   => $dataProvider3,
-                        'filterModel'    => $searchModel3,
-                        'columns'        => [
-                                ['class' => 'yii\grid\SerialColumn'],
-                            'name',
-                            //'persons',
-                            //'hiring_enable:boolean',
-                            //'job_code',
-                            //'description:ntext',
-                            //'form_id',
-                            //'extra_description:ntext',
-                            //'degree_id',
-                            //'experience',
-                            //'gender_id',
-                            //'resume_deadline',
-                            //'skills:ntext',
-                            [
-                                'class'      => ActionColumn::class,
-                                'urlCreator' => function ($action, $model) {
-                                    if ($action === 'view') {
-                                        return Url::to(['/organizations/organizations-positions/view', 'id' => $model->id]);
-                                    }
-                                    if ($action === 'update') {
-                                        return Url::to(['/organizations/organizations-positions/update', 'id' => $model->id]);
-                                    }
-                                    if ($action === 'delete') {
-                                        return Url::to(['/organizations/organizations-positions/delete', 'id' => $model->id]);
-                                    }
-                                },
-                            ],
-                        ],
-                    ])
-                    ?>
-                    <?php Pjax::end() ?>
+                    <?= $this->render('view_page3', [
+                        'data' => $model,
+                        'searchModel' => $searchModel3,
+                        'dataProvider' => $dataProvider3,
+                    ]) ?>
                 </div>
                 <div class="tab-pane" id="page4">
-                    <p>
-                        <?= Html::a(Yii::t('app', 'Create'), ['/organizations/organizations-positions-list-skills/create', 'org_id' => $model->id], ['class' => 'btn btn-sm btn-success']) ?>
-                    </p>
-                    <?php Pjax::begin(); ?>
-                    <?= GridView::widget([
-                        'layout'         => '
-                            {items}
-                            <div class="pull-right" style="margin-left: 15px;">
-                                <label>تعداد نمایش: </label>
-                                ' . Html::activeDropDownList($searchModel4, 'myPageSize', [10 => 10, 20 => 20, 50 => 50, 100 => 100], ['id' => 'myPageSize4', 'class' => 'form-control form-control-sm', 'style' => 'width: auto;display: inline-block;']) . '
-                            </div>
-                            {summary}
-                            {pager}
-                        ',
-                        'filterSelector' => '#myPageSize4',
-                        'summaryOptions' => ['class' => 'summary pull-right'],
-                        'pager'          => [
-                            'options'                       => ['class' => 'pagination pagination-sm pull-left', 'style' => 'margin-left: 2px;'],
-                            'linkContainerOptions'          => ['class' => 'page-item'],
-                            'linkOptions'                   => ['class' => 'page-link'],
-                            'disabledListItemSubTagOptions' => ['class' => 'page-link disabled']
-                        ],
+                    <?= $this->render('view_page4', [
+                        'data' => $model,
+                        'searchModel' => $searchModel4,
                         'dataProvider' => $dataProvider4,
-                        'filterModel' => $searchModel4,
-                        'columns' => [
-                            ['class' => 'yii\grid\SerialColumn'],
-                            'title',
-                            [
-                                'class'      => ActionColumn::class,
-                                'template'   => '{update} {delete}',
-                                'urlCreator' => function ($action, $model) {
-                                    if ($action === 'update') {
-                                        return Url::to(['/organizations/organizations-positions-list-skills/update', 'id' => $model->id]);
-                                    }
-                                    if ($action === 'delete') {
-                                        return Url::to(['/organizations/organizations-positions-list-skills/delete', 'id' => $model->id]);
-                                    }
-                                },
-                            ],
-                        ],
-                    ]); ?>
-                    <?php Pjax::end() ?>
+                    ]) ?>
+                </div>
+                <div class="tab-pane" id="page5">
+                    <?= $this->render('view_page5', [
+                        'data' => $model,
+                        'searchModel' => $searchModel5,
+                        'dataProvider' => $dataProvider5,
+                    ]) ?>
                 </div>
             </div>
         </div>

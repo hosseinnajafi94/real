@@ -47,6 +47,9 @@ function ajax(inUrl, inType, inData, inSuccess, inDataType, inError, inComplete)
             type: inType,
             data: inData,
             dataType: inDataType ? inDataType : 'json',
+            cache:false,
+            contentType: false,
+            processData: false,
             success: function () {
                 ajaxDoAjax = true;
                 if (typeof inSuccess === 'function') {

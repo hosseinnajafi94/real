@@ -25,7 +25,7 @@ $this->beginPage();
     <body>
         <?php $this->beginBody() ?>
         <div class="wrapper">
-            <div class="app-sidebar" data-active-color="white" data-background-color="black" data-image="<?= Yii::getAlias('@web/uploads/img/sidebar-bg/08.jpg') ?>">
+            <div class="app-sidebar hidden-print" data-active-color="white" data-background-color="black" data-image="<?= Yii::getAlias('@web/uploads/img/sidebar-bg/08.jpg') ?>">
                 <div class="sidebar-header">
                     <div class="logo clearfix">
                         <a href="#" class="logo-text float-right">
@@ -63,6 +63,12 @@ $this->beginPage();
                                         <i class="fa fa-search" style="position: absolute;bottom: -5px;right: -5px;font-size: 11px;color: white;text-shadow: 0 0 2px #000;"></i>
                                     </i>
                                     <span class="menu-title">پرسنلی</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="menu-item" href="<?= Url::to(['/calendars/calendars/index']) ?>">
+                                    <i class="fa fa-calendar"></i>
+                                    <span class="menu-title">تقویم</span>
                                 </a>
                             </li>
                             <li class="has-sub nav-item">
@@ -700,7 +706,7 @@ $this->beginPage();
                 </div>
                 <div class="sidebar-background"></div>
             </div>
-            <nav class="navbar navbar-expand-lg navbar-light bg-faded">
+            <nav class="navbar navbar-expand-lg navbar-light bg-faded hidden-print">
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <button type="button" data-toggle="collapse" class="navbar-toggle d-lg-none float-right">
@@ -858,6 +864,13 @@ $this->beginPage();
                 </footer>
             </div>
         </div>
+        <?php
+        if (isset($this->params['modals']) && is_array($this->params['modals'])) {
+            foreach ($this->params['modals'] as $modal) {
+                echo $modal;
+            }
+        }
+        ?>
         <?php $this->endBody() ?>
     </body>
 </html>
