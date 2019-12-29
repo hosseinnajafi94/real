@@ -187,6 +187,7 @@ $this->title              = Yii::t('calendars', 'Calendars');
     <?php ob_start() ?>
     <?php
     Modal::begin([
+        'size'    => Modal::SIZE_LARGE,
         'id'      => 'modalNewType',
         'options' => ['class' => ''],
         'title'   => Yii::t('app', 'Create'),
@@ -197,6 +198,17 @@ $this->title              = Yii::t('calendars', 'Calendars');
     <?= Html::activeHiddenInput($modelType, 'id') ?>
     <?= $formType->field($modelType, 'title')->textInput() ?>
     <?= $formType->field($modelType, 'description')->textarea() ?>
+    <div class="row">
+        <div class="col">
+            <?= $formType->field($modelType, 'sections1')->select2($modelType->list_sections, ['multiple' => true]) ?>
+        </div>
+        <div class="col">
+            <?= $formType->field($modelType, 'sections2')->select2($modelType->list_sections, ['multiple' => true]) ?>
+        </div>
+        <div class="col">
+            <?= $formType->field($modelType, 'sections3')->select2($modelType->list_sections, ['multiple' => true]) ?>
+        </div>
+    </div>
     <?php ActiveForm::end(); ?>
     <?php Modal::end() ?>
     <?php $this->params['modals'][] = ob_get_clean() ?>

@@ -17,5 +17,8 @@ return [
     'Alarm Type ID'      => 'نوع اعلان',
     'Description'        => 'توضیحات',
     'File'               => 'فایل ضمیمه',
-    'Users'               => 'دعوت شدگان',
+    'Users'              => 'دعوت شدگان',
+    'Sections1'          => 'نمایش',
+    'Sections2'          => 'برنامه ریزی',
+    'Sections3'          => 'مدیر',
 ];
