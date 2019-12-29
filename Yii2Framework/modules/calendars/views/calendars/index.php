@@ -1,13 +1,16 @@
 <?php
+use yii\helpers\Url;
 use yii\bootstrap4\Html;
 use yii\bootstrap4\Modal;
 use app\config\widgets\ActiveForm;
 use app\config\components\functions;
 /* @var $this yii\web\View */
 /* @var $model \app\modules\calendars\models\VML\CalendarsVML */
+/* @var $modelType \app\modules\calendars\models\VML\CalendarsListTypeVML */
 $this->title              = Yii::t('calendars', 'Calendars');
 //$this->params['breadcrumbs'][] = $this->title;
 ?>
+<!--  -->
 <div class="calendars-index">
     <div class="card">
         <div class="card-header ">
@@ -17,10 +20,37 @@ $this->title              = Yii::t('calendars', 'Calendars');
             <p><?= Yii::t('app', '') ?></p>
         </div>
         <div class="card-block">
+            <div class="border p-1 mb-1 bg-light" style="border-radius: 4px;">
+                <p class="mb-2">تقویم</p>
+                <a class="btn btn-sm btn-success mb-0 addType">تقویم جدید</a>
+                <a class="btn btn-sm btn-secondary mb-0 listType"><i class="fa fa-edit"></i></a>
+                <ul id="ulListType">
+                    <li>
+                        <label class="btn btn-sm btn-primary">
+                            <input type="checkbox" class="calendar_type" data-id="all"/>
+                            <span>همه</span>
+                        </label>
+                    </li>
+                    <?php
+                    $types = $modelType->getTypes();
+                    foreach ($types as $type) {
+                        ?>
+                        <li>
+                            <label class="btn btn-sm btn-primary">
+                                <input type="checkbox" class="calendar_type" data-id="<?= $type->id ?>"/>
+                                <span><?= $type->title ?></span>
+                            </label>
+                        </li>
+                        <?php
+                    }
+                    ?>
+                </ul>
+            </div>
             <div id="calendar"></div>
         </div>
     </div>
 </div>
+<!-- Events -->
 <div>
     <?php ob_start(); ?>
     <?php
@@ -31,7 +61,7 @@ $this->title              = Yii::t('calendars', 'Calendars');
         'footer'  => Html::a(Yii::t('app', 'Save'), null, ['class' => 'btn btn-sm btn-success', 'id' => 'saveNew'])
     ]);
     ?>
-    <?php $form                     = ActiveForm::begin(['id' => 'formNew']); ?>
+    <?php $form                     = ActiveForm::begin(['id' => 'formNew', 'action' => ['event']]); ?>
     <?= Html::activeHiddenInput($model, 'id') ?>
     <div class="row">
         <div class="col">
@@ -147,7 +177,63 @@ $this->title              = Yii::t('calendars', 'Calendars');
     <?php Modal::end() ?>
     <?php $this->params['modals'][] = ob_get_clean() ?>
 </div>
-
+<!-- Types -->
+<div>
+    <?php ob_start() ?>
+    <?php
+    Modal::begin([
+        'id'      => 'modalNewType',
+        'options' => ['class' => ''],
+        'title'   => Yii::t('app', 'Create'),
+        'footer'  => Html::a(Yii::t('app', 'Save'), null, ['class' => 'btn btn-sm btn-success', 'id' => 'saveNewType'])
+    ])
+    ?>
+    <?php $formType                     = ActiveForm::begin(['id' => 'formNewType', 'action' => ['type']]); ?>
+    <?= Html::activeHiddenInput($modelType, 'id') ?>
+    <?= $formType->field($modelType, 'title')->textInput() ?>
+    <?= $formType->field($modelType, 'description')->textarea() ?>
+    <?php ActiveForm::end(); ?>
+    <?php Modal::end() ?>
+    <?php $this->params['modals'][] = ob_get_clean() ?>
+</div>
+<div>
+    <?php ob_start() ?>
+    <?php
+    Modal::begin([
+        'id'      => 'modalListType',
+        'options' => ['class' => ''],
+        'title'   => 'تقویم',
+    ])
+    ?>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>عنوان</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($types as $type) {
+                ?>
+                <tr>
+                    <td><?= $type->id ?></td>
+                    <td><?= $type->title ?></td>
+                    <td>
+                        <a class="btn btn-sm btn-primary mb-0 editType" data-id="<?= $type->id ?>" data-title="<?= $type->title ?>" data-description="<?= $type->descriptions ?>"><i class="fa fa-edit"></i></a>
+                        <a class="btn btn-sm btn-danger mb-0 deleteType" data-id="<?= $type->id ?>"><i class="fa fa-times"></i></a>
+                    </td>
+                </tr>
+                <?php
+            }
+            ?>
+        </tbody>
+    </table>
+    <?php Modal::end() ?>
+    <?php $this->params['modals'][] = ob_get_clean() ?>
+</div>
+<!--  -->
 <?php
 $this->registerCssFile('@web/themes/custom/css/fullcalendar.min.css', ['depends' => \app\assets\AdminAsset::class]);
 $this->registerCss('
@@ -157,6 +243,10 @@ $this->registerCss('
     }
     .fc-basic-view td {cursor: pointer;}
     .fc-basic-view th {cursor: default;}
+    ul {list-style: none;padding: 0;margin: 0;}
+    ul li {line-height: 1;margin: 5px 0 0 0;display: inline-block;}
+    ul li label {margin: 0 !important;}
+    .modal-header, .modal-footer {padding: 5px;}
 ');
 $this->registerJsFile('@web/themes/custom/js/moment.min.js', ['depends' => \app\assets\AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/moment-jalaali.js', ['depends' => \app\assets\AdminAsset::class]);
@@ -164,6 +254,131 @@ $this->registerJsFile('@web/themes/custom/js/fullcalendar.min.js', ['depends' =>
 $this->registerJsFile('@web/themes/custom/js/locale-all.js', ['depends' => \app\assets\AdminAsset::class]);
 
 $this->registerJs("
+    //--------------------------------------------------------------------------
+    $('#calendarsvml-start_date').MdPersianDateTimePicker({
+        targetTextSelector: '#calendarsvml-start_date',
+        isGregorian: false,
+        yearOffset: 60
+    });
+    $('#calendarsvml-end_date').MdPersianDateTimePicker({
+        targetTextSelector: '#calendarsvml-end_date',
+        isGregorian: false,
+        yearOffset: 60
+    });
+    $(document).on('click', '[select-year-button]', function () {
+        setTimeout(function () {
+            var val1 = $('.select-year-box').css('height').replace('px', '');
+            var val2 = $('.select-year-box table').css('height').replace('px', '');
+            var val3 = (parseInt(val2) / 2) - (parseInt(val1) / 2);
+            $('.select-year-box').scrollTop(val3);
+        }, 200);
+    });
+    $(document).on('change', '.calendar_type', function (e) {
+        e.preventDefault();
+        if ($(this).data('id') === 'all') {
+            $('.calendar_type:not([data-id=\"all\"])').prop('checked', $(this).prop('checked'));
+        }
+        $('#calendar').fullCalendar('refetchEvents');
+    });
+    //--------------------------------------------------------------------------
+    $('.listType').on('click', function (e) {
+        $('#modalListType').modal('show');
+    });
+    $(document).on('click', '.editType', function (e) {
+        var id = $(this).data('id');
+        var title = $(this).data('title');
+        var description = $(this).data('description');
+        $('#calendarslisttypevml-id').val(id);
+        $('#calendarslisttypevml-title').val(title);
+        $('#calendarslisttypevml-description').val(description);
+        $('#modalListType').modal('hide');
+        $('#modalNewType').modal('show');
+    });
+    $(document).on('click', '.deleteType', function (e) {
+        var id = $(this).data('id');
+        if (confirm('" . Yii::t('app', 'Are you sure?') . "')) {
+            var formData = new FormData();
+            formData.append('id', id);
+            ajaxpost('" . Url::to(['delete-type']) . "', formData, function (result) {
+                if (result.saved) {
+                    $('.deleteType[data-id=\"' + id + '\"]').parents('tr').remove();
+                    $('#calendarsvml-type_id option[value=\"' + id + '\"]').remove();
+                    $('.calendar_type[data-id=\"' + id + '\"]').parents('li').remove();
+                }
+            });
+        }
+    });
+    $('#modalNewType').on('hidden.bs.modal', function () {
+        $('#formNewType').get(0).reset();
+        $('#calendarslisttypevml-id').val('');
+    });
+    $('.addType').on('click', function (e) {
+        $('#modalNewType').modal('show');
+    });
+    $('#saveNewType').on('click', function (e) {
+        e.preventDefault();
+        $('#formNewType').submit();
+    });
+    $('#formNewType').on('submit', function (e) {
+        e.preventDefault();
+        showloading();
+        $('#formNewType').yiiActiveForm('validate');
+        setTimeout(function () {
+            hideloading();
+            var errors = $('#formNewType').find('.is-invalid').length;
+            if (errors === 0) {
+                var url = $('#formNewType').attr('action');
+                var formData = new FormData($('#formNewType').get(0));
+                ajaxpost(url, formData, function (result) {
+                    if (result.saved === true) {
+                        $('.deleteType[data-id=\"' + result.data.id + '\"]').parents('tr').remove();
+                        $('#calendarsvml-type_id option[value=\"' + result.data.id + '\"]').remove();
+                        $('.calendar_type[data-id=\"' + result.data.id + '\"]').parents('li').remove();
+                        $('#ulListType').append(`<li><label class=\"btn btn-sm btn-primary\"><input type=\"checkbox\" class=\"calendar_type\" data-id=\"\${result.data.id}\"/> <span>\${result.data.title}</span></label></li>`);
+                        $('#calendarsvml-type_id').append(`<option value=\"\${result.data.id}\">\${result.data.title}</option>`);
+                        $('#modalListType tbody').append(`<tr><td>\${result.data.id}</td><td>\${result.data.title}</td><td><a class=\"btn btn-sm btn-primary mb-0 editType\" data-id=\"\${result.data.id}\" data-title=\"\${result.data.title}\" data-description=\"\${result.data.description}\"><i class=\"fa fa-edit\"></i></a> <a class=\"btn btn-sm btn-danger mb-0 deleteType\" data-id=\"\${result.data.id}\"><i class=\"fa fa-times\"></i></a></td></tr>`);
+                        $('#modalNewType').modal('hide');
+                    }
+                });
+            }
+        }, 500);
+    });
+    //--------------------------------------------------------------------------
+    $('#modalNew').on('hidden.bs.modal', function () {
+        $('.myselected').removeClass('myselected');
+        $('#formNew').get(0).reset();
+        $('#calendarsvml-id').val('');
+    });
+    $('#saveNew').on('click', function (e) {
+        e.preventDefault();
+        $('#formNew').submit();
+    });
+    $('#formNew').on('submit', function (e) {
+        e.preventDefault();
+        showloading();
+        $('#formNew').yiiActiveForm('validate');
+        setTimeout(function () {
+            hideloading();
+            var errors = $('#formNew').find('.is-invalid').length;
+            if (errors === 0) {
+                var url = $('#formNew').attr('action');
+                var formData = new FormData($('#formNew').get(0));
+                ajaxpost(url, formData, function (result) {
+                    if (result.saved === true) {
+                        if ($('#calendar').fullCalendar('clientEvents', result.data.id).length > 0) {
+                            var events = $('#calendar').fullCalendar('clientEvents', result.data.id);
+                            $('#calendar').fullCalendar('updateEvent', $.extend(events[0], result.data));
+                        }
+                        else {
+                            $('#calendar').fullCalendar('renderEvent', result.data);
+                        }
+                        $('#modalNew').modal('hide');
+                    }
+                });
+            }
+        }, 500);
+    });
+    //--------------------------------------------------------------------------
     $('.update').on('click', function (e) {
         var row = $(this).data('row');
         var s = row.start_date.split('/');
@@ -193,7 +408,7 @@ $this->registerJs("
         if (confirm('" . Yii::t('app', 'Are you sure?') . "')) {
             var formData = new FormData();
             formData.append('id', id);
-            ajaxpost('" . \yii\helpers\Url::to(['delete']) . "', formData, function (result) {
+            ajaxpost('" . Url::to(['delete']) . "', formData, function (result) {
                 if (result.saved) {
                     $('#calendar').fullCalendar('removeEvents', id);
                     $('#modalView').modal('hide');
@@ -204,53 +419,7 @@ $this->registerJs("
             });
         }
     });
-    $('#formNew').on('submit', function (e) {
-        e.preventDefault();
-        showloading();
-        $('#formNew').yiiActiveForm('validate');
-        setTimeout(function () {
-            hideloading();
-            var errors = $('#formNew').find('.has-error').length;
-            if (errors === 0) {
-                var url = $('#formNew').attr('action');
-                var formData = new FormData($('#formNew').get(0));
-                ajaxpost(url, formData, function (result) {
-                    if (result.saved === true) {
-                        $('#calendar').fullCalendar('removeEvents', result.data.id);
-                        $('#calendar').fullCalendar('renderEvent', result.data);
-                        $('#modalNew').modal('hide');
-                    }
-                });
-            }
-        }, 500);
-    });
-    $('#saveNew').on('click', function (e) {
-        e.preventDefault();
-        $('#formNew').submit();
-    });
-    $('#calendarsvml-start_date').MdPersianDateTimePicker({
-        targetTextSelector: '#calendarsvml-start_date',
-        isGregorian: false,
-        yearOffset: 60
-    });
-    $('#calendarsvml-end_date').MdPersianDateTimePicker({
-        targetTextSelector: '#calendarsvml-end_date',
-        isGregorian: false,
-        yearOffset: 60
-    });
-    $(document).on('click', '[select-year-button]', function () {
-        setTimeout(function () {
-            var val1 = $('.select-year-box').css('height').replace('px', '');
-            var val2 = $('.select-year-box table').css('height').replace('px', '');
-            var val3 = (parseInt(val2) / 2) - (parseInt(val1) / 2);
-            $('.select-year-box').scrollTop(val3);
-        }, 200);
-    });
-    $('#modalNew').on('hidden.bs.modal', function () {
-        $('.myselected').removeClass('myselected');
-        $('#formNew').get(0).reset();
-    });
-    
+    //--------------------------------------------------------------------------
     $('#calendar').fullCalendar({
         locale: 'fa',
         isJalaali: true,
@@ -267,9 +436,10 @@ $this->registerJs("
         eventRender: function (calEvent, element, view) {
             element.css('background-color', calEvent.favcolor);
             element.css('border-color', calEvent.favcolor);
-            return true;
+            console.log(calEvent.type_id, '.calendar_type[data-id=\"' + calEvent.type_id + '\"]', $('.calendar_type[data-id=\"' + calEvent.type_id + '\"]').prop('checked'));
+            return $('.calendar_type[data-id=\"' + calEvent.type_id + '\"]').prop('checked');
         },
-        events: " . json_encode($calendars) . ",
+        events: " . json_encode($model->getEvents()) . ",
         eventClick: function (event, jsEvent, view) {
             var \$modal = $('#modalView');
             \$modal.find('.update').data('row', event);
@@ -320,38 +490,9 @@ $this->registerJs("
     $('.fc-toolbar .fc-prev-button').html('قبل');
     $('.fc-toolbar .fc-next-button').html('بعد');
     $('.fc-toolbar .fc-left').prepend('<button class=\"btn printBtn\" onclick=\"print();\">پرینت</button>');
-    $('<input/>').val('" . functions::getjdate() . "').addClass('form-control form-control-sm')
-        .attr('id', 'fulldate')
-        .attr('style', 'direction: ltr;text-align: center;max-width: 150px;')
-        .MdPersianDateTimePicker({
-            targetTextSelector: '#fulldate',
-            isGregorian: false,
-            yearOffset: 60,
-            englishNumber: true,
-            //trigger: 
-        })
-        .on('hide.bs.popover', function () {
-            var m = moment(this.value, 'jYYYY/jMM/jDD');
-            var date = tr_num(m.format('YYYY-MM-DD'))
-            $('#calendar').fullCalendar('gotoDate', date);
-        })
-        .attr('placeholder', 'تاریخ')
-        .appendTo('.fc-left');
-    $('<input/>').addClass('form-control form-control-sm')
-        .attr('id', 'search')
-        .attr('placeholder', 'جستجو')
-        .attr('style', 'max-width: 150px;')
-        .on('input', function () {
-            var title = $(this).val();
-            console.log(title);
-            ajaxget('".yii\helpers\Url::to(['search'])."?title=' + title, {}, function (result) {
-                if (result && result.start) {
-                    $('#calendar').fullCalendar('gotoDate', result.start);
-                }
-            });
-        })
-        .appendTo('.fc-left');
-    
+    $('<input/>').val('" . functions::getjdate() . "').addClass('form-control form-control-sm').attr('id', 'fulldate').attr('style', 'direction: ltr;text-align: center;max-width: 150px;').attr('placeholder', 'تاریخ').appendTo('.fc-left').MdPersianDateTimePicker({targetTextSelector: '#fulldate', isGregorian: false, yearOffset: 60, englishNumber: true}).on('hide.bs.popover', function () { var m = moment(this.value, 'jYYYY/jMM/jDD'); var date = tr_num(m.format('YYYY-MM-DD')); $('#calendar').fullCalendar('gotoDate', date); });
+    $('<input/>').addClass('form-control form-control-sm').attr('id', 'search').attr('placeholder', 'جستجو').attr('style', 'max-width: 150px;').appendTo('.fc-left').on('input', function () { var title = $(this).val(); ajaxget('" . yii\helpers\Url::to(['search']) . "?title=' + title, {}, function (result) { if (result && result.start) { $('#calendar').fullCalendar('gotoDate', result.start); } }); });
+    //--------------------------------------------------------------------------
     function tr_num(fa) {
         return fa.toString()
         .replace(/-/g, '/')
@@ -366,4 +507,5 @@ $this->registerJs("
         .replace(/۸/g, '8')
         .replace(/۹/g, '9');
     }
+    //--------------------------------------------------------------------------
 ");

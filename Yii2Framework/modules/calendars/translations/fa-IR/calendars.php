@@ -5,7 +5,7 @@ return [
     'ID'                 => 'شناسه',
     'Title'              => 'عنوان',
     'Favcolor'           => 'رنگ پس زمینه',
-    'Type ID'            => 'نوع تقویم',
+    'Type ID'            => 'تقویم',
     'Status ID'          => 'وضعیت',
     'Location'           => 'موقعیت',
     'Start Date'         => 'تاریخ شروع',

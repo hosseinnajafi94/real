@@ -3,6 +3,7 @@ namespace app\modules\calendars\models\VML;
 use Yii;
 use yii\base\Model;
 use yii\web\UploadedFile;
+use app\config\components\functions;
 use app\modules\calendars\models\DAL\Calendars;
 use app\modules\calendars\models\SRL\CalendarsListTypeSRL;
 use app\modules\calendars\models\SRL\CalendarsListStatusSRL;
@@ -67,21 +68,13 @@ class CalendarsVML extends Model {
             'file' => Yii::t('calendars', 'Extensions: {exts}', ['exts' => 'png, jpg, jpeg, gif, zip'])
         ];
     }
-    public function loaditems(&$ar = null) {
-        if ($ar === null) {
-            $this->list_type       = CalendarsListTypeSRL::getItems();
-            $this->list_status     = CalendarsListStatusSRL::getItems();
-            $this->list_time       = CalendarsListTimeSRL::getItems();
-            $this->list_period     = CalendarsListPeriodSRL::getItems();
-            $this->list_alarm_type = CalendarsListAlarmTypeSRL::getItems();
-        }
-        else {
-            $ar['list_type']       = CalendarsListTypeSRL::getItems();
-            $ar['list_status']     = CalendarsListStatusSRL::getItems();
-            $ar['list_time']       = CalendarsListTimeSRL::getItems();
-            $ar['list_period']     = CalendarsListPeriodSRL::getItems();
-            $ar['list_alarm_type'] = CalendarsListAlarmTypeSRL::getItems();
-        }
+    public function loaditems() {
+        $this->list_type       = CalendarsListTypeSRL::getItems();
+        $this->list_status     = CalendarsListStatusSRL::getItems();
+        $this->list_time       = CalendarsListTimeSRL::getItems();
+        $this->list_period     = CalendarsListPeriodSRL::getItems();
+        $this->list_alarm_type = CalendarsListAlarmTypeSRL::getItems();
+        return $this;
     }
     public function save($post) {
         $oldFile = $this->file;
@@ -94,7 +87,7 @@ class CalendarsVML extends Model {
         if (!$this->validate()) {
             return false;
         }
-        $this->end_date = date('Y-m-d', strtotime($this->end_date . ' +1 day'));
+        $this->end_date   = date('Y-m-d', strtotime($this->end_date . ' +1 day'));
         $this->start_time = $this->start_date . ' ' . $this->start_time;
         $this->end_time   = $this->end_date . ' ' . $this->end_time;
         /* @var $model OrganizationsPlanning */
@@ -150,5 +143,22 @@ class CalendarsVML extends Model {
         $dest->alarm_type_id = $source->alarm_type_id;
         $dest->description   = $source->description;
         $dest->file          = $source->file;
+    }
+    public function getEvents() {
+        $events = Calendars::find()->select('*, cast(start_time as date) as `start`, cast(end_time as date) as `end`')->asArray()->all();
+        foreach ($events as &$row) {
+            $s                      = explode(' ', $row['start_time']);
+            $e                      = explode(' ', $row['end_time']);
+            $row['start_date']      = functions::tojdate($s[0]);
+            $row['end_date']        = functions::tojdate(date('Y-m-d', strtotime($e[0] . ' -1 day')));
+            $row['start_time']      = $s[1];
+            $row['end_time']        = $e[1];
+            $row['list_type']       = $this->list_type;
+            $row['list_status']     = $this->list_status;
+            $row['list_time']       = $this->list_time;
+            $row['list_period']     = $this->list_period;
+            $row['list_alarm_type'] = $this->list_alarm_type;
+        }
+        return $events;
     }
 }
