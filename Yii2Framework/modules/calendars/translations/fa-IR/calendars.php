@@ -12,9 +12,10 @@ return [
     'End Date'           => 'تاریخ پایان',
     'Start Time'         => 'ساعت شروع',
     'End Time'           => 'ساعت پایان',
-    'Time ID'            => 'زمان هشدار',
-    'Period ID'          => 'سیکل تکرار',
+    'Time ID'            => 'هشدار',
+    'Period ID'          => 'نوع تکرار',
     'Alarm Type ID'      => 'نوع اعلان',
     'Description'        => 'توضیحات',
     'File'               => 'فایل ضمیمه',
+    'Users'               => 'دعوت شدگان',
 ];

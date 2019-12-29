@@ -93,6 +93,7 @@ $this->title              = Yii::t('calendars', 'Calendars');
     <?= $form->field($model, 'time_id')->dropDownList($model->list_time) ?>
     <?= $form->field($model, 'period_id')->dropDownList($model->list_period) ?>
     <?= $form->field($model, 'alarm_type_id')->dropDownList($model->list_alarm_type) ?>
+    <?= $form->field($model, 'users')->select2($model->list_users, ['multiple' => true, 'class' => 'form-control form-control-sm']) ?>
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
     <?= $form->field($model, 'file')->fileInput() ?>
     <?php ActiveForm::end(); ?>
@@ -162,6 +163,10 @@ $this->title              = Yii::t('calendars', 'Calendars');
         <div class="row form-group">
             <label class="col-4"><?= $model->getAttributeLabel('alarm_type_id') ?></label>
             <div class="col-8" id="alarm_type_id"></div>
+        </div>
+        <div class="row form-group">
+            <label class="col-4"><?= $model->getAttributeLabel('users') ?></label>
+            <div class="col-8" id="users"></div>
         </div>
         <div class="row form-group">
             <label class="col-4"><?= $model->getAttributeLabel('description') ?></label>
@@ -238,14 +243,12 @@ $this->title              = Yii::t('calendars', 'Calendars');
 $this->registerCssFile('@web/themes/custom/css/fullcalendar.min.css', ['depends' => \app\assets\AdminAsset::class]);
 $this->registerCss('
     .fc-unthemed .fc-today {color: black !important;}
-    .myselected {
-        background-color: #bed7f3 !important;
-    }
+    .myselected {background-color: #bed7f3 !important;}
     .fc-basic-view td {cursor: pointer;}
     .fc-basic-view th {cursor: default;}
-    ul {list-style: none;padding: 0;margin: 0;}
-    ul li {line-height: 1;margin: 5px 0 0 0;display: inline-block;}
-    ul li label {margin: 0 !important;}
+    .bg-light ul {list-style: none;padding: 0;margin: 0;}
+    .bg-light ul li {line-height: 1;margin: 5px 0 0 0;display: inline-block;}
+    .bg-light ul li label {margin: 0 !important;}
     .modal-header, .modal-footer {padding: 5px;}
 ');
 $this->registerJsFile('@web/themes/custom/js/moment.min.js', ['depends' => \app\assets\AdminAsset::class]);
@@ -399,6 +402,8 @@ $this->registerJs("
         $('#calendarsvml-period_id').val(row.period_id);
         $('#calendarsvml-alarm_type_id').val(row.alarm_type_id);
         $('#calendarsvml-description').val(row.description);
+        $('#calendarsvml-users').val(row.users);
+        $('#calendarsvml-users').trigger('change');
         $('#modalView').modal('hide');
         $('#modalNew').modal('show');
     });
@@ -436,11 +441,15 @@ $this->registerJs("
         eventRender: function (calEvent, element, view) {
             element.css('background-color', calEvent.favcolor);
             element.css('border-color', calEvent.favcolor);
-            console.log(calEvent.type_id, '.calendar_type[data-id=\"' + calEvent.type_id + '\"]', $('.calendar_type[data-id=\"' + calEvent.type_id + '\"]').prop('checked'));
             return $('.calendar_type[data-id=\"' + calEvent.type_id + '\"]').prop('checked');
         },
         events: " . json_encode($model->getEvents()) . ",
         eventClick: function (event, jsEvent, view) {
+            var list = [];
+            for (var i in event.users) {
+                list.push(event.list_users[event.users[i]]);
+            }
+            var users = list.join('، ');
             var \$modal = $('#modalView');
             \$modal.find('.update').data('row', event);
             \$modal.find('.delete').data('row', event);
@@ -456,6 +465,7 @@ $this->registerJs("
             \$modal.find('#time_id').text(event.list_time[event.time_id]);
             \$modal.find('#period_id').text(event.list_period[event.period_id]);
             \$modal.find('#alarm_type_id').text(event.list_alarm_type[event.alarm_type_id]);
+            \$modal.find('#users').text(users);
             \$modal.find('#description').text(event.description);
             \$modal.find('#file').attr('src', '" . Yii::getAlias('@web/uploads/calendars') . "/' + event.file);
             \$modal.modal('show');

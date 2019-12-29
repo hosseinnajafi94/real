@@ -29,6 +29,7 @@ use app\modules\users\models\DAL\Users;
  * @property CalendarsListTime $time
  * @property CalendarsListPeriod $period
  * @property CalendarsListAlarmType $alarmType
+ * @property CalendarsUsers[] $calendarsUsers
  */
 class Calendars extends \yii\db\ActiveRecord
 {
@@ -128,5 +129,13 @@ class Calendars extends \yii\db\ActiveRecord
     public function getAlarmType()
     {
         return $this->hasOne(CalendarsListAlarmType::className(), ['id' => 'alarm_type_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendarsUsers()
+    {
+        return $this->hasMany(CalendarsUsers::className(), ['calendar_id' => 'id']);
     }
 }

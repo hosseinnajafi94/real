@@ -4,7 +4,9 @@ use Yii;
 use yii\base\Model;
 use yii\web\UploadedFile;
 use app\config\components\functions;
+use app\modules\users\models\SRL\UsersSRL;
 use app\modules\calendars\models\DAL\Calendars;
+use app\modules\calendars\models\DAL\CalendarsUsers;
 use app\modules\calendars\models\SRL\CalendarsListTypeSRL;
 use app\modules\calendars\models\SRL\CalendarsListStatusSRL;
 use app\modules\calendars\models\SRL\CalendarsListTimeSRL;
@@ -26,12 +28,14 @@ class CalendarsVML extends Model {
     public $alarm_type_id;
     public $description;
     public $file;
+    public $users           = [];
     //
     public $list_type       = [];
     public $list_status     = [];
     public $list_time       = [];
     public $list_period     = [];
     public $list_alarm_type = [];
+    public $list_users      = [];
     //
     public $model;
     //
@@ -41,7 +45,8 @@ class CalendarsVML extends Model {
                 [['start_date', 'end_date', 'start_time', 'end_time'], 'safe'],
                 [['description'], 'string'],
                 [['title', 'favcolor', 'location'], 'string', 'max' => 255],
-                [['file'], 'file', 'extensions' => 'png, jpg, jpeg, gif, zip']
+                [['file'], 'file', 'extensions' => 'png, jpg, jpeg, gif, zip'],
+                [['users'], 'each', 'rule' => ['integer']]
         ];
     }
     public function attributeLabels() {
@@ -61,6 +66,7 @@ class CalendarsVML extends Model {
             'alarm_type_id' => Yii::t('calendars', 'Alarm Type ID'),
             'description'   => Yii::t('calendars', 'Description'),
             'file'          => Yii::t('calendars', 'File'),
+            'users'         => Yii::t('calendars', 'Users'),
         ];
     }
     public function attributeHints() {
@@ -74,6 +80,7 @@ class CalendarsVML extends Model {
         $this->list_time       = CalendarsListTimeSRL::getItems();
         $this->list_period     = CalendarsListPeriodSRL::getItems();
         $this->list_alarm_type = CalendarsListAlarmTypeSRL::getItems();
+        $this->list_users      = UsersSRL::getItems();
         return $this;
     }
     public function save($post) {
@@ -81,8 +88,8 @@ class CalendarsVML extends Model {
         if (!$this->load($post)) {
             return false;
         }
-        $this->start_date = \app\config\components\functions::togdate($this->start_date);
-        $this->end_date   = \app\config\components\functions::togdate($this->end_date);
+        $this->start_date = functions::togdate($this->start_date);
+        $this->end_date   = functions::togdate($this->end_date);
         $this->file       = UploadedFile::getInstance($this, 'file');
         if (!$this->validate()) {
             return false;
@@ -112,6 +119,17 @@ class CalendarsVML extends Model {
         if (!$model->save()) {
             return false;
         }
+
+        CalendarsUsers::deleteAll(['calendar_id' => $model->id]);
+        if (is_array($this->users)) {
+            foreach ($this->users as $userId) {
+                $row              = new CalendarsUsers();
+                $row->calendar_id = $model->id;
+                $row->user_id     = $userId;
+                $row->save();
+            }
+        }
+
         $this->id = $model->id;
         return true;
     }
@@ -153,11 +171,18 @@ class CalendarsVML extends Model {
             $row['end_date']        = functions::tojdate(date('Y-m-d', strtotime($e[0] . ' -1 day')));
             $row['start_time']      = $s[1];
             $row['end_time']        = $e[1];
+            $rows2 = CalendarsUsers::find()->where(['calendar_id' => $row['id']])->asArray()->all();
+            $users = [];
+            foreach ($rows2 as $row2) {
+                $users[] = $row['user_id'];
+            }
+            $row['users']           = $users;
             $row['list_type']       = $this->list_type;
             $row['list_status']     = $this->list_status;
             $row['list_time']       = $this->list_time;
             $row['list_period']     = $this->list_period;
             $row['list_alarm_type'] = $this->list_alarm_type;
+            $row['list_users']      = $this->list_users;
         }
         return $events;
     }
