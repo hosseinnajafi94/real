@@ -37,8 +37,8 @@ $this->title              = Yii::t('calendars', 'Calendars');
                         ?>
                         <li>
                             <label class="btn btn-sm btn-primary">
-                                <input type="checkbox" class="calendar_type" data-id="<?= $type->id ?>"/>
-                                <span><?= $type->title ?></span>
+                                <input type="checkbox" class="calendar_type" data-id="<?= $type['id'] ?>"/>
+                                <span><?= $type['title'] ?></span>
                             </label>
                         </li>
                         <?php
@@ -235,11 +235,11 @@ $this->title              = Yii::t('calendars', 'Calendars');
             foreach ($types as $type) {
                 ?>
                 <tr>
-                    <td><?= $type->id ?></td>
-                    <td><?= $type->title ?></td>
+                    <td><?= $type['id'] ?></td>
+                    <td><?= $type['title'] ?></td>
                     <td>
-                        <a class="btn btn-sm btn-primary mb-0 editType" data-id="<?= $type->id ?>" data-title="<?= $type->title ?>" data-description="<?= $type->descriptions ?>"><i class="fa fa-edit"></i></a>
-                        <a class="btn btn-sm btn-danger mb-0 deleteType" data-id="<?= $type->id ?>"><i class="fa fa-times"></i></a>
+                        <a class="btn btn-sm btn-primary mb-0 editType" data-id="<?= $type['id'] ?>"><i class="fa fa-edit"></i></a>
+                        <a class="btn btn-sm btn-danger mb-0 deleteType" data-id="<?= $type['id'] ?>"><i class="fa fa-times"></i></a>
                     </td>
                 </tr>
                 <?php
@@ -269,6 +269,7 @@ $this->registerJsFile('@web/themes/custom/js/fullcalendar.min.js', ['depends' =>
 $this->registerJsFile('@web/themes/custom/js/locale-all.js', ['depends' => \app\assets\AdminAsset::class]);
 
 $this->registerJs("
+    var types = ". json_encode($types).";
     //--------------------------------------------------------------------------
     $('#calendarsvml-start_date').MdPersianDateTimePicker({
         targetTextSelector: '#calendarsvml-start_date',
@@ -301,11 +302,18 @@ $this->registerJs("
     });
     $(document).on('click', '.editType', function (e) {
         var id = $(this).data('id');
-        var title = $(this).data('title');
-        var description = $(this).data('description');
-        $('#calendarslisttypevml-id').val(id);
-        $('#calendarslisttypevml-title').val(title);
-        $('#calendarslisttypevml-description').val(description);
+        var row = types.find(function (type) {
+            return type.id == id;
+        });
+        $('#calendarslisttypevml-id').val(row.id);
+        $('#calendarslisttypevml-title').val(row.title);
+        $('#calendarslisttypevml-description').val(row.description);
+        $('#calendarslisttypevml-sections1').val(row.sections1);
+        $('#calendarslisttypevml-sections1').trigger('change');
+        $('#calendarslisttypevml-sections2').val(row.sections2);
+        $('#calendarslisttypevml-sections2').trigger('change');
+        $('#calendarslisttypevml-sections3').val(row.sections3);
+        $('#calendarslisttypevml-sections3').trigger('change');
         $('#modalListType').modal('hide');
         $('#modalNewType').modal('show');
     });
@@ -319,12 +327,21 @@ $this->registerJs("
                     $('.deleteType[data-id=\"' + id + '\"]').parents('tr').remove();
                     $('#calendarsvml-type_id option[value=\"' + id + '\"]').remove();
                     $('.calendar_type[data-id=\"' + id + '\"]').parents('li').remove();
+                    var index = types.findIndex(function (row) {
+                        return row.id == id;
+                    });
+                    if (index !== -1) {
+                        types.splice(index, 1);
+                    }
                 }
             });
         }
     });
     $('#modalNewType').on('hidden.bs.modal', function () {
         $('#formNewType').get(0).reset();
+        $('#calendarslisttypevml-sections1').trigger('change');
+        $('#calendarslisttypevml-sections2').trigger('change');
+        $('#calendarslisttypevml-sections3').trigger('change');
         $('#calendarslisttypevml-id').val('');
     });
     $('.addType').on('click', function (e) {
@@ -353,6 +370,13 @@ $this->registerJs("
                         $('#calendarsvml-type_id').append(`<option value=\"\${result.data.id}\">\${result.data.title}</option>`);
                         $('#modalListType tbody').append(`<tr><td>\${result.data.id}</td><td>\${result.data.title}</td><td><a class=\"btn btn-sm btn-primary mb-0 editType\" data-id=\"\${result.data.id}\" data-title=\"\${result.data.title}\" data-description=\"\${result.data.description}\"><i class=\"fa fa-edit\"></i></a> <a class=\"btn btn-sm btn-danger mb-0 deleteType\" data-id=\"\${result.data.id}\"><i class=\"fa fa-times\"></i></a></td></tr>`);
                         $('#modalNewType').modal('hide');
+                        var index = types.findIndex(function (row) {
+                            return row.id == result.data.id;
+                        });
+                        if (index !== -1) {
+                            types.splice(index, 1);
+                        }
+                        types.push(result.data);
                     }
                 });
             }
@@ -362,6 +386,7 @@ $this->registerJs("
     $('#modalNew').on('hidden.bs.modal', function () {
         $('.myselected').removeClass('myselected');
         $('#formNew').get(0).reset();
+        $('#calendarsvml-users').trigger('change');
         $('#calendarsvml-id').val('');
     });
     $('#saveNew').on('click', function (e) {

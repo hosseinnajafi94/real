@@ -95,6 +95,13 @@ class CalendarsListTypeVML extends Model {
         return true;
     }
     public function getTypes() {
-        return CalendarsListType::find()->orderBy(['id' => SORT_ASC])->all();
+        $types = CalendarsListType::find()->orderBy(['id' => SORT_ASC])->asArray()->all();
+        foreach ($types as &$type) {
+            $rows = CalendarsSections::find()->where(['type_id' => $type['id']])->asArray()->all();
+            foreach ($rows as $row) {
+                $type['sections' . $row['section_id']][] = $row['user_id'];
+            }
+        }
+        return $types;
     }
 }
