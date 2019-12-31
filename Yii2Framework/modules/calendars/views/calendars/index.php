@@ -4,10 +4,13 @@ use yii\bootstrap4\Html;
 use yii\bootstrap4\Modal;
 use app\config\widgets\ActiveForm;
 use app\config\components\functions;
+use yii\widgets\Pjax;
+use app\config\widgets\GridView;
+use app\config\widgets\ActionColumn;
 /* @var $this yii\web\View */
 /* @var $model \app\modules\calendars\models\VML\CalendarsVML */
 /* @var $modelType \app\modules\calendars\models\VML\CalendarsListTypeVML */
-$this->title              = Yii::t('calendars', 'Calendars');
+$this->title = Yii::t('calendars', 'Calendars');
 //$this->params['breadcrumbs'][] = $this->title;
 ?>
 <!--  -->
@@ -20,33 +23,70 @@ $this->title              = Yii::t('calendars', 'Calendars');
             <p><?= Yii::t('app', '') ?></p>
         </div>
         <div class="card-block">
-            <div class="border p-1 mb-1 bg-light" style="border-radius: 4px;">
-                <p class="mb-2">تقویم</p>
-                <a class="btn btn-sm btn-success mb-0 addType">تقویم جدید</a>
-                <a class="btn btn-sm btn-secondary mb-0 listType"><i class="fa fa-edit"></i></a>
-                <ul id="ulListType">
-                    <li>
-                        <label class="btn btn-sm btn-primary">
-                            <input type="checkbox" class="calendar_type" data-id="all"/>
-                            <span>همه</span>
-                        </label>
-                    </li>
-                    <?php
-                    $types = $modelType->getTypes();
-                    foreach ($types as $type) {
-                        ?>
-                        <li>
-                            <label class="btn btn-sm btn-primary">
-                                <input type="checkbox" class="calendar_type" data-id="<?= $type['id'] ?>"/>
-                                <span><?= $type['title'] ?></span>
-                            </label>
-                        </li>
-                        <?php
-                    }
+            <ul class="nav nav-tabs">
+                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#page1">تقویم</a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page2">مدیریت</a></li>
+            </ul>
+            <div class="tab-content px-1">
+                <div class="tab-pane active show" id="page1">
+                    <div class="border p-1 mb-1 bg-light" style="border-radius: 4px;">
+                        <p class="mb-2">تقویم</p>
+                        <a class="btn btn-sm btn-success mb-0 addType">تقویم جدید</a>
+                        <a class="btn btn-sm btn-secondary mb-0 listType"><i class="fa fa-edit"></i></a>
+                        <ul id="ulListType">
+                            <li>
+                                <label class="btn btn-sm btn-primary">
+                                    <input type="checkbox" class="calendar_type" data-id="all"/>
+                                    <span>همه</span>
+                                </label>
+                            </li>
+                            <?php
+                            $types       = $modelType->getTypes();
+                            foreach ($types as $type) {
+                                ?>
+                                <li>
+                                    <label class="btn btn-sm btn-primary">
+                                        <input type="checkbox" class="calendar_type" data-id="<?= $type['id'] ?>"/>
+                                        <span><?= $type['title'] ?></span>
+                                    </label>
+                                </li>
+                                <?php
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                    <div id="calendar"></div>
+                </div>
+                <div class="tab-pane" id="page2">
+                    <?php Pjax::begin(); ?>
+                    <?=
+                    GridView::widget([
+                        'layout'         => '
+                            {items}
+                            {summary}
+                            {pager}
+                        ',
+                        'summaryOptions' => ['class' => 'summary pull-right'],
+                        'pager'          => [
+                            'options'                       => ['class' => 'pagination pagination-sm pull-left', 'style' => 'margin-left: 2px;'],
+                            'linkContainerOptions'          => ['class' => 'page-item'],
+                            'linkOptions'                   => ['class' => 'page-link'],
+                            'disabledListItemSubTagOptions' => ['class' => 'page-link disabled']
+                        ],
+                        'dataProvider'   => $data,
+                        'filterModel'    => $search,
+                        'columns'        => [
+                                ['class' => 'yii\grid\SerialColumn'],
+                            'title',
+                                [
+                                'class' => ActionColumn::class,
+                            ],
+                        ],
+                    ]);
                     ?>
-                </ul>
+                    <?php Pjax::end() ?>
+                </div>
             </div>
-            <div id="calendar"></div>
         </div>
     </div>
 </div>
@@ -194,7 +234,7 @@ $this->title              = Yii::t('calendars', 'Calendars');
         'footer'  => Html::a(Yii::t('app', 'Save'), null, ['class' => 'btn btn-sm btn-success', 'id' => 'saveNewType'])
     ])
     ?>
-    <?php $formType                     = ActiveForm::begin(['id' => 'formNewType', 'action' => ['type']]); ?>
+    <?php $formType                 = ActiveForm::begin(['id' => 'formNewType', 'action' => ['type']]); ?>
     <?= Html::activeHiddenInput($modelType, 'id') ?>
     <?= $formType->field($modelType, 'title')->textInput() ?>
     <?= $formType->field($modelType, 'description')->textarea() ?>
@@ -269,7 +309,7 @@ $this->registerJsFile('@web/themes/custom/js/fullcalendar.min.js', ['depends' =>
 $this->registerJsFile('@web/themes/custom/js/locale-all.js', ['depends' => \app\assets\AdminAsset::class]);
 
 $this->registerJs("
-    var types = ". json_encode($types).";
+    var types = " . json_encode($types) . ";
     //--------------------------------------------------------------------------
     $('#calendarsvml-start_date').MdPersianDateTimePicker({
         targetTextSelector: '#calendarsvml-start_date',

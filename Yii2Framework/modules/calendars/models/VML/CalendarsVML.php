@@ -94,7 +94,6 @@ class CalendarsVML extends Model {
         if (!$this->validate()) {
             return false;
         }
-        $this->end_date   = date('Y-m-d', strtotime($this->end_date . ' +1 day'));
         $this->start_time = $this->start_date . ' ' . $this->start_time;
         $this->end_time   = $this->end_date . ' ' . $this->end_time;
         /* @var $model OrganizationsPlanning */
@@ -163,26 +162,26 @@ class CalendarsVML extends Model {
         $dest->file          = $source->file;
     }
     public function getEvents() {
-        $events = Calendars::find()->select('*, cast(start_time as date) as `start`, cast(end_time as date) as `end`')->asArray()->all();
-        foreach ($events as &$row) {
-            $s                      = explode(' ', $row['start_time']);
-            $e                      = explode(' ', $row['end_time']);
-            $row['start_date']      = functions::tojdate($s[0]);
-            $row['end_date']        = functions::tojdate(date('Y-m-d', strtotime($e[0] . ' -1 day')));
-            $row['start_time']      = $s[1];
-            $row['end_time']        = $e[1];
-            $rows2 = CalendarsUsers::find()->where(['calendar_id' => $row['id']])->asArray()->all();
-            $users = [];
-            foreach ($rows2 as $row2) {
+        $events = Calendars::find()->select('*, start_time as `start`, end_time as `end`')->asArray()->all();
+        foreach ($events as &$event) {
+            $s                   = explode(' ', $event['start_time']);
+            $e                   = explode(' ', $event['end_time']);
+            $event['start_date'] = functions::tojdate($s[0]);
+            $event['end_date']   = functions::tojdate($e[0]);
+            $event['start_time'] = $s[1];
+            $event['end_time']   = $e[1];
+            $rows                = CalendarsUsers::find()->where(['calendar_id' => $event['id']])->asArray()->all();
+            $users               = [];
+            foreach ($rows as $row) {
                 $users[] = $row['user_id'];
             }
-            $row['users']           = $users;
-            $row['list_type']       = $this->list_type;
-            $row['list_status']     = $this->list_status;
-            $row['list_time']       = $this->list_time;
-            $row['list_period']     = $this->list_period;
-            $row['list_alarm_type'] = $this->list_alarm_type;
-            $row['list_users']      = $this->list_users;
+            $event['users']           = $users;
+            $event['list_type']       = $this->list_type;
+            $event['list_status']     = $this->list_status;
+            $event['list_time']       = $this->list_time;
+            $event['list_period']     = $this->list_period;
+            $event['list_alarm_type'] = $this->list_alarm_type;
+            $event['list_users']      = $this->list_users;
         }
         return $events;
     }
