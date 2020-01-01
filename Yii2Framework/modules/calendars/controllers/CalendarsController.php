@@ -1,15 +1,16 @@
 <?php
 namespace app\modules\calendars\controllers;
 use Yii;
+use yii\helpers\Url;
 use yii\filters\VerbFilter;
-use app\config\widgets\Controller;
 use app\config\components\jdf;
+use app\config\widgets\Controller;
 use app\config\components\functions;
 use app\modules\calendars\models\DAL\Calendars;
-use app\modules\calendars\models\DAL\CalendarsListType;
 use app\modules\calendars\models\VML\CalendarsVML;
-use app\modules\calendars\models\VML\CalendarsListTypeVML;
+use app\modules\calendars\models\DAL\CalendarsListType;
 use app\modules\calendars\models\VML\CalendarsSearchVML;
+use app\modules\calendars\models\VML\CalendarsListTypeVML;
 class CalendarsController extends Controller {
     public function behaviors() {
         return [
@@ -101,6 +102,18 @@ class CalendarsController extends Controller {
         return $this->asJson(['saved' => false, 'errors' => $model->getErrors()]);
     }
     //
+    public function actionCreate($date, $time1, $time2) {
+        $model             = CalendarsVML::newInstance();
+        $model->start_date = $date;
+        $model->end_date   = $date;
+        $model->start_time = $time1;
+        $model->end_time   = $time2;
+        if ($model->save(Yii::$app->request->post())) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+        $model->loaditems();
+        return $this->renderView($model);
+    }
     public function actionView($id) {
         $model = CalendarsVML::find($id);
         if ($model === null) {
@@ -147,7 +160,8 @@ class CalendarsController extends Controller {
                 'start_time' => $session_start_time,
                 'end_time'   => $session_end_time,
                 'rowId'      => null,
-                //'rowId'      => $day === 'جمعه' ? false : null,
+                'url'        => Url::to(['create', 'date' => $date, 'time1' => $session_start_time, 'time2' => $session_end_time])
+                    //'rowId'      => $day === 'جمعه' ? false : null,
             ];
         }
         if ($select) {

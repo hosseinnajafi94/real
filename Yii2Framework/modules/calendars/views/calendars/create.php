@@ -9,6 +9,6 @@
 //$this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
 //$this->params['breadcrumbs'][] = Yii::t('calendars', 'Update');
 ?>
-<div class="calendars-update">
+<div class="calendars-create">
     <?= $this->render('_form', ['model' => $model]) ?>
 </div>

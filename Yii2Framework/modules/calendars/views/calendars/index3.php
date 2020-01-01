@@ -70,14 +70,6 @@ $('#session_start_time, #session_end_time').timeDropper({
     format: 'HH:mm:00',
     //autoswitch: true,
 });
-$(document).on('click', '[select-year-button]', function () {
-    setTimeout(function () {
-        var val1 = $('.select-year-box').css('height').replace('px', '');
-        var val2 = $('.select-year-box table').css('height').replace('px', '');
-        var val3 = (parseInt(val2) / 2) - (parseInt(val1) / 2);
-        $('.select-year-box').scrollTop(val3);
-    }, 200);
-});
 $('#session_search').click(function () {
     
     var session_start_time = $('#session_start_time').val();
@@ -99,7 +91,7 @@ $('#session_search').click(function () {
                     <td class=\"text-center\" style=\"vertical-align: middle;\">\${row.day}</td>
                     <td class=\"text-center\" style=\"vertical-align: middle;direction: ltr;\">\${row.date}</td>
                     <td class=\"text-center\" style=\"vertical-align: middle;direction: ltr;\">\${row.start_time} الی \${row.end_time}</td>
-                    <td>\${(row.rowId === null ? '<a class=\"btn btn-sm btn-primary mb-0\">انتخاب</a>' : '')}</td>
+                    <td>\${(row.rowId === null ? '<a href=\"' + row.url + '\" class=\"btn btn-sm btn-primary mb-0\">انتخاب</a>' : '')}</td>
                 </tr>
             `);
         }
