@@ -1,4 +1,5 @@
 <?php
+use app\assets\AdminAsset;
 /* @var $this \yii\web\View */
 /* @var $model \app\modules\calendars\models\VML\CalendarsVML */
 /* @var $modelType \app\modules\calendars\models\VML\CalendarsListTypeVML */
@@ -6,6 +7,8 @@
 /* @var $search \app\modules\calendars\models\VML\CalendarsSearchVML */
 $this->title = Yii::t('calendars', 'Calendars');
 //$this->params['breadcrumbs'][] = $this->title;
+$this->registerCssFile('@web/themes/custom/libs/timepicker/timepicker.css', ['depends' => AdminAsset::class]);
+$this->registerJsFile('@web/themes/custom/libs/timepicker/timepicker.js', ['depends' => AdminAsset::class]);
 ?>
 <!--  -->
 <div class="calendars-index">

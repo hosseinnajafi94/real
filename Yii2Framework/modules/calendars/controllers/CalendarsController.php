@@ -3,6 +3,7 @@ namespace app\modules\calendars\controllers;
 use Yii;
 use yii\filters\VerbFilter;
 use app\config\widgets\Controller;
+use app\config\components\jdf;
 use app\config\components\functions;
 use app\modules\calendars\models\DAL\Calendars;
 use app\modules\calendars\models\DAL\CalendarsListType;
@@ -124,5 +125,45 @@ class CalendarsController extends Controller {
         }
         $model->delete();
         return $this->redirect(['index']);
+    }
+    public function actionSearchSession() {
+        $session_start_time = Yii::$app->request->post('session_start_time');
+        $session_end_time   = Yii::$app->request->post('session_end_time');
+        $session_start_date = Yii::$app->request->post('session_start_date');
+        $session_end_date   = Yii::$app->request->post('session_end_date');
+        $gstart             = functions::togdate($session_start_date);
+        $days               = $this->getDiffDays($session_start_date, $session_end_date);
+        $select             = [];
+        $output             = [];
+        for ($index = 0; $index <= $days; $index++) {
+            $day           = jdf::jdate('l', strtotime($gstart . ' +' . $index . ' days'));
+            $date          = jdf::jdate('Y/m/d', strtotime($gstart . ' +' . $index . ' days'));
+            $start_time    = date('Y/m/d H:i:s', strtotime($gstart . ' ' . $session_start_time . ' +' . $index . ' days'));
+            $end_time      = date('Y/m/d H:i:s', strtotime($gstart . ' ' . $session_end_time . ' +' . $index . ' days'));
+            $select[]      = "SELECT '$date' as date, id FROM `calendars` as m2 WHERE ((m2.start_time <= '$start_time' AND m2.end_time >= '$start_time') OR (m2.start_time <  '$end_time' AND m2.end_time >= '$end_time') OR ('$start_time' <= m2.start_time AND '$end_time' >= m2.start_time))";
+            $output[$date] = [
+                'day'        => $day,
+                'date'       => $date,
+                'start_time' => $session_start_time,
+                'end_time'   => $session_end_time,
+                'rowId'      => null,
+                //'rowId'      => $day === 'جمعه' ? false : null,
+            ];
+        }
+        if ($select) {
+            $rows = functions::queryAll('SELECT c.date, c.id FROM (' . implode(' UNION ', $select) . ') as c GROUP BY c.date');
+            foreach ($rows as $row) {
+                $output[$row['date']]['rowId'] = $row['id'];
+            }
+        }
+        return $this->asJson(['rows' => $output]);
+    }
+    public function getDiffDays($start, $end) {
+        $start1 = functions::togdate($start);
+        $end1   = functions::togdate($end);
+        $s      = new \DateTime($start1);
+        $e      = new \DateTime($end1);
+        $d      = $e->diff($s);
+        return $d->days;
     }
 }

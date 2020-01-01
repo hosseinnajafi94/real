@@ -1,6 +1,10 @@
 /* global urlSearch, today, moment, urlCalendars, events, areYouSure, urlDelete, types */
 
 $(function () {
+    $('#calendarsvml-start_time, #calendarsvml-end_time').timeDropper({
+        format: 'HH:mm:00'
+        //autoswitch: true,
+    });
     //--------------------------------------------------------------------------
     $('#calendarsvml-start_date').MdPersianDateTimePicker({
         targetTextSelector: '#calendarsvml-start_date',
