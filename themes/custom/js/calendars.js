@@ -3,7 +3,7 @@
 $(function () {
     $('#calendarsvml-start_time, #calendarsvml-end_time').timeDropper({
         format: 'HH:mm:00'
-        //autoswitch: true,
+                //autoswitch: true,
     });
     //--------------------------------------------------------------------------
     $('#calendarsvml-start_date').MdPersianDateTimePicker({
@@ -208,7 +208,7 @@ $(function () {
         timeFormat: 'HH:mm',
         header: {
             left: 'agendaDay,agendaWeek,month next today prev print'
-            //center: 'title',
+                    //center: 'title',
         },
         eventRender: function (calEvent, element, view) {
             element.css('background-color', calEvent.favcolor);
@@ -277,14 +277,18 @@ $(function () {
         var date = tr_num(m.format('YYYY-MM-DD'));
         $('#calendar').fullCalendar('gotoDate', date);
     });
-    $('<input/>').addClass('form-control form-control-sm').attr('id', 'search').attr('placeholder', 'جستجو').attr('style', 'max-width: 150px;').appendTo('.fc-left').on('input', function () {
+    $('<div/>').attr('style', 'max-width: 150px;').attr('id', 'search_event').appendTo('.fc-left');
+    $('<input/>').addClass('form-control form-control-sm').attr('id', 'search').attr('placeholder', 'جستجو').attr('style', 'max-width: 150px;').appendTo('#search_event').on('input', function () {
         var title = $(this).val();
-        ajaxget(urlSearch + '?title=' + title, {}, function (result) {
-            if (result && result.start) {
-                $('#calendar').fullCalendar('gotoDate', result.start);
-            }
-        });
+        searchEvent(title);
+    }).focus(function () {
+        var title = $(this).val();
+        if (title) {
+            searchEvent(title);
+        }
     });
+    $('<ul/>').attr('class', 'bg-light border').attr('id', 'search_event_result').appendTo('#search_event');
+
     //--------------------------------------------------------------------------
     function tr_num(fa) {
         return fa.toString()
@@ -300,5 +304,38 @@ $(function () {
                 .replace(/۸/g, '8')
                 .replace(/۹/g, '9');
     }
+    var interV = null;
+    function searchEvent(title) {
+        clearTimeout(interV);
+        interV = setTimeout(function () {
+            ajaxget(urlSearch + '?title=' + title, {}, function (result) {
+                var $ul = $('#search_event_result');
+                $ul.html('');
+                if (result.models.length === 0) {
+                    $ul.append(`<li>رویدادی یافت نشد!</li>`);
+                }
+                else {
+                    result.models.forEach(function (row) {
+                        $ul.append(`
+                            <li data-date="${row.start}">
+                                <span class="title">${row.title}</span>
+                                <span class="time">${row.start_title}</span>
+                            </li>
+                        `);
+                    });
+                }
+                $('#search_event_result').addClass('active');
+            });
+        }, 500);
+    }
+    $(document).on('click', '#search_event_result li[data-date]', function () {
+        var date = $(this).data('date');
+        var date_title = $(this).find('.time').text();
+        $('#fulldate').val(date_title);
+        $('#calendar').fullCalendar('gotoDate', date);
+    });
+    $(document).on('click', function () {
+        $('#search_event_result').removeClass('active');
+    });
     //-------------------------------------------------------------------------- 
 });

@@ -64,12 +64,17 @@ class CalendarsController extends Controller {
         if (!Yii::$app->request->isAjax) {
             return functions::httpNotFound();
         }
-        $model = Calendars::find()->where(['user_id' => Yii::$app->user->id])->andWhere(['like', 'title', $title])->one();
-        if ($model === null) {
-            return $this->asJson(['saved' => false]);
+        $models = Calendars::find()
+                ->select('title, cast(start_time as date) as start')
+                ->where(['user_id' => Yii::$app->user->id])
+                ->andWhere(['like', 'title', $title])
+                ->asArray()
+                ->orderBy(['start_time' => SORT_DESC])
+                ->all();
+        foreach ($models as &$model) {
+            $model['start_title'] = functions::tojdate($model['start']);
         }
-        $datetime = explode(' ', $model->start_time);
-        return $this->asJson(['saved' => true, 'start' => $datetime[0]]);
+        return $this->asJson(['models' => $models]);
     }
     public function actionEvent() {
         if (!Yii::$app->request->isAjax) {

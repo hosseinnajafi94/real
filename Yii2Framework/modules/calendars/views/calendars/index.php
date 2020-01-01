@@ -13,14 +13,14 @@ $this->registerJsFile('@web/themes/custom/libs/timepicker/timepicker.js', ['depe
 <!--  -->
 <div class="calendars-index">
     <div class="card">
-        <div class="card-header ">
+        <div class="card-header hidden-print">
             <div class="card-title-wrap bar-success">
                 <h4 class="card-title"><?= Yii::t('calendars', 'Calendars') ?></h4>
             </div>
             <p><?= Yii::t('app', '') ?></p>
         </div>
         <div class="card-block">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs hidden-print">
                 <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#page1">تقویم</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page2">مدیریت</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page3">جلسه ساز</a></li>

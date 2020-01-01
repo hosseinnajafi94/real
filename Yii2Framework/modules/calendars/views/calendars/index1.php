@@ -11,7 +11,7 @@ use app\config\components\functions;
 /* @var $modelType \app\modules\calendars\models\VML\CalendarsListTypeVML */
 $types = $modelType->getTypes();
 ?>
-<div class="border p-1 mb-1 bg-light" style="border-radius: 4px;">
+<div class="border p-1 mb-1 bg-light hidden-print" style="border-radius: 4px;">
     <p class="mb-2">تقویم</p>
     <a class="btn btn-sm btn-success mb-0 addType">تقویم جدید</a>
     <a class="btn btn-sm btn-secondary mb-0 listType"><i class="fa fa-edit"></i></a>
@@ -250,6 +250,51 @@ $this->registerCss('
     .bg-light ul li {line-height: 1;margin: 5px 0 0 0;display: inline-block;}
     .bg-light ul li label {margin: 0 !important;}
     .modal-header, .modal-footer {padding: 5px;}
+    .fc-view > table * {direction: ltr !important;}
+    #search_event {
+        max-width: 150px;
+        position:  relative;
+        z-index:   1000;
+    }
+    #search_event_result {
+        position: absolute;
+        top: 32px;
+        right: -50px;
+        width: 250px;
+        max-height: 200px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: 5px 0;
+        margin: 0;
+        list-style: none;
+        text-align: right;
+        border-radius: 4px;
+        display: none;
+    }
+    #search_event_result.active {
+        display: block;
+    }
+    #search_event_result li {
+        padding: 0 15px;
+    }
+    #search_event_result li[data-date] {
+        padding: 10px 15px 0;
+        cursor: pointer;
+    }
+    #search_event_result li:not(:last-child) {
+        border-bottom: 1px dashhed #CCC;
+    }
+    #search_event_result li:hover {
+        background: rgba(0,0,0,0.1);
+    }
+    #search_event_result li span.title {
+        display: block;
+        line-height: 1;
+    }
+    #search_event_result li span.time {
+        font-size: 11px;
+        line-height: 1;
+    }
 ');
 $this->registerJsFile('@web/themes/custom/js/moment.min.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/moment-jalaali.js', ['depends' => AdminAsset::class]);
