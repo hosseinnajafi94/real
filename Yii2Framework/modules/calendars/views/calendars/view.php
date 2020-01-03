@@ -1,9 +1,9 @@
 <?php
 use yii\bootstrap4\Html;
 use app\config\widgets\DetailView;
+use app\modules\users\models\SRL\UsersSRL;
 /* @var $this yii\web\View */
-/* @var $model app\modules\calendars\models\DAL\Calendars */
-
+/* @var $model app\modules\calendars\models\VML\CalendarsVML */
 //$this->title = $model->title;
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('calendars', 'Calendars'), 'url' => ['index']];
 //$this->params['breadcrumbs'][] = $this->title;
@@ -28,7 +28,13 @@ use app\config\widgets\DetailView;
                 'model'      => $model->model,
                 'attributes' => [
                     'title',
-                    'favcolor',
+                    [
+                        'attribute' => 'favcolor',
+                        'format' => 'raw',
+                        'value' => function ($model) {
+                            return '<div style="max-width: 150px;height: 20px;background: '.$model->favcolor.'"></div>';
+                        }
+                    ],
                     [
                         'attribute' => 'type_id',
                         'pattern' => '{title}'
@@ -52,6 +58,19 @@ use app\config\widgets\DetailView;
                         'label' => $model->getAttributeLabel('alarm_type_id'),
                         'value' => function ($model) {
                             return $model->alarmType ? $model->alarmType->title : null;
+                        }
+                    ],
+                    [
+                        'label' => 'دعوت شدگان',
+                        'value' => function ($model) {
+                            $users = $model->getCalendarsUsers()->orderBy(['id' => SORT_ASC])->all();
+                            $items = [];
+                            foreach ($users as $user) {
+                                if ($user->user) {
+                                    $items[] = UsersSRL::getUserFullname($user->user);
+                                }
+                            }
+                            return implode('، ', $items);
                         }
                     ],
                     'description:raw',

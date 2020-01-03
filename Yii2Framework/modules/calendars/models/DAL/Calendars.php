@@ -9,17 +9,17 @@ use app\modules\users\models\DAL\Users;
  * This is the model class for table "calendars".
  *
  * @property int $id
- * @property int|null $user_id
- * @property string|null $title
- * @property string|null $favcolor
- * @property int|null $type_id
- * @property int|null $status_id
- * @property string|null $location
- * @property string|null $start_time
- * @property string|null $end_time
- * @property int|null $time_id
- * @property int|null $period_id
- * @property int|null $alarm_type_id
+ * @property int $user_id
+ * @property string $title
+ * @property string $favcolor
+ * @property int $type_id
+ * @property int $status_id
+ * @property string $location
+ * @property string $start_time
+ * @property string $end_time
+ * @property int $time_id
+ * @property int $period_id
+ * @property int $alarm_type_id
  * @property string|null $description
  * @property string|null $file
  *
@@ -47,6 +47,7 @@ class Calendars extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['user_id', 'title', 'favcolor', 'type_id', 'status_id', 'location', 'start_time', 'end_time', 'time_id', 'period_id', 'alarm_type_id'], 'required'],
             [['user_id', 'type_id', 'status_id', 'time_id', 'period_id', 'alarm_type_id'], 'integer'],
             [['start_time', 'end_time'], 'safe'],
             [['description'], 'string'],

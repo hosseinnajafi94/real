@@ -73,6 +73,7 @@ $(document).on('click', '[select-year-button]', function () {
             <?= $form->field($model, 'time_id')->dropDownList($model->list_time) ?>
             <?= $form->field($model, 'period_id')->dropDownList($model->list_period) ?>
             <?= $form->field($model, 'alarm_type_id')->dropDownList($model->list_alarm_type) ?>
+            <?= $form->field($model, 'users')->select2($model->list_users, ['multiple' => true, 'class' => 'form-control form-control-sm']) ?>
             <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
             <?= $form->field($model, 'file')->fileInput() ?>
             <div class="form-group">

@@ -41,6 +41,7 @@ class CalendarsVML extends Model {
     //
     public function rules() {
         return [
+                [['title', 'favcolor', 'type_id', 'status_id', 'location', 'start_time', 'end_time', 'time_id', 'period_id', 'alarm_type_id'], 'required'],
                 [['type_id', 'status_id', 'time_id', 'period_id', 'alarm_type_id', 'id'], 'integer'],
                 [['start_date', 'end_date', 'start_time', 'end_time'], 'safe'],
                 [['description'], 'string'],
@@ -144,7 +145,17 @@ class CalendarsVML extends Model {
         }
         $data        = new static();
         $data->model = $model;
+        $users = $model->getCalendarsUsers()->orderBy(['id' => SORT_ASC])->all();
+        foreach ($users as $user) {
+            $data->users[] = $user->user_id;
+        }
         static::populate($data, $model);
+        $s = explode(' ', $model->start_time);
+        $e = explode(' ', $model->end_time);
+        $data->start_date = functions::tojdate($s[0]);
+        $data->start_time = $s[1];
+        $data->end_date = functions::tojdate($e[0]);
+        $data->end_time = $e[1];
         return $data;
     }
     public static function populate($dest, $source) {

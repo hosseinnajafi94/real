@@ -18,7 +18,7 @@ $types = $modelType->getTypes();
     <ul id="ulListType">
         <li>
             <label class="btn btn-sm btn-primary">
-                <input type="checkbox" class="calendar_type" data-id="all"/>
+                <input type="checkbox" class="calendar_type" data-id="all" checked/>
                 <span>همه</span>
             </label>
         </li>
@@ -27,7 +27,7 @@ $types = $modelType->getTypes();
             ?>
             <li>
                 <label class="btn btn-sm btn-primary">
-                    <input type="checkbox" class="calendar_type" data-id="<?= $type['id'] ?>"/>
+                    <input type="checkbox" class="calendar_type" data-id="<?= $type['id'] ?>" checked/>
                     <span><?= $type['title'] ?></span>
                 </label>
             </li>

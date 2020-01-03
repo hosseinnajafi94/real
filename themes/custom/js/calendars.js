@@ -10,6 +10,10 @@ $(function () {
         targetTextSelector: '#calendarsvml-start_date',
         isGregorian: false,
         yearOffset: 60
+    }).on('hide.bs.popover', function () {
+        var s = tr_num(this.value).split('/');
+        var date = {year: parseInt(s[0]), month: parseInt(s[1]), day: parseInt(s[2])};
+        $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', date);
     });
     $('#calendarsvml-end_date').MdPersianDateTimePicker({
         targetTextSelector: '#calendarsvml-end_date',
