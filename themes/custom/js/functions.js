@@ -38,18 +38,15 @@ function toFloat(val) {
 // Ajax
 //------------------------------------------------------------------------------
 var ajaxDoAjax = true;
-function ajax(inUrl, inType, inData, inSuccess, inDataType, inError, inComplete) {
+function ajax(inUrl, inType, inData, inSuccess, inDataType, inError, inComplete, isUpload) {
     if (ajaxDoAjax) {
         ajaxDoAjax = false;
         showloading();
-        $.ajax({
+        var $args = {
             url: inUrl,
             type: inType,
             data: inData,
             dataType: inDataType ? inDataType : 'json',
-            cache:false,
-            contentType: false,
-            processData: false,
             success: function () {
                 ajaxDoAjax = true;
                 if (typeof inSuccess === 'function') {
@@ -69,14 +66,20 @@ function ajax(inUrl, inType, inData, inSuccess, inDataType, inError, inComplete)
                     inComplete.apply(this, arguments);
                 }
             }
-        });
+        };
+        if (isUpload) {
+            $args.cache = false;
+            $args.contentType = false;
+            $args.processData = false;
+        }
+        $.ajax($args);
     }
 }
-function ajaxpost(url, data, success, dataType, error, complete) {
-    ajax(url, 'post', data, success, dataType, error, complete);
+function ajaxpost(url, data, success, dataType, error, complete, isUpload) {
+    ajax(url, 'post', data, success, dataType, error, complete, isUpload);
 }
-function ajaxget(url, data, success, dataType, error, complete) {
-    ajax(url, 'get', data, success, dataType, error, complete);
+function ajaxget(url, data, success, dataType, error, complete, isUpload) {
+    ajax(url, 'get', data, success, dataType, error, complete, isUpload);
 }
 function validResult(result) {
     var message = '';
@@ -87,7 +90,8 @@ function validResult(result) {
         if (message !== '') {
             if (result.saved === true) {
                 showmessage(message, 'green');
-            } else {
+            }
+            else {
                 showmessage(message, 'red', 'خطا');
             }
         }

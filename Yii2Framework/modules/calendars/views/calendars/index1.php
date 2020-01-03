@@ -306,7 +306,7 @@ $this->registerJs("
     var events        = " . json_encode($model->getEvents()) . ";
     var areYouSure    = '" . Yii::t('app', 'Are you sure?') . "';
     var urlDeleteType = '" . Url::to(['delete-type']) . "';
-    var urlDelete     = '" . Url::to(['delete']) . "';
+    var urlDelete     = '" . Url::to(['delete-event']) . "';
     var urlCalendars  = '" . Yii::getAlias('@web/uploads/calendars') . "/';
     var today         = '" . functions::getjdate() . "';
     var urlSearch     = '" . Url::to(['search']) . "';

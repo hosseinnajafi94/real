@@ -17,9 +17,10 @@ class CalendarsController extends Controller {
             'verbs' => [
                 'class'   => VerbFilter::className(),
                 'actions' => [
-                    'delete'      => ['POST'],
-                    'delete-type' => ['POST'],
                     'type'        => ['POST'],
+                    'delete'      => ['POST'],
+//                    'delete-event'      => ['POST'],
+//                    'delete-type' => ['POST'],
                 ],
             ],
         ];
@@ -38,32 +39,32 @@ class CalendarsController extends Controller {
                     'data'      => $data
         ]);
     }
-    public function actionDeleteType() {
-        if (!Yii::$app->request->isAjax) {
-            return functions::httpNotFound();
-        }
-        $id    = Yii::$app->request->post('id');
+    public function actionDeleteType($id) {
+//        if (!Yii::$app->request->isAjax) {
+//            return functions::httpNotFound();
+//        }
+//        $id = Yii::$app->request->post('id');
         if (($model = CalendarsListType::findOne(['id' => $id])) === null) {
             return $this->asJson(['saved' => false]);
         }
         $model->delete();
         return $this->asJson(['saved' => true]);
     }
-    public function actionDeleteEvent() {
-        if (!Yii::$app->request->isAjax) {
-            return functions::httpNotFound();
-        }
-        $id    = Yii::$app->request->post('id');
-        if (($model = Calendars::findOne(['id' => $id, 'user_id' => Yii::$app->user->id])) === null) {
+    public function actionDeleteEvent($id) {
+//        if (!Yii::$app->request->isAjax) {
+//            return functions::httpNotFound();
+//        }
+//        $id = Yii::$app->request->post('id');
+        if (($model = Calendars::findOne(['id' => $id])) === null) {
             return $this->asJson(['saved' => false]);
         }
         $model->delete();
         return $this->asJson(['saved' => true]);
     }
     public function actionSearch($title) {
-        if (!Yii::$app->request->isAjax) {
-            return functions::httpNotFound();
-        }
+//        if (!Yii::$app->request->isAjax) {
+//            return functions::httpNotFound();
+//        }
         $models = Calendars::find()
                 ->select('title, cast(start_time as date) as start')
                 ->where(['user_id' => Yii::$app->user->id])
@@ -77,9 +78,9 @@ class CalendarsController extends Controller {
         return $this->asJson(['models' => $models]);
     }
     public function actionEvent() {
-        if (!Yii::$app->request->isAjax) {
-            return functions::httpNotFound();
-        }
+//        if (!Yii::$app->request->isAjax) {
+//            return functions::httpNotFound();
+//        }
         $model = CalendarsVML::newInstance();
         if ($model->save(Yii::$app->request->post())) {
             $data               = $model->loaditems()->toArray();
@@ -95,9 +96,9 @@ class CalendarsController extends Controller {
         return $this->asJson(['saved' => false, 'errors' => $model->getErrors()]);
     }
     public function actionType() {
-        if (!Yii::$app->request->isAjax) {
-            return functions::httpNotFound();
-        }
+//        if (!Yii::$app->request->isAjax) {
+//            return functions::httpNotFound();
+//        }
         $model = CalendarsListTypeVML::newInstance();
         if ($model->save(Yii::$app->request->post())) {
             $data = $model->loaditems()->toArray();
@@ -138,7 +139,7 @@ class CalendarsController extends Controller {
         return $this->renderView($model);
     }
     public function actionDelete($id) {
-        if (($model = Calendars::findOne(['id' => $id, 'user_id' => Yii::$app->user->id])) === null) {
+        if (($model = Calendars::findOne(['id' => $id])) === null) {
             return functions::httpNotFound();
         }
         $model->delete();

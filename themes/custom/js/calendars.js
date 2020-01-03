@@ -1,9 +1,9 @@
-/* global urlSearch, today, moment, urlCalendars, events, areYouSure, urlDelete, types */
+/* global urlSearch, today, moment, urlCalendars, events, areYouSure, urlDelete, types, urlDeleteType */
 
 $(function () {
     $('#calendarsvml-start_time, #calendarsvml-end_time').timeDropper({
         format: 'HH:mm:00'
-                //autoswitch: true,
+        //autoswitch: true,
     });
     //--------------------------------------------------------------------------
     $('#calendarsvml-start_date').MdPersianDateTimePicker({
@@ -59,9 +59,7 @@ $(function () {
     $(document).on('click', '.deleteType', function (e) {
         var id = $(this).data('id');
         if (confirm(areYouSure)) {
-            var formData = new FormData();
-            formData.append('id', id);
-            ajaxpost(urlDeleteType, formData, function (result) {
+            ajaxget(urlDeleteType, {id}, function (result) {
                 if (result.saved) {
                     $('.deleteType[data-id="' + id + '"]').parents('tr').remove();
                     $('#calendarsvml-type_id option[value="' + id + '"]').remove();
@@ -117,7 +115,7 @@ $(function () {
                         }
                         types.push(result.data);
                     }
-                });
+                }, undefined, undefined, undefined, true);
             }
         }, 500);
     });
@@ -153,7 +151,7 @@ $(function () {
                         }
                         $('#modalNew').modal('hide');
                     }
-                });
+                }, undefined, undefined, undefined, true);
             }
         }, 500);
     });
@@ -187,9 +185,7 @@ $(function () {
         var row = $(this).data('row');
         var id = row.id;
         if (confirm(areYouSure)) {
-            var formData = new FormData();
-            formData.append('id', id);
-            ajaxpost(urlDelete, formData, function (result) {
+            ajaxget(urlDelete, {id}, function (result) {
                 if (result.saved) {
                     $('#calendar').fullCalendar('removeEvents', id);
                     $('#modalView').modal('hide');
