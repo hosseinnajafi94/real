@@ -1,10 +1,11 @@
 <?php
 use yii\helpers\Url;
-use app\config\widgets\Alert;
 use yii\bootstrap4\Nav;
 use yii\bootstrap4\NavBar;
 use yii\bootstrap4\Breadcrumbs;
 use app\assets\AdminAsset;
+use app\config\widgets\Alert;
+use app\modules\notifications\models\SRL\NotificationsSRL;
 /* @var $this \yii\web\View */
 /* @var $content string */
 AdminAsset::register($this);
@@ -182,58 +183,43 @@ $this->beginPage();
                                     </div>
                                 </li>
                                 <li class="dropdown nav-item mt-1">
+                                    <?php
+                                    $notes = NotificationsSRL::unreadNotes(Yii::$app->user->id);
+                                    ?>
                                     <a id="dropdownBasic2" href="#" data-toggle="dropdown" class="nav-link position-relative dropdown-toggle">
                                         <i class="ft-bell blue-grey darken-4"></i>
-                                        <span class="notification badge badge-pill badge-danger">4</span>
+                                        <?= count($notes) > 0 ? '<span class="notification badge badge-pill badge-danger">' . count($notes) . '</span>' : '' ?>
                                         <p class="d-none">اطلاعیه</p>
                                     </a>
                                     <div class="notification-dropdown dropdown-menu dropdown-menu-left">
                                         <div class="arrow_box_right">
                                             <div class="noti-list">
-                                                <a class="dropdown-item noti-container py-2">
-                                                    <i class="ft-share info float-right d-block font-medium-4 mt-2 ml-2"></i>
-                                                    <span class="noti-wrapper">
-                                                        <span class="noti-title line-height-1 d-block text-bold-400 info">سفارش جدید دریافت شده</span>
-                                                        <span class="noti-text">لورم ایپسوم متن ساختگی با تولید سادگی</span>
-                                                    </span>
-                                                </a>
-                                                <a class="dropdown-item noti-container py-2">
-                                                    <i class="ft-save warning float-right d-block font-medium-4 mt-2 ml-2"></i>
-                                                    <span class="noti-wrapper">
-                                                        <span class="noti-title line-height-1 d-block text-bold-400 warning">کاربر جدید ثبت شده است</span>
-                                                        <span class="noti-text">لورم ایپسوم متن ساختگی با تولید سادگی</span>
-                                                    </span>
-                                                </a>
-                                                <a class="dropdown-item noti-container py-2">
-                                                    <i class="ft-repeat danger float-right d-block font-medium-4 mt-2 ml-2"></i>
-                                                    <span class="noti-wrapper">
-                                                        <span class="noti-title line-height-1 d-block text-bold-400 danger">سفارش جدید دریافت شده</span>
-                                                        <span class="noti-text">لورم ایپسوم متن ساختگی با تولید سادگی</span>
-                                                    </span>
-                                                </a>
-                                                <a class="dropdown-item noti-container py-2">
-                                                    <i class="ft-shopping-cart success float-right d-block font-medium-4 mt-2 ml-2"></i>
-                                                    <span class="noti-wrapper">
-                                                        <span class="noti-title line-height-1 d-block text-bold-400 success">مورد جدید در سبد خرید شما</span>
-                                                        <span class="noti-text">لورم ایپسوم متن ساختگی با تولید سادگی</span>
-                                                    </span>
-                                                </a>
-                                                <a class="dropdown-item noti-container py-2">
-                                                    <i class="ft-heart info float-right d-block font-medium-4 mt-2 ml-2"></i>
-                                                    <span class="noti-wrapper">
-                                                        <span class="noti-title line-height-1 d-block text-bold-400 info">فروش جدید</span>
-                                                        <span class="noti-text">لورم ایپسوم متن ساختگی با تولید سادگی</span>
-                                                    </span>
-                                                </a>
-                                                <a class="dropdown-item noti-container py-2">
-                                                    <i class="ft-box warning float-right d-block font-medium-4 mt-2 ml-2"></i>
-                                                    <span class="noti-wrapper">
-                                                        <span class="noti-title line-height-1 d-block text-bold-400 warning">سفارش تحویل داده شده</span>
-                                                        <span class="noti-text">لورم ایپسوم متن ساختگی با تولید سادگی</span>
-                                                    </span>
-                                                </a>
+                                                <?php
+                                                if ($notes) {
+                                                    foreach ($notes as $note) {
+                                                        ?>
+                                                        <a class="dropdown-item noti-container py-2" href="<?= Url::to(['/notifications/notifications/view', 'id' => $note->id]) ?>">
+                                                            <i class="fa fa-<?= $note->icon ?> info float-right d-block font-medium-4 mt-2 ml-2"></i>
+                                                            <span class="noti-wrapper">
+                                                                <span class="noti-title line-height-1 d-block text-bold-400 info"><?= $note->title ?></span>
+                                                                <span class="noti-text"><?= mb_substr($note->description, 0, 40) . ' ...' ?></span>
+                                                            </span>
+                                                        </a>
+                                                        <?php
+                                                    }
+                                                }
+                                                else {
+                                                    ?>
+                                                    <a class="dropdown-item noti-container py-2" style="cursor: default;text-align: center;">
+                                                        <span class="noti-wrapper">
+                                                            <span class="noti-text">-- بدون اعلان --</span>
+                                                        </span>
+                                                    </a>
+                                                    <?php
+                                                }
+                                                ?>
                                             </div>
-                                            <a class="noti-footer primary text-center d-block border-top border-top-blue-grey border-top-lighten-4 text-bold-400 py-1">خواندن همه اعلان ها</a>
+                                            <a class="noti-footer primary text-center d-block border-top border-top-blue-grey border-top-lighten-4 text-bold-400 py-1" href="<?= Url::to(['/notifications/notifications/index']) ?>">خواندن همه اعلان ها</a>
                                         </div>
                                     </div>
                                 </li>

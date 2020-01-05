@@ -14,6 +14,7 @@ thead th,thead td {padding: 5px !important;}
 .vakata-context li > a {line-height: 2 !important;height: 35px !important;}
 .vakata-context li > a > i:empty {line-height: 2 !important;}
 .vakata-context li > a .vakata-contextmenu-sep {height: 2em !important;}
+.notification-dropdown .noti-list {height: auto;max-height: 290px;}
 @media print {
     * {border-radius: 0 !important;}
     .hidden-print {display: none;}
