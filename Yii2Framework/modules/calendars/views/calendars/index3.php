@@ -96,6 +96,6 @@ $('#session_search').click(function () {
             `);
         }
         //$('#text').html('<pre style=\"direction: ltr !important;text-align: left;\">'+JSON.stringify(result, null, 4)+'</pre>');
-    });
+    }, undefined, undefined, undefined, true);
 });
 ");

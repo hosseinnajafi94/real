@@ -288,7 +288,6 @@ $(function () {
         }
     });
     $('<ul/>').attr('class', 'bg-light border').attr('id', 'search_event_result').appendTo('#search_event');
-
     //--------------------------------------------------------------------------
     function tr_num(fa) {
         return fa.toString()

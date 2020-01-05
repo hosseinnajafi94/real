@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $title
+ * @property int $times
  *
  * @property Calendars[] $calendars
  */
@@ -28,7 +29,8 @@ class CalendarsListTime extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title'], 'required'],
+            [['title', 'times'], 'required'],
+            [['times'], 'integer'],
             [['title'], 'string', 'max' => 255],
         ];
     }
@@ -41,6 +43,7 @@ class CalendarsListTime extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('calendars', 'ID'),
             'title' => Yii::t('calendars', 'Title'),
+            'times' => Yii::t('calendars', 'Times'),
         ];
     }
 

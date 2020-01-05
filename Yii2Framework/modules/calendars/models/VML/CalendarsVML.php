@@ -7,6 +7,7 @@ use app\config\components\functions;
 use app\modules\users\models\SRL\UsersSRL;
 use app\modules\calendars\models\DAL\Calendars;
 use app\modules\calendars\models\DAL\CalendarsUsers;
+use app\modules\calendars\models\DAL\CalendarsEvents;
 use app\modules\calendars\models\SRL\CalendarsListTypeSRL;
 use app\modules\calendars\models\SRL\CalendarsListStatusSRL;
 use app\modules\calendars\models\SRL\CalendarsListTimeSRL;
@@ -130,6 +131,18 @@ class CalendarsVML extends Model {
             }
         }
 
+        CalendarsEvents::deleteAll(['calendar_id' => $model->id]);
+        $days = getDiffDays($model->start_time, $model->end_time) + 1;
+        for ($index = 0; $index < $days; $index += $model->period->days) {
+            $datetime1 = date('Y-m-d H:i:s', strtotime($model->start_time . " +$index days"));
+            $datetime2 = date('Y-m-d H:i:s', strtotime($datetime1) - $model->time->times);
+            $model1              = new CalendarsEvents();
+            $model1->calendar_id = $model->id;
+            $model1->datetime    = $datetime2;
+            $model1->done        = 0;
+            $model1->save();
+        }
+        
         $this->id = $model->id;
         return true;
     }
