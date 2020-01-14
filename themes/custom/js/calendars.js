@@ -19,6 +19,17 @@ $(function () {
             }
         });
     });
+    $(document).on('click', '.ajaxDelete', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        var container = $(this).data('container');
+        var message = $(this).data('confirm2');
+        if (confirm(message)) {
+            ajaxget(url, {}, function () {
+                $.pjax.reload({container: '#' + container});
+            });
+        }
+    });
     $(document).on('click', '#getList a', function () {
         var url = $(this).data('url');
         var id = $(this).data('id');

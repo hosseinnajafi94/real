@@ -1,11 +1,15 @@
 <?php
+use yii\bootstrap4\Html;
 use yii\widgets\Pjax;
 use app\config\widgets\GridView;
-use app\config\widgets\ActionColumn;
+use yii\grid\ActionColumn;
+use yii\grid\SerialColumn;
 /* @var $this \yii\web\View */
 /* @var $data \yii\data\ActiveDataProvider */
 /* @var $search \app\modules\calendars\models\VML\CalendarsSearchVML */
-Pjax::begin();
+Pjax::begin([
+    'id' => 'list2'
+]);
 
 echo GridView::widget([
     'layout'         => '
@@ -23,9 +27,22 @@ echo GridView::widget([
     'dataProvider'   => $data,
     'filterModel'    => $search,
     'columns'        => [
-        ['class' => 'yii\grid\SerialColumn'],
+        ['class' => 'yii\grid\SerialColumn', 'header' => 'ردیف'],
         'title',
-        ['class' => ActionColumn::class],
+        [
+            'class' => ActionColumn::class,
+            'buttons' => [
+                'delete' => function ($url) {
+                    return Html::a('<i class="fa fa-times"></i>', $url, ['class' => 'ajaxDelete', 'data' => ['pjax' => 0, 'container' => 'list2', 'confirm2' => Yii::t('app', 'Are you sure?')]]);
+                },
+                'update' => function ($url, $model) {
+                    return '<a href="' . $url . '" title="بروز رسانی" data-pjax="0"><span class="fa fa-pencil"></span></a>';
+                },
+                'view' => function ($url) {
+                    return '<a href="' . $url . '" class="view" title="جزئیات" data-pjax="0"><span class="fa fa-eye"></span></a>';
+                },
+            ],
+        ],
     ],
 ]);
 

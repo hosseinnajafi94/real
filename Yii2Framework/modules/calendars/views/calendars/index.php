@@ -11,6 +11,8 @@ $this->registerCssFile('@web/themes/custom/libs/timepicker/timepicker.css', ['de
 $this->registerJsFile('@web/themes/custom/libs/timepicker/timepicker.js', ['depends' => AdminAsset::class]);
 $types                = $modelType->getTypes();
 $this->params['menu'] = '
+    <li class="nav-item"><a class="addType">تقویم جدید</a></li>
+    <li class="nav-item"><a class="listType">مدیریت تقویم ها</a></li>
     <li class="nav-item noclose">
         <a style="padding: 0;">
             <label class="mb-0" style="padding: 7px 14px 7px 10px;display: block;cursor: pointer;">

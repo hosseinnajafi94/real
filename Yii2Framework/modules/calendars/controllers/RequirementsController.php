@@ -11,7 +11,7 @@ class RequirementsController extends Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+//                    'delete' => ['POST'],
                 ],
             ],
         ];
@@ -27,7 +27,7 @@ class RequirementsController extends Controller {
     }
     public function actionDelete($id) {
         $this->findModel($id)->delete();
-        return $this->redirect(['/calendars/calendars/index']);
+        return $this->asJson(['saved' => true]);
     }
     protected function findModel($id) {
         if (($model = CalendarsListRequirements::findOne($id)) !== null) {

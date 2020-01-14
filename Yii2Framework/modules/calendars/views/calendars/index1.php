@@ -11,10 +11,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 /* @var $model \app\modules\calendars\models\VML\CalendarsVML */
 /* @var $modelType \app\modules\calendars\models\VML\CalendarsListTypeVML */
 ?>
-<div class="border p-1 mb-1 bg-light hidden-print" style="border-radius: 4px;">
-    <p class="mb-2">تقویم</p>
-    <a class="btn btn-sm btn-success mb-0 addType">تقویم جدید</a>
-    <a class="btn btn-sm btn-secondary mb-0 listType"><i class="fa fa-edit"></i></a>
+<div class="d-none border p-1 mb-1 bg-light hidden-print" style="border-radius: 4px;">
     <!--    <ul id="ulListType">
             <li>
                 <label class="btn btn-sm btn-primary">

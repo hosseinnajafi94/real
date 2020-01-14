@@ -21,7 +21,7 @@ class CalendarsController extends Controller {
                 'class'   => VerbFilter::className(),
                 'actions' => [
                     'type'   => ['POST'],
-                    'delete' => ['POST'],
+//                    'delete' => ['POST'],
 //                    'delete-event'      => ['POST'],
 //                    'delete-type' => ['POST'],
                 ],
@@ -319,7 +319,7 @@ class CalendarsController extends Controller {
             return functions::httpNotFound();
         }
         $model->delete();
-        return $this->redirect(['index']);
+        return $this->asJson(['saved' => true]);
     }
     public function actionSearchSession() {
         $session_start_time = Yii::$app->request->post('session_start_time');

@@ -2,7 +2,7 @@
 use yii\bootstrap4\Html;
 use yii\widgets\Pjax;
 use app\config\widgets\GridView;
-use app\config\widgets\ActionColumn;
+use yii\grid\ActionColumn;
 use yii\helpers\Url;
 /* @var $this \yii\web\View */
 /* @var $data \yii\data\ActiveDataProvider */
@@ -12,7 +12,9 @@ use yii\helpers\Url;
     <?= Html::a(Yii::t('app', 'Create'), ['/calendars/requirements/create'], ['class' => 'btn btn-sm mb-1 btn-success']) ?>
 </p>
 <?php
-Pjax::begin();
+Pjax::begin([
+    'id' => 'list4'
+]);
 echo GridView::widget([
     'layout'         => '
         {items}
@@ -29,16 +31,16 @@ echo GridView::widget([
     'dataProvider'   => $data,
     'filterModel'    => $search,
     'columns'        => [
-        ['class' => 'yii\grid\SerialColumn'],
+        ['class' => 'yii\grid\SerialColumn', 'header' => 'ردیف'],
         'title',
         [
             'class' => ActionColumn::class,
             'template' => '{delete}',
-            'urlCreator' => function ($action, $model) {
-                if ($action === 'delete') {
-                    return Url::to(['/calendars/requirements/delete', 'id' => $model->id]);
-                }
-            },
+            'buttons' => [
+                'delete' => function ($url, $model) {
+                    return Html::a('<i class="fa fa-times"></i>', ['/calendars/requirements/delete', 'id' => $model->id], ['class' => 'ajaxDelete', 'data' => ['pjax' => 0, 'container' => 'list4', 'confirm2' => Yii::t('app', 'Are you sure?')]]);
+                },
+            ],
         ],
     ],
 ]);
