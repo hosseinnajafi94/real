@@ -21,4 +21,8 @@ return [
     'Copies1'          => 'رونوشت',
     'Copies2'          => 'رونوشت مخفی',
     'Signatories'      => 'امضاء کنندگان',
+    'Members'          => 'اعضاء دبیرخانه',
+    'Secretariat ID'   => 'دبیرخانه',
+    'User ID'   => 'کاربر',
+    'Description'   => 'توضیحات',
 ];

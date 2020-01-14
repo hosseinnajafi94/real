@@ -1,9 +1,90 @@
 /* global urlSearch, today, moment, urlCalendars, events, areYouSure, urlDelete, types, urlDeleteType */
 
 $(function () {
+
+    $('#date6').MdPersianDateTimePicker({inLine: true, englishNumber: true}).on('change-dp', function () {
+        var url = $(this).data('url');
+        var datetime = $(this).data('dp-val');
+        ajaxget(url, {datetime}, function (rows) {
+            $('#getList tbody').html('');
+            for (var i = 0, max = rows.length; i < max; i++) {
+                var html = `
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td>${rows[i].title}</td>
+                        <td><a data-url="${rows[i].url}" data-id="${rows[i].id}"><i class="fa fa-eye"></i></a></td>
+                    </tr>
+                `;
+                $('#getList tbody').append(html);
+            }
+        });
+    });
+    $(document).on('click', '#getList a', function () {
+        var url = $(this).data('url');
+        var id = $(this).data('id');
+        ajaxget(url, {id}, function (result) {
+            showEvent(result);
+        });
+    });
+
+    $('#calendarsvml-has_reception').change(function () {
+        var checked = $(this).prop('checked');
+        if (checked) {
+            $('.field-calendarsvml-catering_id,.field-calendarsvml-requirements').show();
+        } else {
+            $('.field-calendarsvml-catering_id,.field-calendarsvml-requirements').hide();
+        }
+    });
+    $(document).on('click', '.r li', function (e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        var url = $(this).data('url');
+        $('.r').remove();
+        ajaxget(url, {id}, function (result) {
+            if (result) {
+                $('#calendarsvml-title').val(result.title);
+                $('#calendarsvml-favcolor').val(result.favcolor);
+                $('#calendarsvml-type_id').val(result.type_id);
+                $('#calendarsvml-status_id').val(result.status_id);
+                $('#calendarsvml-location').val(result.location);
+                $('#calendarsvml-start_date').val(result.start_date);
+                $('#calendarsvml-end_date').val(result.start_date);
+                $('#calendarsvml-start_time').val(result.start_time);
+                $('#calendarsvml-end_time').val(result.start_time);
+                $('#calendarsvml-description').val(result.description);
+                $('#calendarsvml-has_reception').prop('checked', parseInt(result.has_reception) === 1).trigger('change');
+                $('#calendarsvml-catering_id').val(result.catering_id);
+            }
+        });
+    });
+    $('#searchTitle').click(function () {
+        var $that = $(this);
+        var url = $that.data('url');
+        var title = $('#calendarsvml-title').val();
+        $('.r').remove();
+        if (title) {
+            ajaxget(url, {title}, function (result) {
+                var items = ``;
+                for (var i in result) {
+                    var row = result[i];
+                    items += `<li data-id="${row.id}" data-url="${row.url}">${row.title}</li>`;
+                }
+                $that.parent().append(`<ul class="r bg-light border p-0" style="
+                    position: absolute;
+                    z-index: 1;
+                    top: 33px;
+                    left: 0;
+                    list-style: none;
+                    margin: 0;
+                    min-width: 700%;
+                    border-radius: 4px;
+                ">${items}</ul>`);
+            });
+        }
+    });
     $('#calendarsvml-start_time, #calendarsvml-end_time').timeDropper({
         format: 'HH:mm:00'
-        //autoswitch: true,
+                //autoswitch: true,
     });
     //--------------------------------------------------------------------------
     $('#calendarsvml-start_date').MdPersianDateTimePicker({
@@ -124,6 +205,9 @@ $(function () {
         $('.myselected').removeClass('myselected');
         $('#formNew').get(0).reset();
         $('#calendarsvml-users').trigger('change');
+        $('#calendarsvml-for_informations').trigger('change');
+        $('#calendarsvml-requirements').trigger('change');
+        $('#calendarsvml-has_reception').trigger('change');
         $('#calendarsvml-id').val('');
     });
     $('#saveNew').on('click', function (e) {
@@ -145,8 +229,7 @@ $(function () {
                         if ($('#calendar').fullCalendar('clientEvents', result.data.id).length > 0) {
                             var events = $('#calendar').fullCalendar('clientEvents', result.data.id);
                             $('#calendar').fullCalendar('updateEvent', $.extend(events[0], result.data));
-                        }
-                        else {
+                        } else {
                             $('#calendar').fullCalendar('renderEvent', result.data);
                         }
                         $('#modalNew').modal('hide');
@@ -156,6 +239,81 @@ $(function () {
         }, 500);
     });
     //--------------------------------------------------------------------------
+    $('#returnNewAlarm').on('click', function (e) {
+        e.preventDefault();
+        $('#modalNewAlarm').modal('hide');
+        $('#modalView').modal('show');
+    });
+    $('#saveNewAlarm').on('click', function (e) {
+        e.preventDefault();
+        $('#formNewAlarm').submit();
+    });
+    $('#formNewAlarm').on('submit', function (e) {
+        e.preventDefault();
+        showloading();
+        $('#formNewAlarm').yiiActiveForm('validate');
+        setTimeout(function () {
+            hideloading();
+            var errors = $('#formNewAlarm').find('.is-invalid').length;
+            if (errors === 0) {
+                var url = $('#formNewAlarm').attr('action');
+                var formData = new FormData($('#formNewAlarm').get(0));
+                ajaxpost(url, formData, function (result) {
+                    if (result.saved === true) {
+                        var alarms = `
+                            <li data-id="${result.data.id}">
+                                <table class="table table-bordered table-sm mb-1">
+                                    <thead>
+                                        <tr class="table-primary">
+                                            <th>${result.data.list_time[result.data.time_id]}</th>
+                                            <th>${result.data.list_period[result.data.period_id]}</th>
+                                            <th>${result.data.list_alarm_type[result.data.alarm_type_id]}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="3">
+                                                <a class="btn btn-sm btn-danger mb-0 pull-left delete-alarm" data-url="${result.data.url}" data-id="${result.data.id}"><i class="fa fa-times text-red"></i></a>
+                                                <div>
+                                                    ${result.data.message}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                        `;
+                        $('#alarms').prepend(alarms);
+                        $('#alarms .no').remove();
+                        $('#modalNewAlarm').modal('hide');
+                        $('#modalView').modal('show');
+                    }
+                }, undefined, undefined, undefined, true);
+            }
+        }, 500);
+    });
+    $(document).on('click', '.delete-alarm', function (e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        var url = $(this).data('url');
+        if (confirm('آیا مطمئن هستید؟')) {
+            ajaxget(url, {id}, function (result) {
+                if (result.saved) {
+                    $('#alarms li[data-id="' + id + '"]').remove();
+                }
+            });
+        }
+    });
+    $('.add-alarm').on('click', function (e) {
+        e.preventDefault();
+        var row = $(this).data('row');
+        $('#calendarsalarmsvml-calendar_id').val(row.id);
+        $('#modalView').modal('hide');
+        $('#modalNewAlarm').modal('show');
+    });
+    $('#modalNewAlarm').on('hidden.bs.modal', function (e) {
+        $('#formNewAlarm').get(0).reset();
+    });
     $('.update').on('click', function (e) {
         var row = $(this).data('row');
         var s = row.start_date.split('/');
@@ -189,8 +347,7 @@ $(function () {
                 if (result.saved) {
                     $('#calendar').fullCalendar('removeEvents', id);
                     $('#modalView').modal('hide');
-                }
-                else {
+                } else {
                     alert('خطا در حذف اطلاعات');
                 }
             });
@@ -217,30 +374,7 @@ $(function () {
         },
         events: events,
         eventClick: function (event, jsEvent, view) {
-            var list = [];
-            for (var i in event.users) {
-                list.push(event.list_users[event.users[i]]);
-            }
-            var users = list.join('، ');
-            var $modal = $('#modalView');
-            $modal.find('.update').data('row', event);
-            $modal.find('.delete').data('row', event);
-            $modal.find('#title').text(event.title);
-            $modal.find('#favcolor').css('background', event.favcolor);
-            $modal.find('#type_id').text(event.list_type[event.type_id]);
-            $modal.find('#status_id').text(event.list_status[event.status_id]);
-            $modal.find('#location').text(event.location);
-            $modal.find('#start_date').text(event.start_date);
-            $modal.find('#start_time').text(event.start_time);
-            $modal.find('#end_date').text(event.end_date);
-            $modal.find('#end_time').text(event.end_time);
-            $modal.find('#time_id').text(event.list_time[event.time_id]);
-            $modal.find('#period_id').text(event.list_period[event.period_id]);
-            $modal.find('#alarm_type_id').text(event.list_alarm_type[event.alarm_type_id]);
-            $modal.find('#users').text(users);
-            $modal.find('#description').text(event.description);
-            $modal.find('#file').attr('src', urlCalendars + event.file);
-            $modal.modal('show');
+            showEvent(event);
         },
         dayClick: function (dateText, jsEvent, view) {
             var self = this;
@@ -312,8 +446,7 @@ $(function () {
                 $ul.html('');
                 if (result.models.length === 0) {
                     $ul.append(`<li>رویدادی یافت نشد!</li>`);
-                }
-                else {
+                } else {
                     result.models.forEach(function (row) {
                         $ul.append(`
                             <li data-date="${row.start}">
@@ -337,4 +470,58 @@ $(function () {
         $('#search_event_result').removeClass('active');
     });
     //-------------------------------------------------------------------------- 
+    function showEvent(event) {
+        var list = [];
+        for (var i in event.users) {
+            list.push(event.list_users[event.users[i]]);
+        }
+        var users = list.join('، ');
+        var $modal = $('#modalView');
+        $modal.find('.update').data('row', event);
+        $modal.find('.delete').data('row', event);
+        $modal.find('.add-alarm').data('row', event);
+        $modal.find('#title').text(event.title);
+        $modal.find('#favcolor').css('background', event.favcolor);
+        $modal.find('#type_id').text(event.list_type[event.type_id]);
+        $modal.find('#status_id').text(event.list_status[event.status_id]);
+        $modal.find('#location').text(event.location);
+        $modal.find('#start_date').text(event.start_date);
+        $modal.find('#start_time').text(event.start_time);
+        $modal.find('#end_date').text(event.end_date);
+        $modal.find('#end_time').text(event.end_time);
+        $modal.find('#time_id').text(event.list_time[event.time_id]);
+        $modal.find('#period_id').text(event.list_period[event.period_id]);
+        $modal.find('#alarm_type_id').text(event.list_alarm_type[event.alarm_type_id]);
+        $modal.find('#users').text(users);
+        $modal.find('#description').text(event.description);
+        $modal.find('#file').attr('src', urlCalendars + event.file);
+        var alarms = '';
+        event.alarms.forEach(function (alarm) {
+            alarms += `
+                <li data-id="${alarm.id}">
+                    <table class="table table-bordered table-sm mb-1">
+                        <thead>
+                            <tr class="table-primary">
+                                <th>${alarm.list_time[alarm.time_id]}</th>
+                                <th>${alarm.list_period[alarm.period_id]}</th>
+                                <th>${alarm.list_alarm_type[alarm.alarm_type_id]}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">
+                                    <a class="btn btn-sm btn-danger mb-0 pull-left delete-alarm" data-url="${alarm.url}" data-id="${alarm.id}"><i class="fa fa-times text-red"></i></a>
+                                    <div>
+                                        ${alarm.message}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </li>
+            `;
+        });
+        $modal.find('#alarms').html(alarms ? alarms : '<li class="no">---</li>');
+        $modal.modal('show');
+    }
 });

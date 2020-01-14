@@ -2,7 +2,7 @@
 use yii\bootstrap4\Html;
 use app\config\widgets\ActiveForm;
 /* @var $this yii\web\View */
-/* @var $model app\modules\correspondence\models\DAL\Mails */
+/* @var $model app\modules\correspondence\models\VML\MailsVML */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 <div class="mails-form">
@@ -16,6 +16,9 @@ use app\config\widgets\ActiveForm;
         <div class="card-block">
             <?php $form = ActiveForm::begin(); ?>
             <div class="row">
+                <div class="col-3">
+                    <?= $form->field($model, 'secretariat_id')->select2($model->list_secretariats) ?>
+                </div>
                 <div class="col-3">
                     <?= $form->field($model, 'pattern_id')->select2($model->list_pattern) ?>
                 </div>

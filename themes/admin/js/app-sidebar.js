@@ -196,7 +196,7 @@
             }
         });
 
-        $(document).on('click', '.navigation li:not(.has-sub)', function(){
+        $(document).on('click', '.navigation li:not(.has-sub,.noclose)', function(){
             if( $(window).width() < 992 ){
                 $sidebar.addClass('hide-sidebar');
             }

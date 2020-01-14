@@ -35,6 +35,16 @@ use app\config\widgets\ActiveForm;
                 <?= $form->field($model, 'splitter_2')->textInput(['maxlength' => true]) ?>
             </div>
         </div>
+        <div class="row">
+            <div class="col-6">
+                <?= $form->field($model, 'members')->select2($model->list_users, ['multiple' => 'true']) ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <?= $form->field($model, 'signatories')->select2($model->list_users, ['multiple' => 'true']) ?>
+            </div>
+        </div>
         <?= Html::a(Yii::t('app', 'Return'), ['index'], ['class' => 'btn btn-sm mb-0 btn-warning']) ?>
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-sm mb-0 btn-success']) ?>
         <?php ActiveForm::end(); ?>

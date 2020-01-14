@@ -15,7 +15,7 @@ class AdminAsset extends AssetBundle {
         'themes/admin/css/app.css',
         'themes/custom/libs/PersianDateTimePicker/dist/jquery.md.bootstrap.datetimepicker.style.css',
         //'themes/custom/libs/summernote/summernote-bs4.css',
-        'themes/custom/css/admin.css'
+        'themes/custom/css/admin.css?v=1'
     ];
     public $js       = [
 //        '<!-- BEGIN VENDOR JS-->',
@@ -39,7 +39,7 @@ class AdminAsset extends AssetBundle {
 //        <!-- BEGIN PAGE LEVEL JS-->
 //        'themes/admin/js/dashboard-ecommerce.js',
 //        <!-- END PAGE LEVEL JS-->
-        'themes/custom/libs/PersianDateTimePicker/dist/jquery.md.bootstrap.datetimepicker.js',
+        'themes/custom/libs/PersianDateTimePicker/src/jquery.md.bootstrap.datetimepicker.js',
     ];
     public $depends  = [
         'yii\web\YiiAsset',

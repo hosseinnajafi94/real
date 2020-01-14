@@ -3,6 +3,7 @@
 namespace app\modules\correspondence\models\DAL;
 
 use Yii;
+use app\modules\users\models\DAL\Users;
 
 /**
  * This is the model class for table "secretariats_members".

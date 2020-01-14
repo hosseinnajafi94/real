@@ -76,9 +76,9 @@ $(document).on('click', '[select-year-button]', function () {
             <?= $form->field($model, 'users')->select2($model->list_users, ['multiple' => true, 'class' => 'form-control form-control-sm']) ?>
             <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
             <?= $form->field($model, 'file')->fileInput() ?>
-            <div class="form-group">
-                <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-sm btn-success']) ?>
-            </div>
+            <?= $form->field($model, 'message')->textarea(['rows' => 6]) ?>
+            <?= Html::a(Yii::t('app', 'Return'), ['index'], ['class' => 'btn btn-sm btn-warning mb-0']) ?>
+            <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-sm btn-success mb-0']) ?>
             <?php ActiveForm::end(); ?>
         </div>
     </div>

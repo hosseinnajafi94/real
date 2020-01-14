@@ -26,7 +26,7 @@ $this->beginPage();
     <body>
         <?php $this->beginBody() ?>
         <div class="wrapper">
-            <div class="app-sidebar hidden-print" data-active-color="white" data-background-color="black" data-image="<?= Yii::getAlias('@web/uploads/img/sidebar-bg/08.jpg') ?>">
+            <div class="app-sidebar hidden-print hide-sidebar" data-active-color="white" data-background-color="black" data-image="<?= Yii::getAlias('@web/uploads/img/sidebar-bg/08.jpg') ?>">
                 <div class="sidebar-header">
                     <div class="logo clearfix">
                         <a href="#" class="logo-text float-right">
@@ -40,39 +40,28 @@ $this->beginPage();
                 <div class="sidebar-content">
                     <div class="nav-container">
                         <ul id="main-menu-navigation" data-menu="menu-navigation" class="navigation navigation-main">
-                            <li class="nav-item active">
-                                <a href="<?= yii\helpers\Url::to(['/dashboard/default/index']) ?>">
-                                    <i class="icon-home"></i>
-                                    <span class="menu-title">خانه</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="<?= yii\helpers\Url::to(['/ticketing/tickets/index']) ?>">
-                                    <i class="fa fa-ticket"></i>
-                                    <span class="menu-title">پشتیبانی</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="menu-item" href="<?= Url::to(['/organizations/organizations/index']) ?>">
-                                    <i class="fa fa-sitemap"></i>
-                                    <span class="menu-title">شعبه</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="menu-item" href="<?= Url::to(['/users/users/index']) ?>">
-                                    <i class="fa fa-user" style="position: relative;">
-                                        <i class="fa fa-search" style="position: absolute;bottom: -5px;right: -5px;font-size: 11px;color: white;text-shadow: 0 0 2px #000;"></i>
-                                    </i>
-                                    <span class="menu-title">پرسنلی</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="menu-item" href="<?= Url::to(['/calendars/calendars/index']) ?>">
-                                    <i class="fa fa-calendar"></i>
-                                    <span class="menu-title">تقویم</span>
+                            <li class="nav-item noclose">
+                                <a style="padding: 0;">
+                                    <select class="form-control">
+                                        <option value="">asd 1</option>
+                                        <option value="">asd 2</option>
+                                        <option value="">asd 3</option>
+                                    </select>
                                 </a>
                             </li>
                             <li class="nav-item has-sub">
+                                <a><i class="fa fa-bars"></i> <span class="menu-title"><?= $this->title ?></span></a>
+                                <ul class="menu-content">
+                                    <li><a class="menu-item" href="<?= Url::to(['/dashboard/default/index']) ?>"><i class="fa fa-home"></i> <span class="menu-title">خانه</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/ticketing/tickets/index']) ?>"><i class="fa fa-ticket"></i> <span class="menu-title">پشتیبانی</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/organizations/organizations/index']) ?>"><i class="fa fa-sitemap"></i> <span class="menu-title">شعبه</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/users/users/index']) ?>"><i class="fa fa-user" style="position: relative;"><i class="fa fa-search" style="position: absolute;bottom: -5px;right: -5px;font-size: 11px;color: white;text-shadow: 0 0 2px #000;"></i></i> <span class="menu-title">پرسنلی</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/calendars/calendars/index']) ?>"><i class="fa fa-calendar"></i> <span class="menu-title">تقویم</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/correspondence/default/index']) ?>"><i class="fa fa-file"></i> <span class="menu-title">مکاتبات</span></a></li>
+                                </ul>
+                            </li>
+                            <?= isset($this->params['menu']) ? $this->params['menu'] : '' ?>
+                            <li class="nav-item has-sub d-none">
                                 <a>
                                     <i class="fa fa-file"></i>
                                     <span class="menu-title">مکاتبات</span>

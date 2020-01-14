@@ -12,6 +12,7 @@ use Yii;
  * @property int $days
  *
  * @property Calendars[] $calendars
+ * @property CalendarsAlarms[] $calendarsAlarms
  */
 class CalendarsListPeriod extends \yii\db\ActiveRecord
 {
@@ -53,5 +54,13 @@ class CalendarsListPeriod extends \yii\db\ActiveRecord
     public function getCalendars()
     {
         return $this->hasMany(Calendars::className(), ['period_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendarsAlarms()
+    {
+        return $this->hasMany(CalendarsAlarms::className(), ['period_id' => 'id']);
     }
 }

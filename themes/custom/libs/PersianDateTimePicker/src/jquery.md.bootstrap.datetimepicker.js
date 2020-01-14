@@ -1689,6 +1689,7 @@
 
     // کلیک روی روزها
     $(document).on('click', mdDatePickerContainerSelector + ' [data-day]', function () {
+        var $el = $(this).parents('[data-mdpersiandatetimepicker]');
         var $this = $(this),
             disabled = $this.attr('disabled'),
             dateNumber = Number($this.attr('data-number')),
@@ -1745,9 +1746,12 @@
                 updateCalendarHtml1($fromDateDayElement, getSetting1($fromDateDayElement));
             }
             updateCalendarHtml1($this, setting);
-        } else {
+        }
+        else {
             updateCalendarHtml1($this, setting);
         }
+        var b = $el.MdPersianDateTimePicker('getText');
+        $el.data('dp-val', b).trigger('change-dp');
     });
 
     // هاور روی روزها

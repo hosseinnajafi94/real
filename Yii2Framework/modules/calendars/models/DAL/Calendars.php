@@ -22,6 +22,9 @@ use app\modules\users\models\DAL\Users;
  * @property int $alarm_type_id
  * @property string|null $description
  * @property string|null $file
+ * @property string|null $message
+ * @property int|null $has_reception
+ * @property int|null $catering_id
  *
  * @property Users $user
  * @property CalendarsListType $type
@@ -29,6 +32,10 @@ use app\modules\users\models\DAL\Users;
  * @property CalendarsListTime $time
  * @property CalendarsListPeriod $period
  * @property CalendarsListAlarmType $alarmType
+ * @property CalendarsAlarms[] $calendarsAlarms
+ * @property CalendarsEvents[] $calendarsEvents
+ * @property CalendarsForInformation[] $calendarsForInformations
+ * @property CalendarsRequirements[] $calendarsRequirements
  * @property CalendarsUsers[] $calendarsUsers
  */
 class Calendars extends \yii\db\ActiveRecord
@@ -47,10 +54,10 @@ class Calendars extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'title', 'favcolor', 'type_id', 'status_id', 'location', 'start_time', 'end_time', 'time_id', 'period_id', 'alarm_type_id'], 'required'],
-            [['user_id', 'type_id', 'status_id', 'time_id', 'period_id', 'alarm_type_id'], 'integer'],
+            [['user_id', 'title', 'favcolor', 'type_id', 'status_id', 'location', 'start_time', 'end_time'], 'required'],
+            [['user_id', 'type_id', 'status_id', 'time_id', 'period_id', 'alarm_type_id', 'has_reception', 'catering_id'], 'integer'],
             [['start_time', 'end_time'], 'safe'],
-            [['description'], 'string'],
+            [['description', 'message'], 'string'],
             [['title', 'favcolor', 'location', 'file'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['type_id'], 'exist', 'skipOnError' => true, 'targetClass' => CalendarsListType::className(), 'targetAttribute' => ['type_id' => 'id']],
@@ -81,6 +88,9 @@ class Calendars extends \yii\db\ActiveRecord
             'alarm_type_id' => Yii::t('calendars', 'Alarm Type ID'),
             'description' => Yii::t('calendars', 'Description'),
             'file' => Yii::t('calendars', 'File'),
+            'message' => Yii::t('calendars', 'Message'),
+            'has_reception' => Yii::t('calendars', 'Has Reception'),
+            'catering_id' => Yii::t('calendars', 'Catering ID'),
         ];
     }
 
@@ -130,6 +140,38 @@ class Calendars extends \yii\db\ActiveRecord
     public function getAlarmType()
     {
         return $this->hasOne(CalendarsListAlarmType::className(), ['id' => 'alarm_type_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendarsAlarms()
+    {
+        return $this->hasMany(CalendarsAlarms::className(), ['calendar_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendarsEvents()
+    {
+        return $this->hasMany(CalendarsEvents::className(), ['calendar_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendarsForInformations()
+    {
+        return $this->hasMany(CalendarsForInformation::className(), ['calendar_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendarsRequirements()
+    {
+        return $this->hasMany(CalendarsRequirements::className(), ['calendar_id' => 'id']);
     }
 
     /**
