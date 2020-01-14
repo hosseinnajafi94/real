@@ -17,9 +17,9 @@ use app\modules\users\models\DAL\Users;
  * @property string $location
  * @property string $start_time
  * @property string $end_time
- * @property int $time_id
- * @property int $period_id
- * @property int $alarm_type_id
+ * @property int|null $time_id
+ * @property int|null $period_id
+ * @property int|null $alarm_type_id
  * @property string|null $description
  * @property string|null $file
  * @property string|null $message

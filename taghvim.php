@@ -17,21 +17,25 @@ $one  = date('Y-m-d H:i:s', strtotime('-1 min'));
 $calendars = CalendarsEvents::find()->where("done = 0 AND datetime BETWEEN '$one' AND '$now'")->all();
 CalendarsEvents::updateAll(['done' => 1], "done = 0 AND datetime < '$now'");
 foreach ($calendars as $model) {
+    /* @var $model CalendarsEvents */
     $calendar = $model->calendar;
+    $alarm = $model->alarm;
     $date = jdf::jdate('Y/m/d', strtotime($model->datetime));
     $time = jdf::jdate('H:i', strtotime($model->datetime));
-    $message  = str_replace(['date', 'time'], [$date, $time], $text);
+    $message  = str_replace(['date', 'time'], [$date, $time], $alarm->message);
     foreach ($calendar->calendarsUsers as $user) {
-        switch ($calendar->alarm_type_id) {
+        switch ($alarm->alarm_type_id) {
             case 1:
                 NotificationsSRL::newNote('تقویم', $message, 'calendar', 1, $user->user_id);
                 break;
             case 2:
-                sms($message, $user->user->mobile);
+                //sms_parsgreen($message, $user->user->mobile);
+                sms_saba($message, $user->user->mobile);
                 break;
             case 3:
                 NotificationsSRL::newNote('تقویم', $message, 'calendar', 1, $user->user_id);
-                sms($message, $user->user->mobile);
+                //sms_parsgreen($message, $user->user->mobile);
+                sms_saba($message, $user->user->mobile);
                 break;
         }
     }

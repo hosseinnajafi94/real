@@ -184,23 +184,27 @@ class CalendarsVML extends Model {
             }
         }
 
+        
+        
+        CalendarsEvents::deleteAll(['calendar_id' => $model->id]);
         CalendarsAlarms::deleteAll(['calendar_id' => $model->id]);
+        
+        $days = getDiffDays($model->start_time, $model->end_time) + 1;
         foreach ($models as $row) {
             $row->calendar_id = $model->id;
-            $row->save();
+            if ($row->save()) {
+                for ($index = 0; $index < $days; $index += $row->model->period->days) {
+                    $datetime1 = date('Y-m-d H:i:s', strtotime($model->start_time . " +$index days"));
+                    $datetime2 = date('Y-m-d H:i:s', strtotime($datetime1) - $row->model->time->times);
+                    $model1 = new CalendarsEvents();
+                    $model1->alarm_id = $row->id;
+                    $model1->calendar_id = $model->id;
+                    $model1->datetime = $datetime2;
+                    $model1->done = 0;
+                    $model1->save();
+                }
+            }
         }
-
-//        CalendarsEvents::deleteAll(['calendar_id' => $model->id]);
-//        $days = getDiffDays($model->start_time, $model->end_time) + 1;
-//        for ($index = 0; $index < $days; $index += $model->period->days) {
-//            $datetime1 = date('Y-m-d H:i:s', strtotime($model->start_time . " +$index days"));
-//            $datetime2 = date('Y-m-d H:i:s', strtotime($datetime1) - $model->time->times);
-//            $model1 = new CalendarsEvents();
-//            $model1->calendar_id = $model->id;
-//            $model1->datetime = $datetime2;
-//            $model1->done = 0;
-//            $model1->save();
-//        }
 
         $this->id = $model->id;
         return true;

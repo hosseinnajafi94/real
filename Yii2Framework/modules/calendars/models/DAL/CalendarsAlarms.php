@@ -18,6 +18,7 @@ use Yii;
  * @property CalendarsListTime $time
  * @property CalendarsListPeriod $period
  * @property CalendarsListAlarmType $alarmType
+ * @property CalendarsEvents[] $calendarsEvents
  */
 class CalendarsAlarms extends \yii\db\ActiveRecord
 {
@@ -90,5 +91,13 @@ class CalendarsAlarms extends \yii\db\ActiveRecord
     public function getAlarmType()
     {
         return $this->hasOne(CalendarsListAlarmType::className(), ['id' => 'alarm_type_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendarsEvents()
+    {
+        return $this->hasMany(CalendarsEvents::className(), ['alarm_id' => 'id']);
     }
 }
