@@ -209,6 +209,10 @@ $(function () {
         $('#calendarsvml-requirements').trigger('change');
         $('#calendarsvml-has_reception').trigger('change');
         $('#calendarsvml-id').val('');
+        var dynamicform = window[$('.dynamicform_wrapper').data('dynamicform')];
+        $("#formNew .remove-item").each(function (e) {
+            $(".dynamicform_wrapper").yiiDynamicForm("deleteItem", dynamicform, e, $(this));
+        });
     });
     $('#saveNew').on('click', function (e) {
         e.preventDefault();
@@ -330,12 +334,28 @@ $(function () {
         $('#calendarsvml-start_time').val(row.start_time);
         $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', end_date);
         $('#calendarsvml-end_time').val(row.end_time);
-        $('#calendarsvml-time_id').val(row.time_id);
-        $('#calendarsvml-period_id').val(row.period_id);
-        $('#calendarsvml-alarm_type_id').val(row.alarm_type_id);
+//        $('#calendarsvml-time_id').val(row.time_id);
+//        $('#calendarsvml-period_id').val(row.period_id);
+//        $('#calendarsvml-alarm_type_id').val(row.alarm_type_id);
+        $('#calendarsvml-users').val(row.users).trigger('change');
+        $('#calendarsvml-for_informations').val(row.for_informations).trigger('change');
         $('#calendarsvml-description').val(row.description);
-        $('#calendarsvml-users').val(row.users);
-        $('#calendarsvml-users').trigger('change');
+        
+        $('#calendarsvml-has_reception').prop('checked', row.has_reception == 1).trigger('change');
+        $('#calendarsvml-catering_id').val(row.catering_id);
+        $('#calendarsvml-requirements').val(row.requirements).trigger('change');
+
+        var dynamicform = window[$('.dynamicform_wrapper').data('dynamicform')];
+        for (var i = 0, max = row.alarms.length; i < max; i++) {
+            $(".dynamicform_wrapper").yiiDynamicForm("addItem", dynamicform, null, $('.dynamicform_wrapper'));
+            var alarm = row.alarms[i];
+            $('[name="CalendarsAlarmsVML[' + i + '][time_id]"]').val(alarm.time_id);
+            $('[name="CalendarsAlarmsVML[' + i + '][alarm_type_id]"]').val(alarm.alarm_type_id);
+            $('[name="CalendarsAlarmsVML[' + i + '][period_id]"]').val(alarm.period_id);
+            $('[name="CalendarsAlarmsVML[' + i + '][message]"]').val(alarm.message);
+        }
+        $(".dynamicform_wrapper").yiiDynamicForm("deleteItem", dynamicform, null, $("#formNew .remove-item").last());
+
         $('#modalView').modal('hide');
         $('#modalNew').modal('show');
     });
@@ -471,11 +491,28 @@ $(function () {
     });
     //-------------------------------------------------------------------------- 
     function showEvent(event) {
+        
+        console.log(event);
+        
         var list = [];
         for (var i in event.users) {
             list.push(event.list_users[event.users[i]]);
         }
         var users = list.join('، ');
+        
+        list = [];
+        for (var i in event.for_informations) {
+            list.push(event.list_users[event.for_informations[i]]);
+        }
+        var for_informations = list.join('، ');
+        
+        list = [];
+        for (var i in event.requirements) {
+            list.push(event.list_requirements[event.requirements[i]]);
+        }
+        var requirements = list.join('، ');
+        
+        
         var $modal = $('#modalView');
         $modal.find('.update').data('row', event);
         $modal.find('.delete').data('row', event);
@@ -493,8 +530,22 @@ $(function () {
         $modal.find('#period_id').text(event.list_period[event.period_id]);
         $modal.find('#alarm_type_id').text(event.list_alarm_type[event.alarm_type_id]);
         $modal.find('#users').text(users);
+        $modal.find('#for_informations').text(for_informations);
         $modal.find('#description').text(event.description);
         $modal.find('#file').attr('src', urlCalendars + event.file);
+        
+        $modal.find('#has_reception').text(event.has_reception == 1 ? 'بله' : 'خیر');
+        if (event.has_reception == 1) {
+            $modal.find('#catering_id').parent().show();
+            $modal.find('#requirements').parent().show();
+            $modal.find('#catering_id').text(event.list_users[event.catering_id]);
+            $modal.find('#requirements').text(requirements);
+        }
+        else {
+            $modal.find('#catering_id').parent().hide();
+            $modal.find('#requirements').parent().hide();
+        }
+        
         var alarms = '';
         event.alarms.forEach(function (alarm) {
             alarms += `
@@ -510,7 +561,6 @@ $(function () {
                         <tbody>
                             <tr>
                                 <td colspan="3">
-                                    <a class="btn btn-sm btn-danger mb-0 pull-left delete-alarm" data-url="${alarm.url}" data-id="${alarm.id}"><i class="fa fa-times text-red"></i></a>
                                     <div>
                                         ${alarm.message}
                                     </div>
@@ -524,4 +574,17 @@ $(function () {
         $modal.find('#alarms').html(alarms ? alarms : '<li class="no">---</li>');
         $modal.modal('show');
     }
+
+//    $("#formNew").on("click", ".add-item", function (e) {
+//        e.preventDefault();
+//
+//        window[$('.dynamicform_wrapper').data('dynamicform')];
+//
+////        $(".dynamicform_wrapper").triggerHandler("beforeInsert", [$(this)]);
+////        $(".dynamicform_wrapper").yiiDynamicForm("addItem", dynamicform_5c73f849, e, $(this));
+//    });
+
+//    $("#formNew").on("click", ".remove-item", function(e) {
+    //e.preventDefault();
+
 });

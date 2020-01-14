@@ -245,7 +245,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
         'options' => ['class' => ''],
         'title'   => Yii::t('app', 'Details'),
         'footer'  => ''
-        . ' ' . Html::a(Yii::t('app', 'افزودن هشدار'), null, ['class' => 'btn btn-sm btn-secondary add-alarm'])
+//        . ' ' . Html::a(Yii::t('app', 'افزودن هشدار'), null, ['class' => 'btn btn-sm btn-secondary add-alarm'])
         . ' ' . Html::a(Yii::t('app', 'Update'), null, ['class' => 'btn btn-sm btn-primary update'])
         . ' ' . Html::a(Yii::t('app', 'Delete'), null, ['class' => 'btn btn-sm btn-danger delete'])
     ])
@@ -310,6 +310,10 @@ use wbraganca\dynamicform\DynamicFormWidget;
             <div class="col-8" id="users"></div>
         </div>
         <div class="row form-group">
+            <label class="col-4"><?= $model->getAttributeLabel('for_informations') ?></label>
+            <div class="col-8" id="for_informations"></div>
+        </div>
+        <div class="row form-group">
             <label class="col-4"><?= $model->getAttributeLabel('description') ?></label>
             <div class="col-8" id="description"></div>
         </div>
@@ -319,6 +323,19 @@ use wbraganca\dynamicform\DynamicFormWidget;
                 <img id="file" src="" style="max-width: 100%;max-height: 150px;"/>
             </div>
         </div>
+        <div class="row form-group">
+            <label class="col-4"><?= $model->getAttributeLabel('has_reception') ?></label>
+            <div class="col-8" id="has_reception"></div>
+        </div>
+        <div class="row form-group">
+            <label class="col-4"><?= $model->getAttributeLabel('catering_id') ?></label>
+            <div class="col-8" id="catering_id"></div>
+        </div>
+        <div class="row form-group">
+            <label class="col-4"><?= $model->getAttributeLabel('requirements') ?></label>
+            <div class="col-8" id="requirements"></div>
+        </div>
+        
         <div class="row form-group">
             <label class="col-4">هشدارها</label>
         </div>

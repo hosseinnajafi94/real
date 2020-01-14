@@ -47,10 +47,10 @@ class CalendarsAlarmsVML extends Model {
         $this->list_alarm_type = CalendarsListAlarmTypeSRL::getItems();
         return $this;
     }
-    public function save($post) {
-        if (!$this->load($post)) {
-            return false;
-        }
+    public function save() {
+//        if (!$this->load($post)) {
+//            return false;
+//        }
         if (!$this->validate()) {
             return false;
         }

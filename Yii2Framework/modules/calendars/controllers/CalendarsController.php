@@ -174,11 +174,16 @@ class CalendarsController extends Controller {
         }
         return $this->asJson($data);
     }
-    public function actionDetails($id) {
+    public function actionDetails($id, $type = 1) {
         $model = new CalendarsVML;
         $model->loaditems();
         $events = $model->getEvents($id);
-        return $this->asJson($events[0]);
+        if ($type === 1) {
+            return $this->asJson($events[0]);
+        }
+        else {
+            return $events[0];
+        }
     }
     public function actionIndex() {
         $search     = new CalendarsSearchVML();
@@ -238,15 +243,15 @@ class CalendarsController extends Controller {
     public function actionEvent() {
         $model = CalendarsVML::newInstance();
         if ($model->save(Yii::$app->request->post())) {
-            $data               = $model->loaditems()->toArray();
-            $data['start_time'] = substr($data['start_time'], 11);
-            $data['end_time']   = substr($data['end_time'], 11);
-            $data['start']      = $data['start_date'] . ' ' . $data['start_time'];
-            $data['end']        = $data['end_date'] . ' ' . $data['end_time'];
-            $data['start_date'] = functions::tojdate($data['start_date']);
-            $data['end_date']   = functions::tojdate($data['end_date']);
-            unset($data['model']);
-            return $this->asJson(['saved' => true, 'data' => $data]);
+//            $data               = $model->loaditems()->toArray();
+//            $data['start_time'] = substr($data['start_time'], 11);
+//            $data['end_time']   = substr($data['end_time'], 11);
+//            $data['start']      = $data['start_date'] . ' ' . $data['start_time'];
+//            $data['end']        = $data['end_date'] . ' ' . $data['end_time'];
+//            $data['start_date'] = functions::tojdate($data['start_date']);
+//            $data['end_date']   = functions::tojdate($data['end_date']);
+//            unset($data['model']);
+            return $this->asJson(['saved' => true, 'data' => $this->actionDetails($model->id, 2)]);
         }
         return $this->asJson(['saved' => false, 'errors' => $model->getErrors()]);
     }

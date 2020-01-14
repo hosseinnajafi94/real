@@ -3,6 +3,7 @@
 namespace app\modules\calendars\models\DAL;
 
 use Yii;
+use app\modules\users\models\DAL\Users;
 
 /**
  * This is the model class for table "calendars_for_information".

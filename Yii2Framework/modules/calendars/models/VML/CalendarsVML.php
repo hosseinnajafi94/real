@@ -17,6 +17,7 @@ use app\modules\calendars\models\SRL\CalendarsListPeriodSRL;
 use app\modules\calendars\models\SRL\CalendarsListAlarmTypeSRL;
 use app\modules\calendars\models\SRL\CalendarsListRequirementsSRL;
 use app\modules\calendars\models\DAL\CalendarsRequirements;
+use app\modules\calendars\models\VML\CalendarsAlarmsVML;
 class CalendarsVML extends Model {
     public $id;
     public $title;
@@ -102,6 +103,7 @@ class CalendarsVML extends Model {
         return $this;
     }
     public function save($post) {
+//        CalendarsAlarmsVML::news;
         $oldFile = $this->file;
         if (!$this->load($post)) {
             return false;
@@ -112,6 +114,7 @@ class CalendarsVML extends Model {
         if (!$this->validate()) {
             return false;
         }
+
         $this->start_time = $this->start_date . ' ' . $this->start_time;
         $this->end_time   = $this->end_date . ' ' . $this->end_time;
         /* @var $model OrganizationsPlanning */
@@ -133,6 +136,20 @@ class CalendarsVML extends Model {
         }
         $this->populate($model, $this);
         $model->user_id = Yii::$app->user->id;
+
+
+        $models = [];
+        if (isset($post['CalendarsAlarmsVML'])) {
+            for ($index = 0, $count = count($post['CalendarsAlarmsVML']); $index < $count; $index++) {
+                $models[] = CalendarsAlarmsVML::newInstance();
+            }
+            $loaded = CalendarsAlarmsVML::loadMultiple($models, $post);
+            if (!$loaded) {
+                return false;
+            }
+        }
+
+
         if (!$model->save()) {
             return false;
         }
@@ -165,6 +182,12 @@ class CalendarsVML extends Model {
                 $row->user_id     = $userId;
                 $row->save();
             }
+        }
+
+        CalendarsAlarms::deleteAll(['calendar_id' => $model->id]);
+        foreach ($models as $row) {
+            $row->calendar_id = $model->id;
+            $row->save();
         }
 
 //        CalendarsEvents::deleteAll(['calendar_id' => $model->id]);
@@ -229,6 +252,7 @@ class CalendarsVML extends Model {
         $list_time       = CalendarsListTimeSRL::getItems();
         $list_period     = CalendarsListPeriodSRL::getItems();
         $list_alarm_type = CalendarsListAlarmTypeSRL::getItems();
+//        $list_requirements = CalendarsListRequirementsSRL::getItems();
 
         if ($id === null) {
             $events = Calendars::find()->select('*, start_time as `start`, end_time as `end`')->asArray()->all();
@@ -236,7 +260,7 @@ class CalendarsVML extends Model {
         else {
             $events = Calendars::find()->select('*, start_time as `start`, end_time as `end`')->where(['id' => $id])->asArray()->all();
         }
-        
+
         foreach ($events as &$event) {
             $s                   = explode(' ', $event['start_time']);
             $e                   = explode(' ', $event['end_time']);
@@ -244,7 +268,20 @@ class CalendarsVML extends Model {
             $event['end_date']   = functions::tojdate($e[0]);
             $event['start_time'] = $s[1];
             $event['end_time']   = $e[1];
-            $event['alarms']     = CalendarsAlarms::find()->where(['calendar_id' => $event['id']])->asArray()->orderBy(['id' => SORT_DESC])->all();
+
+            $requirements          = CalendarsRequirements::find()->where(['calendar_id' => $event['id']])->asArray()->orderBy(['id' => SORT_DESC])->all();
+            $event['requirements'] = [];
+            foreach ($requirements as $row) {
+                $event['requirements'][] = $row['requirement_id'];
+            }
+
+            $for_informations          = CalendarsForInformation::find()->where(['calendar_id' => $event['id']])->asArray()->orderBy(['id' => SORT_DESC])->all();
+            $event['for_informations'] = [];
+            foreach ($for_informations as $row) {
+                $event['for_informations'][] = $row['user_id'];
+            }
+
+            $event['alarms'] = CalendarsAlarms::find()->where(['calendar_id' => $event['id']])->asArray()->orderBy(['id' => SORT_DESC])->all();
             foreach ($event['alarms'] as &$alarm) {
                 $alarm['list_time']       = $list_time;
                 $alarm['list_period']     = $list_period;
@@ -263,6 +300,7 @@ class CalendarsVML extends Model {
             $event['list_period']     = $this->list_period;
             $event['list_alarm_type'] = $this->list_alarm_type;
             $event['list_users']      = $this->list_users;
+            $event['list_requirements']      = $this->list_requirements;
         }
         return $events;
     }
