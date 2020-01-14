@@ -39,7 +39,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 </ul>
 <div class="tab-content p-0 pt-1">
     <div class="tab-pane active show" id="type1">
-        <div id="calendar" class="border" style="background: #F7F9FA;padding: 15px;border-radius: 4px;"></div>
+        <div id="calendar" class="border" style="background: #F7F9FA;padding: 15px;border-radius: 4px;height: 700px;overflow: hidden;"></div>
     </div>
     <div class="tab-pane" id="type2">
         <div id="date6" data-url="<?= Url::to(['get-list']) ?>" class="mb-2"></div>

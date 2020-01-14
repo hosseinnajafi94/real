@@ -351,7 +351,7 @@ $(function () {
         $('#calendarsvml-users').val(row.users).trigger('change');
         $('#calendarsvml-for_informations').val(row.for_informations).trigger('change');
         $('#calendarsvml-description').val(row.description);
-        
+
         $('#calendarsvml-has_reception').prop('checked', row.has_reception == 1).trigger('change');
         $('#calendarsvml-catering_id').val(row.catering_id);
         $('#calendarsvml-requirements').val(row.requirements).trigger('change');
@@ -387,12 +387,18 @@ $(function () {
     //--------------------------------------------------------------------------
     $('#calendar').fullCalendar({
         locale: 'fa',
+        height: 'parent',
+        eventLimit: 2,
+//        views: {
+//            timeGrid: {
+//                eventLimit: 1 // adjust to 6 only for timeGridWeek/timeGridDay
+//            }
+//        },
         isJalaali: true,
         isrtl: true,
         defaultView: 'month',
         defaultDate: moment().format('YYYY-MM-DD'),
         editable: false,
-        eventLimit: false,
         timeFormat: 'HH:mm',
         header: {
             left: 'agendaDay,agendaWeek,month next today prev print'
@@ -502,28 +508,28 @@ $(function () {
     });
     //-------------------------------------------------------------------------- 
     function showEvent(event) {
-        
+
         console.log(event);
-        
+
         var list = [];
         for (var i in event.users) {
             list.push(event.list_users[event.users[i]]);
         }
         var users = list.join('، ');
-        
+
         list = [];
         for (var i in event.for_informations) {
             list.push(event.list_users[event.for_informations[i]]);
         }
         var for_informations = list.join('، ');
-        
+
         list = [];
         for (var i in event.requirements) {
             list.push(event.list_requirements[event.requirements[i]]);
         }
         var requirements = list.join('، ');
-        
-        
+
+
         var $modal = $('#modalView');
         $modal.find('.update').data('row', event);
         $modal.find('.delete').data('row', event);
@@ -544,19 +550,18 @@ $(function () {
         $modal.find('#for_informations').text(for_informations);
         $modal.find('#description').text(event.description);
         $modal.find('#file').attr('src', urlCalendars + event.file);
-        
+
         $modal.find('#has_reception').text(event.has_reception == 1 ? 'بله' : 'خیر');
         if (event.has_reception == 1) {
             $modal.find('#catering_id').parent().show();
             $modal.find('#requirements').parent().show();
             $modal.find('#catering_id').text(event.list_users[event.catering_id]);
             $modal.find('#requirements').text(requirements);
-        }
-        else {
+        } else {
             $modal.find('#catering_id').parent().hide();
             $modal.find('#requirements').parent().hide();
         }
-        
+
         var alarms = '';
         event.alarms.forEach(function (alarm) {
             alarms += `
