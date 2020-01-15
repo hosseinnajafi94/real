@@ -93,8 +93,26 @@ use app\modules\tcoding\models\DAL\ListMonthDay;
  * @property int|null $mode_use_sip_id SIP پیشوند تماس از طریق
  * @property bool|null $show_lang نمایش کلمات ترجمه شده درصفحات
  *
+ * @property Calendars[] $calendars
+ * @property Calendars[] $calendars0
+ * @property CalendarsForInformation[] $calendarsForInformations
+ * @property CalendarsSections[] $calendarsSections
+ * @property CalendarsUsers[] $calendarsUsers
+ * @property Mails[] $mails
+ * @property Mails[] $mails0
+ * @property MailsAttachments[] $mailsAttachments
+ * @property MailsCopies[] $mailsCopies
+ * @property MailsLogs[] $mailsLogs
+ * @property MailsRefrences[] $mailsRefrences
+ * @property MailsSignatories[] $mailsSignatories
+ * @property MailsSignatures[] $mailsSignatures
+ * @property Notifications[] $notifications
  * @property Organizations[] $organizations
+ * @property OrganizationsPlanning[] $organizationsPlannings
+ * @property OrganizationsPlanning[] $organizationsPlannings0
  * @property OrganizationsUnits[] $organizationsUnits
+ * @property SecretariatsMembers[] $secretariatsMembers
+ * @property SecretariatsSignatories[] $secretariatsSignatories
  * @property Tickets[] $tickets
  * @property Tickets[] $tickets0
  * @property TicketsMessages[] $ticketsMessages
@@ -130,7 +148,12 @@ use app\modules\tcoding\models\DAL\ListMonthDay;
  * @property ListMonth $toMonth
  * @property ListMonthDay $toDay
  * @property UsersListModeUseSip $modeUseSip
+ * @property UsersEducations[] $usersEducations
+ * @property UsersFamilies[] $usersFamilies
+ * @property UsersHonors[] $usersHonors
  * @property UsersOrders[] $usersOrders
+ * @property UsersReagents[] $usersReagents
+ * @property UsersResume[] $usersResumes
  */
 class Users extends \yii\db\ActiveRecord
 {
@@ -285,6 +308,118 @@ class Users extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getCalendars()
+    {
+        return $this->hasMany(Calendars::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendars0()
+    {
+        return $this->hasMany(Calendars::className(), ['catering_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendarsForInformations()
+    {
+        return $this->hasMany(CalendarsForInformation::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendarsSections()
+    {
+        return $this->hasMany(CalendarsSections::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendarsUsers()
+    {
+        return $this->hasMany(CalendarsUsers::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMails()
+    {
+        return $this->hasMany(Mails::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMails0()
+    {
+        return $this->hasMany(Mails::className(), ['receiver1_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMailsAttachments()
+    {
+        return $this->hasMany(MailsAttachments::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMailsCopies()
+    {
+        return $this->hasMany(MailsCopies::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMailsLogs()
+    {
+        return $this->hasMany(MailsLogs::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMailsRefrences()
+    {
+        return $this->hasMany(MailsRefrences::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMailsSignatories()
+    {
+        return $this->hasMany(MailsSignatories::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMailsSignatures()
+    {
+        return $this->hasMany(MailsSignatures::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNotifications()
+    {
+        return $this->hasMany(Notifications::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getOrganizations()
     {
         return $this->hasMany(Organizations::className(), ['manager_id' => 'id']);
@@ -293,9 +428,41 @@ class Users extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getOrganizationsPlannings()
+    {
+        return $this->hasMany(OrganizationsPlanning::className(), ['created_by' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrganizationsPlannings0()
+    {
+        return $this->hasMany(OrganizationsPlanning::className(), ['updated_by' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getOrganizationsUnits()
     {
         return $this->hasMany(OrganizationsUnits::className(), ['manager_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSecretariatsMembers()
+    {
+        return $this->hasMany(SecretariatsMembers::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSecretariatsSignatories()
+    {
+        return $this->hasMany(SecretariatsSignatories::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -581,8 +748,48 @@ class Users extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getUsersEducations()
+    {
+        return $this->hasMany(UsersEducations::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersFamilies()
+    {
+        return $this->hasMany(UsersFamilies::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersHonors()
+    {
+        return $this->hasMany(UsersHonors::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getUsersOrders()
     {
         return $this->hasMany(UsersOrders::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersReagents()
+    {
+        return $this->hasMany(UsersReagents::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersResumes()
+    {
+        return $this->hasMany(UsersResume::className(), ['user_id' => 'id']);
     }
 }

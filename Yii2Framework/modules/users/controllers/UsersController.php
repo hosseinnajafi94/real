@@ -6,6 +6,11 @@ use app\config\widgets\Controller;
 use app\config\components\functions;
 use app\modules\users\models\VML\UsersSearchVML;
 use app\modules\users\models\VML\UsersVML;
+use app\modules\users\models\VML\UsersFamiliesSearchModel;
+use app\modules\users\models\VML\UsersReagentsSearchModel;
+use app\modules\users\models\VML\UsersEducationsSearchModel;
+use app\modules\users\models\VML\UsersResumeSearchModel;
+use app\modules\users\models\VML\UsersHonorsSearchModel;
 class UsersController extends Controller {
     public function behaviors() {
         return [
@@ -30,7 +35,31 @@ class UsersController extends Controller {
         if ($model === null) {
             return functions::httpNotFound();
         }
-        return $this->renderView($model);
+
+        $searchModel5  = new UsersFamiliesSearchModel();
+        $dataProvider5 = $searchModel5->search(Yii::$app->request->queryParams);
+        $searchModel6  = new UsersReagentsSearchModel();
+        $dataProvider6 = $searchModel6->search(Yii::$app->request->queryParams);
+        $searchModel7  = new UsersEducationsSearchModel();
+        $dataProvider7 = $searchModel7->search(Yii::$app->request->queryParams);
+        $searchModel8  = new UsersResumeSearchModel();
+        $dataProvider8 = $searchModel8->search(Yii::$app->request->queryParams);
+        $searchModel9 = new UsersHonorsSearchModel();
+        $dataProvider9 = $searchModel9->search(Yii::$app->request->queryParams);
+
+        return $this->renderView([
+                    'model'         => $model,
+                    'searchModel5'  => $searchModel5,
+                    'dataProvider5' => $dataProvider5,
+                    'searchModel6'  => $searchModel6,
+                    'dataProvider6' => $dataProvider6,
+                    'searchModel7'  => $searchModel7,
+                    'dataProvider7' => $dataProvider7,
+                    'searchModel8'  => $searchModel8,
+                    'dataProvider8' => $dataProvider8,
+                    'searchModel9'  => $searchModel9,
+                    'dataProvider9' => $dataProvider9,
+        ]);
     }
     public function actionCreate() {
         $model = UsersVML::newInstance();

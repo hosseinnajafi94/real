@@ -4,8 +4,8 @@ use app\config\widgets\GridView;
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\users\models\VML\UsersSearchVML */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-$this->title = Yii::t('users', 'Users');
-//$this->params['breadcrumbs'][] = $this->title;
+
+$this->title = Yii::t('users', 'پرونده');
 ?>
 <div class="users-users-index card">
     <div class="card-header">
@@ -52,7 +52,7 @@ $this->title = Yii::t('users', 'Users');
                 'dataProvider' => $dataProvider,
                 'filterModel'  => $searchModel,
                 'columns'      => [
-                    ['class' => 'yii\grid\SerialColumn'],
+                    ['class' => app\config\widgets\SerialColumn::class],
                     [
                         'attribute' => 'organization_id',
                         'value'     => function ($model) {

@@ -8,9 +8,9 @@ use app\config\widgets\ActiveForm;
 <div class="users-form card">
     <div class="card-header">
         <div class="card-title-wrap bar-success">
-            <h4 class="card-title"><?= Yii::t('users', 'Users') ?></h4>
+            <h4 class="card-title"><?= Yii::t('users', 'پرونده') ?></h4>
         </div>
-        <p><?= Yii::t('app', $model->id ? 'Update' : 'Create') ?></p>
+        <p><?= $this->title ?></p>
     </div>
     <div class="card-block">
         <?php

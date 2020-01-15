@@ -6,16 +6,18 @@ use app\assets\AdminAsset;
 /* @var $data \yii\data\ActiveDataProvider */
 /* @var $search \app\modules\calendars\models\VML\CalendarsSearchVML */
 $this->title          = Yii::t('calendars', 'Calendars');
+$this->params['title'] = $this->title;
+
 //$this->params['breadcrumbs'][] = $this->title;
 $this->registerCssFile('@web/themes/custom/libs/timepicker/timepicker.css', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/libs/timepicker/timepicker.js', ['depends' => AdminAsset::class]);
 $types                = $modelType->getTypes();
-$this->params['menu'] = '
-    <li class="nav-item"><a class="addType">تقویم جدید</a></li>
-    <li class="nav-item"><a class="listType">مدیریت تقویم ها</a></li>
+Yii::$app->controller->module->params['menu'] = '
+    <li class="nav-item"><a class="menu-item menu2 addType"><span class="menu-title">تقویم جدید</a></li>
+    <li class="nav-item"><a class="menu-item menu2 listType"><span class="menu-title">مدیریت تقویم ها</a></li>
     <li class="nav-item noclose">
-        <a style="padding: 0;">
-            <label class="mb-0" style="padding: 7px 14px 7px 10px;display: block;cursor: pointer;">
+        <a class="menu-item menu2" style="padding: 0 !important;">
+            <label class="mb-0" style="padding: 2px 14px 2px 10px !important;display: block;cursor: pointer;">
                 <input type="checkbox" class="calendar_type" data-id="all" checked/>
                 <span class="menu-title">همه</span>
             </label>
@@ -23,10 +25,10 @@ $this->params['menu'] = '
     </li>
 ';
 foreach ($types as $type) {
-    $this->params['menu'] .= '
+    Yii::$app->controller->module->params['menu'] .= '
         <li class="nav-item noclose">
-            <a style="padding: 0;">
-                <label class="mb-0" style="padding: 7px 14px 7px 10px;display: block;cursor: pointer;">
+            <a class="menu-item menu2" style="padding: 0 !important;">
+                <label class="mb-0" style="padding: 2px 14px 2px 10px !important;display: block;cursor: pointer;">
                     <input type="checkbox" class="calendar_type" data-id="' . $type['id'] . '" checked/>
                     <span class="menu-title">' . $type['title'] . '</span>
                 </label>

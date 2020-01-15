@@ -1,6 +1,7 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $model app\modules\users\models\VML\UsersVML */
+$this->title = Yii::t('app', 'Update');
 //$this->title = Yii::t('users', 'Update Users: {name}', [
 //    'name' => $model->id,
 //]);

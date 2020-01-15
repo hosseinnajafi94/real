@@ -22,6 +22,21 @@ thead th,thead td {padding: 5px !important;}
 i.far {font: normal normal normal 14px/1 FontAwesome;}
 .app-sidebar.hide-sidebar, .off-canvas-sidebar.hide-sidebar {transform : translate3d(0, 0, 0);}
 .content-wrapper {padding: 0;}
+.app-sidebar .navigation li.has-sub > a.menu2::after {
+    top: 2px !important;
+}
+.menu2 {
+    padding: 2px 14px 2px 10px !important;
+}
+.app-sidebar .navigation li > a, .off-canvas-sidebar .navigation li > a {
+    margin: 0 10px 5px;
+}
+.nav-link {
+    padding: 3px 8px;
+}
+.main-panel {
+    margin-top: 60px;
+}
 @media (max-width: 992px) {
     .app-sidebar.hide-sidebar, .off-canvas-sidebar.hide-sidebar {
       -webkit-transition : -webkit-transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
