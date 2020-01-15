@@ -32,6 +32,7 @@ use app\modules\users\models\DAL\Users;
  * @property CalendarsListTime $time
  * @property CalendarsListPeriod $period
  * @property CalendarsListAlarmType $alarmType
+ * @property Users $catering
  * @property CalendarsAlarms[] $calendarsAlarms
  * @property CalendarsEvents[] $calendarsEvents
  * @property CalendarsForInformation[] $calendarsForInformations
@@ -65,6 +66,7 @@ class Calendars extends \yii\db\ActiveRecord
             [['time_id'], 'exist', 'skipOnError' => true, 'targetClass' => CalendarsListTime::className(), 'targetAttribute' => ['time_id' => 'id']],
             [['period_id'], 'exist', 'skipOnError' => true, 'targetClass' => CalendarsListPeriod::className(), 'targetAttribute' => ['period_id' => 'id']],
             [['alarm_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => CalendarsListAlarmType::className(), 'targetAttribute' => ['alarm_type_id' => 'id']],
+            [['catering_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['catering_id' => 'id']],
         ];
     }
 
@@ -140,6 +142,14 @@ class Calendars extends \yii\db\ActiveRecord
     public function getAlarmType()
     {
         return $this->hasOne(CalendarsListAlarmType::className(), ['id' => 'alarm_type_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCatering()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'catering_id']);
     }
 
     /**

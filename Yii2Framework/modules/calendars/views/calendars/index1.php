@@ -46,7 +46,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
         <table class="table table-bordered table-sm mb-0" id="getList">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>ردیف</th>
                     <th>عنوان</th>
                     <th></th>
                 </tr>

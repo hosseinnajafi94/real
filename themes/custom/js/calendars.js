@@ -1,7 +1,6 @@
 /* global urlSearch, today, moment, urlCalendars, events, areYouSure, urlDelete, types, urlDeleteType */
 
 $(function () {
-
     $('#date6').MdPersianDateTimePicker({inLine: true, englishNumber: true}).on('change-dp', function () {
         var url = $(this).data('url');
         var datetime = $(this).data('dp-val');
