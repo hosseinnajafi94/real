@@ -29,6 +29,10 @@ class RequirementsController extends Controller {
         $this->findModel($id)->delete();
         return $this->asJson(['saved' => true]);
     }
+    public function actionDeleteAll(array $ids = []) {
+        CalendarsListRequirements::deleteAll(['id' => $ids]);
+        return $this->asJson(['saved' => true]);
+    }
     protected function findModel($id) {
         if (($model = CalendarsListRequirements::findOne($id)) !== null) {
             return $model;

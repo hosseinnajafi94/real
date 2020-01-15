@@ -11,8 +11,10 @@ $this->registerCss("
     ul.fields {display: none;list-style: none;margin: 0;position: fixed;background: #FFF;z-index: 1;border-radius: 4px;}
     ul.fields.active {display: block;}
     ul.fields li {line-height: 1;}
-    ul.fields .fields_header {}
-    ul.fields .fields_footer {text-align: center;}
+    ul.fields .fields_header {background: #EEE;margin: -6px -6px 6px -6px;padding: 6px;border-bottom: 1px solid #ccc;}
+    ul.fields .fields_header label {margin: 0;}
+    ul.fields .fields_footer {background: #EEE;margin: 0 -6px -6px -6px;padding: 6px;border-bottom: 1px solid #ccc;text-align: center;}
+    #list2 thead th {padding: 5px 13px !important;}
 ");
 $this->registerJs("
     $(document).on('click', 'a.fields', function () {
@@ -21,7 +23,27 @@ $this->registerJs("
     $('ul.fields .fields_header :checkbox').on('change', function (e) {
         $('ul.fields li:not(.fields_header) :checkbox').prop('checked', $(this).prop('checked'));
     });
+    $(document).on('click', function (e) {
+        if (!$(e.target).is('a.fields') && !$(e.target).is('a.fields *') && !$(e.target).is('ul.fields') && !$(e.target).is('ul.fields *')) {
+            $('ul.fields .btn-warning').trigger('click');
+        }
+    });
+    $(document).on('change', '#list2 [name=\"selection[]\"]', function () {
+        $('.list2DeleteAll').removeClass('disabled');
+        var items = $('#list2 [name=\"selection[]\"]:checked');
+        if (items.length === 0) {
+            $('.list2DeleteAll').addClass('disabled');
+        }
+    });
     var selected_fields = [];
+    $(document).on('click', '.list2DeleteAll', function (e) {
+        var ids = $('#list2 .grid-view').yiiGridView('getSelectedRows');
+        if (confirm('" . Yii::t('app', 'Are you sure?') . "')) {
+            ajaxget('" . yii\helpers\Url::to(['delete-events']) . "', {ids}, function () {
+                $.pjax.reload({url: '?', container: '#list2', data: {list2columns: selected_fields}});
+            });
+        }
+    });
     $('ul.fields .btn-success').on('click', function (e) {
         selected_fields = [];
         $('ul.fields').removeClass('active');
@@ -37,11 +59,6 @@ $this->registerJs("
             $('[name=\"list2columns[]\"][value=\"' + name + '\"]').prop('checked', true);
         });
     });
-    $(document).on('click', function (e) {
-        if (!$(e.target).is('a.fields') && !$(e.target).is('a.fields *') && !$(e.target).is('ul.fields') && !$(e.target).is('ul.fields *')) {
-            $('ul.fields').removeClass('active');
-        }
-    });
 ");
 function set($name) {
     $list2columns = Yii::$app->request->get('list2columns');
@@ -55,34 +72,34 @@ function set($name) {
     return false;
 }
 $fields = [
-    [
+        [
         'attribute' => 'title',
-        'label' => $search->getAttributeLabel('title')
+        'label'     => $search->getAttributeLabel('title')
     ],
-    [
+        [
         'attribute' => 'type_id',
         'label'     => $search->getAttributeLabel('type_id'),
         'value'     => function ($model) {
             return $model->type->title;
         }
     ],
-    [
+        [
         'attribute' => 'status_id',
         'label'     => $search->getAttributeLabel('status_id'),
         'value'     => function ($model) {
             return $model->status->title;
         }
     ],
-    ['attribute' => 'location', 'label' => $search->getAttributeLabel('location')],
-    ['attribute' => 'start_time', 'label' => $search->getAttributeLabel('start_time'), 'format' => 'jdate'],
-    ['attribute' => 'end_time', 'label' => $search->getAttributeLabel('end_time'), 'format' => 'jdate'],
-    ['attribute' => 'description', 'label' => $search->getAttributeLabel('description')],
-    [
+        ['attribute' => 'location', 'label' => $search->getAttributeLabel('location')],
+        ['attribute' => 'start_time', 'label' => $search->getAttributeLabel('start_time'), 'format' => 'jdate'],
+        ['attribute' => 'end_time', 'label' => $search->getAttributeLabel('end_time'), 'format' => 'jdate'],
+        ['attribute' => 'description', 'label' => $search->getAttributeLabel('description')],
+        [
         'attribute' => 'has_reception',
         'label'     => $search->getAttributeLabel('has_reception'),
         'format'    => 'bool'
     ],
-    [
+        [
         'attribute' => 'catering_id',
         'label'     => $search->getAttributeLabel('catering_id'),
         'value'     => function ($model) {
@@ -91,7 +108,7 @@ $fields = [
     ],
 ];
 $columns = [
-    [
+        [
         'class'  => app\config\widgets\SerialColumn::class,
         'header' => 'ردیف',
         'filter' => '<a class="fields btn btn-sm btn-secondary mb-0"><i class="fa fa-caret-down"></i></a>'
@@ -109,12 +126,15 @@ if (Yii::$app->request->get('list2columns')) {
     }
 }
 $columns[] = [
+    'class' => 'yii\grid\CheckboxColumn',
+];
+$columns[] = [
     'class'   => ActionColumn::class,
     'buttons' => [
         'delete' => function ($url) {
             return Html::a('<i class="fa fa-times"></i>', $url, ['class' => 'ajaxDelete', 'data' => ['pjax' => 0, 'container' => 'list2', 'confirm2' => Yii::t('app', 'Are you sure?')]]);
         },
-        'update'  => function ($url, $model) {
+        'update'  => function ($url) {
             return '<a href="' . $url . '" title="بروز رسانی" data-pjax="0"><span class="fa fa-pencil"></span></a>';
         },
         'view'     => function ($url) {
@@ -159,5 +179,6 @@ echo GridView::widget([
     'filterModel'    => $search,
     'columns'        => $columns,
 ]);
-
+echo Html::a('حذف', null, ['class' => 'btn btn-sm btn-danger list2DeleteAll pull-left disabled']);
 Pjax::end();
+

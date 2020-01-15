@@ -220,6 +220,10 @@ class CalendarsController extends Controller {
         $model->delete();
         return $this->asJson(['saved' => true]);
     }
+    public function actionDeleteEvents(array $ids = []) {
+        Calendars::deleteAll(['id' => $ids]);
+        return $this->asJson(['saved' => true]);
+    }
     public function actionDeleteAlarm($id) {
         if (($model = CalendarsAlarms::findOne(['id' => $id])) === null) {
             return $this->asJson(['saved' => false]);
