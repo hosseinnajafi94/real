@@ -1,7 +1,7 @@
 /* global urlSearch, today, moment, urlCalendars, events, areYouSure, urlDelete, types, urlDeleteType */
 
 $(function () {
-    
+
     $(document).on('click', '.nav-item a', function (e) {
         $('.menu2 span.fa').removeClass('active');
         if ($(e.target).is('.menu2')) {
@@ -493,7 +493,7 @@ $(function () {
     $('.fc-toolbar .fc-prev-button').html('قبل');
     $('.fc-toolbar .fc-next-button').html('بعد');
     $('.fc-toolbar .fc-left').prepend('<button class="btn printBtn" onclick="print();">پرینت</button>');
-    $('<input/>').val(today).addClass('form-control form-control-sm mt-2 mb-2').attr('id', 'fulldate').attr('placeholder', 'تاریخ').appendTo('.fc-left').MdPersianDateTimePicker({targetTextSelector: '#fulldate', isGregorian: false, yearOffset: 60, englishNumber: true}).on('hide.bs.popover', function () {
+    $('<input/>').val(today).addClass('form-control form-control-sm mt-2 mb-2').prop('readonly', true).attr('id', 'fulldate').attr('placeholder', 'تاریخ').appendTo('.fc-left').MdPersianDateTimePicker({targetTextSelector: '#fulldate', isGregorian: false, yearOffset: 60, englishNumber: true}).on('hide.bs.popover', function () {
         var m = moment(this.value, 'jYYYY/jMM/jDD');
         var date = tr_num(m.format('YYYY-MM-DD'));
         $('#calendar').fullCalendar('gotoDate', date);
@@ -511,20 +511,6 @@ $(function () {
     $('<ul/>').attr('class', 'bg-light border').attr('id', 'search_event_result').appendTo('#search_event');
     $('.fc-left .btn').addClass('mt-2 mb-2');
     //--------------------------------------------------------------------------
-    function tr_num(fa) {
-        return fa.toString()
-                .replace(/-/g, '/')
-                .replace(/۰/g, '0')
-                .replace(/۱/g, '1')
-                .replace(/۲/g, '2')
-                .replace(/۳/g, '3')
-                .replace(/۴/g, '4')
-                .replace(/۵/g, '5')
-                .replace(/۶/g, '6')
-                .replace(/۷/g, '7')
-                .replace(/۸/g, '8')
-                .replace(/۹/g, '9');
-    }
     var interV = null;
     function searchEvent(title) {
         clearTimeout(interV);
@@ -655,3 +641,18 @@ $(function () {
     //e.preventDefault();
 
 });
+
+function tr_num(fa) {
+    return fa.toString()
+            .replace(/-/g, '/')
+            .replace(/۰/g, '0')
+            .replace(/۱/g, '1')
+            .replace(/۲/g, '2')
+            .replace(/۳/g, '3')
+            .replace(/۴/g, '4')
+            .replace(/۵/g, '5')
+            .replace(/۶/g, '6')
+            .replace(/۷/g, '7')
+            .replace(/۸/g, '8')
+            .replace(/۹/g, '9');
+}

@@ -8,24 +8,25 @@ use yii\grid\ActionColumn;
 /* @var $search \app\modules\calendars\models\VML\CalendarsSearchVML */
 
 $this->registerCss("
-    ul.fields {display: none;list-style: none;margin: 0;position: fixed;background: #FFF;z-index: 1;border-radius: 4px;}
-    ul.fields.active {display: block;}
-    ul.fields li {line-height: 1;}
-    ul.fields .fields_header {background: #EEE;margin: -6px -6px 6px -6px;padding: 6px;border-bottom: 1px solid #ccc;}
-    ul.fields .fields_header label {margin: 0;}
-    ul.fields .fields_footer {background: #EEE;margin: 0 -6px -6px -6px;padding: 6px;border-bottom: 1px solid #ccc;text-align: center;}
+    div.fields {display: none;margin: 0;position: fixed;background: #FFF;z-index: 1;border-radius: 4px;}
+    div.fields ul {list-style: none;margin: 0;}
+    div.fields.active {display: block;}
+    div.fields li {line-height: 1;}
+    div.fields .fields_header {background: #EEE;margin: -6px -6px 6px -6px;padding: 6px;border-bottom: 1px solid #ccc;}
+    div.fields .fields_header label {margin: 0;}
+    div.fields .fields_footer {background: #EEE;margin: 0 -6px -6px -6px;padding: 6px;border-bottom: 1px solid #ccc;text-align: center;}
     #list2 thead th {padding: 5px 13px !important;}
 ");
 $this->registerJs("
     $(document).on('click', 'a.fields', function () {
-        $('ul.fields').toggleClass('active');
+        $('div.fields').toggleClass('active');
     });
-    $('ul.fields .fields_header :checkbox').on('change', function (e) {
-        $('ul.fields li:not(.fields_header) :checkbox').prop('checked', $(this).prop('checked'));
+    $(document).on('change', 'div.fields .fields_header :checkbox', function (e) {
+        $('div.fields li:not(.fields_header) :checkbox').prop('checked', $(this).prop('checked'));
     });
     $(document).on('click', function (e) {
-        if (!$(e.target).is('a.fields') && !$(e.target).is('a.fields *') && !$(e.target).is('ul.fields') && !$(e.target).is('ul.fields *')) {
-            $('ul.fields .btn-warning').trigger('click');
+        if (!$(e.target).is('a.fields') && !$(e.target).is('a.fields *') && !$(e.target).is('div.fields') && !$(e.target).is('div.fields *')) {
+            //$('div.fields .btn-secondary').trigger('click');
         }
     });
     $(document).on('change', '#list2 [name=\"selection[]\"]', function () {
@@ -44,16 +45,16 @@ $this->registerJs("
             });
         }
     });
-    $('ul.fields .btn-success').on('click', function (e) {
+    $(document).on('click', 'div.fields .btn-success', function (e) {
         selected_fields = [];
-        $('ul.fields').removeClass('active');
+        $('div.fields').removeClass('active');
         $('[name=\"list2columns[]\"]:checked').each(function () {
             selected_fields.push($(this).val());
         });
         $.pjax.reload({url: '?', container: '#list2', data: {list2columns: selected_fields}});
     });
-    $('ul.fields .btn-warning').on('click', function (e) {
-        $('ul.fields').removeClass('active');
+    $(document).on('click', 'div.fields .btn-secondary', function (e) {
+        $('div.fields').removeClass('active');
         $('[name=\"list2columns[]\"]').prop('checked', false);
         selected_fields.forEach(function (name) {
             $('[name=\"list2columns[]\"][value=\"' + name + '\"]').prop('checked', true);
@@ -143,7 +144,12 @@ $columns[] = [
     ],
 ];
 
-echo '<ul class="fields border p-1">
+Pjax::begin([
+    'id' => 'list2'
+]);
+
+echo '<div class="fields">
+<ul class="border p-1">
     <li class="fields_header"><label><input type="checkbox"/> همه</label></li>
 ';
 foreach ($fields as $index => $field) {
@@ -154,14 +160,11 @@ foreach ($fields as $index => $field) {
 }
 echo '<li class="fields_footer">
         <a class="btn btn-sm btn-success mb-0">تایید</a>
-        <a class="btn btn-sm btn-warning mb-0">لغو</a>
+        <a class="btn btn-sm btn-secondary mb-0">لغو</a>
     </li>
 </ul>
+</div>
 ';
-
-Pjax::begin([
-    'id' => 'list2'
-]);
 echo GridView::widget([
     'layout'         => '
         {items}
@@ -180,5 +183,6 @@ echo GridView::widget([
     'columns'        => $columns,
 ]);
 echo Html::a('حذف', null, ['class' => 'btn btn-sm btn-danger list2DeleteAll pull-left disabled']);
+
 Pjax::end();
 

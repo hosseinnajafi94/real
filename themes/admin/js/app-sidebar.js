@@ -213,9 +213,6 @@
 
         $('html').on('click', function (e) {
             if ($(window).width() < 992) {
-                if ($(e.target).hasClass('btn-warning')) {
-                    return;
-                }
                 if (!$sidebar.hasClass('hide-sidebar') && $sidebar.has(e.target).length === 0) {
                     $sidebar.addClass('hide-sidebar');
                 }

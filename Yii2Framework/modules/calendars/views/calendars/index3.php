@@ -56,6 +56,27 @@ use app\config\components\functions;
 </div>
 <?php
 $this->registerJs("
+$('#session_table').on('click', 'a', function () {
+    
+    var row = $(this).parents('tr').data('row')
+    var start_time = row.start_time;
+    var end_time = row.end_time;
+    
+    var d = row.date.split('/');
+    
+    var year = parseInt(d[0]);
+    var month = parseInt(d[1]);
+    var day = parseInt(d[2]);
+    
+    $('#calendarsvml-start_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
+    $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
+    
+    $('#calendarsvml-start_time').val(start_time);
+    $('#calendarsvml-end_time').val(end_time);
+    
+    $('#calendarsvml-id').val('');
+    $('#modalNew').modal('show');
+});
 $('#session_start_date').MdPersianDateTimePicker({
     targetTextSelector: '#session_start_date',
     isGregorian: false,
@@ -71,12 +92,19 @@ $('#session_start_time, #session_end_time').timeDropper({
     //autoswitch: true,
 });
 $('#session_search').click(function () {
-    
+
     var session_start_time = $('#session_start_time').val();
     var session_start_date = $('#session_start_date').val();
     var session_end_time = $('#session_end_time').val();
     var session_end_date = $('#session_end_date').val();
     
+    var s = parseInt(tr_num(session_start_date.replace(/\//g, '')));
+    var e = parseInt(tr_num(session_end_date.replace(/\//g, '')));
+    if (s > e) {
+        alert('تاریخ معتبر نمی باشد!');
+        return;
+    }
+
     var formData = new FormData();
     formData.append('session_start_time', session_start_time);
     formData.append('session_end_time', session_end_time);
@@ -86,14 +114,14 @@ $('#session_search').click(function () {
         $('#session_table tbody').html('');
         for (var i in result.rows) {
             var row = result.rows[i];
-            $('#session_table tbody').append(`
+            $(`
                 <tr class=\"` + (row.rowId === null ? 'table-success' : 'table-danger') + `\">
                     <td class=\"text-center\" style=\"vertical-align: middle;\">\${row.day}</td>
                     <td class=\"text-center\" style=\"vertical-align: middle;direction: ltr;\">\${row.date}</td>
                     <td class=\"text-center\" style=\"vertical-align: middle;direction: ltr;\">\${row.start_time} الی \${row.end_time}</td>
-                    <td>\${(row.rowId === null ? '<a href=\"' + row.url + '\" class=\"btn btn-sm btn-primary mb-0\">انتخاب</a>' : '')}</td>
+                    <td>\${(row.rowId === null ? '<a class=\"btn btn-sm btn-primary mb-0\">انتخاب</a>' : '')}</td>
                 </tr>
-            `);
+            `).data('row', row).appendTo('#session_table tbody');
         }
         //$('#text').html('<pre style=\"direction: ltr !important;text-align: left;\">'+JSON.stringify(result, null, 4)+'</pre>');
     }, undefined, undefined, undefined, true);
