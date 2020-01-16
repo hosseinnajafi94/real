@@ -62,7 +62,7 @@ $this->registerJs("
         var ids = $('#list4 .grid-view').yiiGridView('getSelectedRows');
         if (confirm('" . Yii::t('app', 'Are you sure?') . "')) {
             ajaxget('" . yii\helpers\Url::to(['/calendars/requirements/delete-all']) . "', {ids}, function () {
-                $.pjax.reload({container: '#list4'});
+                $.pjax.reload({container: '#list4', async: false});
             });
         }
     });

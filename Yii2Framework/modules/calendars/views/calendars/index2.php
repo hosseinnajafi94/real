@@ -41,7 +41,7 @@ $this->registerJs("
         var ids = $('#list2 .grid-view').yiiGridView('getSelectedRows');
         if (confirm('" . Yii::t('app', 'Are you sure?') . "')) {
             ajaxget('" . yii\helpers\Url::to(['delete-events']) . "', {ids}, function () {
-                $.pjax.reload({url: '?', container: '#list2', data: {list2columns: selected_fields}});
+                $.pjax.reload({url: '?', async: false, container: '#list2', data: {list2columns: selected_fields}});
             });
         }
     });
@@ -51,7 +51,7 @@ $this->registerJs("
         $('[name=\"list2columns[]\"]:checked').each(function () {
             selected_fields.push($(this).val());
         });
-        $.pjax.reload({url: '?', container: '#list2', data: {list2columns: selected_fields}});
+        $.pjax.reload({url: '?', async: false, container: '#list2', data: {list2columns: selected_fields}});
     });
     $(document).on('click', 'div.fields .btn-secondary', function (e) {
         $('div.fields').removeClass('active');
