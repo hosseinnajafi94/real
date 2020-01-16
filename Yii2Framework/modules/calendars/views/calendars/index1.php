@@ -39,7 +39,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 </ul>
 <div class="tab-content p-0 pt-1">
     <div class="tab-pane active show" id="type1">
-        <div id="calendar" class="border" style="background: #F7F9FA;padding: 15px;border-radius: 4px;height: 700px;overflow: hidden;"></div>
+        <div id="calendar" class="border" style="background: #F7F9FA;padding: 15px;border-radius: 4px;min-height: 700px;overflow: hidden;"></div>
     </div>
     <div class="tab-pane" id="type2">
         <div id="date6" data-url="<?= Url::to(['get-list']) ?>" class="mb-2"></div>
@@ -119,44 +119,44 @@ use wbraganca\dynamicform\DynamicFormWidget;
     <?= $form->field($model, 'status_id')->dropDownList($model->list_status) ?>
     <?= $form->field($model, 'location')->textInput(['maxlength' => true]) ?>
     <div class="row">
-        <div class="col">
+        <div class="col-md-6 col-xs-12">
             <?=
             $form->field($model, 'start_date', [
                 'horizontalCssClasses' => [
-                    'label'   => 'col-5',
-                    'wrapper' => 'col-7',
+                    'label'   => 'col-md-5 col-xs-12',
+                    'wrapper' => 'col-md-7 col-xs-12',
                 ],
             ])->textInput(['readonly' => true, 'style' => 'direction: ltr;text-align: left;'])
             ?>
         </div>
-        <div class="col">
+        <div class="col-md-6 col-xs-12">
             <?=
             $form->field($model, 'start_time', [
                 'horizontalCssClasses' => [
-                    'label'   => 'col-5',
-                    'wrapper' => 'col-7',
+                    'label'   => 'col-md-5 col-xs-12',
+                    'wrapper' => 'col-md-7 col-xs-12',
                 ],
             ])->textInput(['style' => 'direction: ltr;text-align: left;'])
             ?>
         </div>
     </div>
     <div class="row">
-        <div class="col">
+        <div class="col-md-6 col-xs-12">
             <?=
             $form->field($model, 'end_date', [
                 'horizontalCssClasses' => [
-                    'label'   => 'col-5',
-                    'wrapper' => 'col-7',
+                    'label'   => 'col-md-5 col-xs-12',
+                    'wrapper' => 'col-md-7 col-xs-12',
                 ],
             ])->textInput(['readonly' => true, 'style' => 'direction: ltr;text-align: left;'])
             ?>
         </div>
-        <div class="col">
+        <div class="col-md-6 col-xs-12">
             <?=
             $form->field($model, 'end_time', [
                 'horizontalCssClasses' => [
-                    'label'   => 'col-5',
-                    'wrapper' => 'col-7',
+                    'label'   => 'col-md-5 col-xs-12',
+                    'wrapper' => 'col-md-7 col-xs-12',
                 ],
             ])->textInput(['style' => 'direction: ltr;text-align: left;'])
             ?>
@@ -434,6 +434,14 @@ $this->registerJs('
 ');
 $this->registerCssFile('@web/themes/custom/css/fullcalendar.min.css', ['depends' => AdminAsset::class]);
 $this->registerCss('
+    #fulldate {direction: ltr;text-align: center;max-width: 150px;}
+    #search {max-width: 150px;}
+    #search_event {
+        max-width: 150px;
+        position:  relative;
+        z-index:   1000;
+    }
+    .fc-title, .fc-time {font-size: 11px !important;}
     .fc-unthemed .fc-today {color: black !important;}
     .myselected {background-color: #bed7f3 !important;}
     .fc-basic-view td {cursor: pointer;}
@@ -445,16 +453,11 @@ $this->registerCss('
     .fc-view > table * {direction: ltr !important;}
     #alarms {list-style: none;padding: 0;margin: 0;}
     #alarms li {}
-    #search_event {
-        max-width: 150px;
-        position:  relative;
-        z-index:   1000;
-    }
     #search_event_result {
         position: absolute;
-        top: 32px;
-        right: -50px;
-        width: 250px;
+        top: 48px;
+        right: 0;
+        width: 200%;
         max-height: 200px;
         overflow-x: hidden;
         overflow-y: auto;
@@ -492,12 +495,33 @@ $this->registerCss('
     .r {}
     .r li {cursor: pointer;padding: 5px;}
     .r li:hover {background: rgba(0,0,0,0.2);}
+    .fc-view-container {
+        overflow-x: scroll;
+    }
+    .fc-view > table {
+        min-width: 700px;
+        min-height: 100%;
+        max-height: 100%;
+        height: 100%;
+    }
+    .fc-row.fc-widget-header {
+        position: relative;
+    }
+    .fc td, .fc th {
+        padding: 0 !important;
+    }
+    @media (max-width: 500px) {
+        #fulldate {max-width: 100%;width: 100%;margin-left: 0;}
+        #search {max-width: 100%;width: 100%;}
+        #search_event {max-width: 100%;width: 100%;margin: 0;}
+        #search_event_result {width: 100%;}
+    }
 ');
 $this->registerJsFile('@web/themes/custom/js/moment.min.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/moment-jalaali.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/fullcalendar.min.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/locale-all.js', ['depends' => AdminAsset::class]);
-$this->registerJsFile('@web/themes/custom/js/calendars.js', ['depends' => AdminAsset::class]);
+$this->registerJsFile('@web/themes/custom/js/calendars.js?ver=1', ['depends' => AdminAsset::class]);
 $this->registerJs("
     var types         = " . json_encode($types) . ";
     var events        = " . json_encode($model->getEvents()) . ";

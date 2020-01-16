@@ -400,7 +400,7 @@ $(function () {
         editable: false,
         timeFormat: 'HH:mm',
         header: {
-            left: 'agendaDay,agendaWeek,month next today prev print'
+            left: 'agendaDay,agendaWeek,month next,today,prev print'
                     //center: 'title',
         },
         eventRender: function (calEvent, element, view) {
@@ -442,13 +442,13 @@ $(function () {
     $('.fc-toolbar .fc-prev-button').html('قبل');
     $('.fc-toolbar .fc-next-button').html('بعد');
     $('.fc-toolbar .fc-left').prepend('<button class="btn printBtn" onclick="print();">پرینت</button>');
-    $('<input/>').val(today).addClass('form-control form-control-sm').attr('id', 'fulldate').attr('style', 'direction: ltr;text-align: center;max-width: 150px;').attr('placeholder', 'تاریخ').appendTo('.fc-left').MdPersianDateTimePicker({targetTextSelector: '#fulldate', isGregorian: false, yearOffset: 60, englishNumber: true}).on('hide.bs.popover', function () {
+    $('<input/>').val(today).addClass('form-control form-control-sm mt-2 mb-2').attr('id', 'fulldate').attr('placeholder', 'تاریخ').appendTo('.fc-left').MdPersianDateTimePicker({targetTextSelector: '#fulldate', isGregorian: false, yearOffset: 60, englishNumber: true}).on('hide.bs.popover', function () {
         var m = moment(this.value, 'jYYYY/jMM/jDD');
         var date = tr_num(m.format('YYYY-MM-DD'));
         $('#calendar').fullCalendar('gotoDate', date);
     });
-    $('<div/>').attr('style', 'max-width: 150px;').attr('id', 'search_event').appendTo('.fc-left');
-    $('<input/>').addClass('form-control form-control-sm').attr('id', 'search').attr('placeholder', 'جستجو').attr('style', 'max-width: 150px;').appendTo('#search_event').on('input', function () {
+    $('<div/>').attr('id', 'search_event').appendTo('.fc-left');
+    $('<input/>').addClass('form-control form-control-sm mt-2 mb-2').attr('id', 'search').attr('placeholder', 'جستجو').appendTo('#search_event').on('input', function () {
         var title = $(this).val();
         searchEvent(title);
     }).focus(function () {
@@ -458,6 +458,7 @@ $(function () {
         }
     });
     $('<ul/>').attr('class', 'bg-light border').attr('id', 'search_event_result').appendTo('#search_event');
+    $('.fc-left .btn').addClass('mt-2 mb-2');
     //--------------------------------------------------------------------------
     function tr_num(fa) {
         return fa.toString()
