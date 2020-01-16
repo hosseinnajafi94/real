@@ -149,6 +149,7 @@ class UsersVML extends Model {
     public $model;
     public function rules() {
         return [
+                [['codemelli'], 'default', 'value' => null],
                 [['organization_id', 'group_id', 'status_id', 'birthplace_province_id', 'birthplace_city_id', 'marital_status_id', 'military_service_status_id', 'gender_id', 'employment_status_id', 'requested_salary', 'total_work_history', 'account_type_id', 'type_id', 'province_id', 'city_id', 'physical_cond_id', 'personnel_share_id', 'insurance_type_id', 'employment_type_id', 'contract_type_id', 'has_machin_id', 'is_owner_id', 'language_id', 'calendar_type_id', 'date_type_id', 'first_day_in_week_id', 'number_format_id', 'daylight_state_id', 'timezone_id', 'from_month_id', 'from_day_id', 'to_month_id', 'to_day_id', 'mode_use_sip_id'], 'integer'],
                 [['birthday', 'date_start', 'start_date', 'issuance_date', 'insurance_start_date', 'expiration'], 'safe'],
                 [['head_line', 'address'], 'string'],

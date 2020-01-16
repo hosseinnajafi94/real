@@ -2,13 +2,13 @@
 use yii\bootstrap4\Html;
 use app\config\widgets\ActiveForm;
 /* @var $this yii\web\View */
-/* @var $model app\modules\users\models\DAL\UsersEducations */
+/* @var $model app\modules\users\models\DAL\UsersCompilations */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-<div class="users-users-educations-form card">
+<div class="users-users-compilations-form card">
     <div class="card-header">
         <div class="card-title-wrap bar-success">
-            <h4 class="card-title"><?= Yii::t('users', 'تحصیلات / مهارت') ?></h4>
+            <h4 class="card-title"><?= Yii::t('users', 'تالیفات') ?></h4>
         </div>
         <p><?= $this->title ?></p>
     </div>
@@ -32,42 +32,38 @@ use app\config\widgets\ActiveForm;
                 <?= $form->field($model, 'type_id')->dropDownList([]) ?>
             </div>
             <div class="col">
-                <?= $form->field($model, 'degree_id')->dropDownList([]) ?>
+                <?= $form->field($model, 'submit_type_id')->dropDownList([]) ?>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <?= $form->field($model, 'field')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
             </div>
             <div class="col">
-                <?= $form->field($model, 'university')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'year')->textInput(['style' => 'direction: ltr !important;text-align: left;', 'type' => 'number']) ?>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <?= $form->field($model, 'gpa')->textInput(['style' => 'direction: ltr;text-align: left;']) ?>
+                <?= $form->field($model, 'place')->textInput(['maxlength' => true]) ?>
             </div>
             <div class="col">
-                <?= $form->field($model, 'points')->textInput(['style' => 'direction: ltr;text-align: left;']) ?>
+                <?= $form->field($model, 'page_number')->textInput(['style' => 'direction: ltr !important;text-align: left;', 'type' => 'number']) ?>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <?= $form->field($model, 'start_date')->textInput(['style' => 'direction: ltr;text-align: left;', 'readonly' => true]) ?>
+                <?= $form->field($model, 'points')->textInput(['style' => 'direction: ltr !important;text-align: left;', 'type' => 'number']) ?>
             </div>
             <div class="col">
-                <?= $form->field($model, 'end_date')->textInput(['style' => 'direction: ltr;text-align: left;', 'readonly' => true]) ?>
             </div>
         </div>
-        <?=
-        $form->field($model, 'description', [
+        <?= $form->field($model, 'descriptions', [
             'horizontalCssClasses' => [
                 'label'   => 'col-sm-2 control-label',
                 'wrapper' => 'col-sm-10',
             ],
-        ])->textInput(['maxlength' => true])
-        ?>
-        <?= $form->field($model, 'evidence')->checkbox() ?>
+        ])->textInput(['maxlength' => true]) ?>
         <?= Html::a(Yii::t('app', 'Return'), ['/users/users/view', 'id' => $model->user_id], ['class' => 'btn btn-sm btn-warning mb-0']) ?>
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-sm btn-success mb-0']) ?>
         <?php ActiveForm::end(); ?>

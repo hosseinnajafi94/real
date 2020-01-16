@@ -26,11 +26,10 @@ $model       = $model->model;
             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page08">سوابق کاری</a></li>
             <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page04">احکام / قراردادها</a></li>-->
             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page09">عناوین و افتخارات</a></li>
-            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page10">تالیفات</a></li>-->
-            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page11">علایق</a></li>-->
-            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page12">توضیحات اداری</a></li>-->
-            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page13">توضیحات اداری</a></li>-->
-            <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page14">توضیحات محرمانه</a></li>-->
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page10">تالیفات</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page11">علایق</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page12">توضیحات اداری</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page13">توضیحات محرمانه</a></li>
             <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page15">دسترسی ها</a></li>-->
             <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page16">دسترسی مرخصی / ماموریت</a></li>-->
             <!--<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page17">مدارک</a></li>-->
@@ -97,16 +96,42 @@ $model       = $model->model;
                 ?>
             </div>
             <div class="tab-pane" id="page10">
-                <h3 class="text-center">در دست اقدام</h3>
+                <?=
+                $this->render('view_10', [
+                    'model' => $model,
+                    'searchModel'  => $searchModel10,
+                    'dataProvider' => $dataProvider10,
+                ])
+                ?>
             </div>
             <div class="tab-pane" id="page11">
-                <h3 class="text-center">در دست اقدام</h3>
+                <?=
+                $this->render('view_11', [
+                    'model' => $model,
+                    'searchModel'  => $searchModel11,
+                    'dataProvider' => $dataProvider11,
+                ])
+                ?>
             </div>
             <div class="tab-pane" id="page12">
-                <h3 class="text-center">در دست اقدام</h3>
+                <?=
+                $this->render('view_12', [
+                    'model' => $model,
+                    'searchModel'  => $searchModel12,
+                    'dataProvider' => $dataProvider12,
+                ])
+                ?>
             </div>
             <div class="tab-pane" id="page13">
-                <h3 class="text-center">در دست اقدام</h3>
+                <?=
+                $this->render('view_13', [
+                    'model' => $model,
+                    'searchModel'  => $searchModel13,
+                    'dataProvider' => $dataProvider13,
+                    'searchModel_2'  => $searchModel13_2,
+                    'dataProvider_2' => $dataProvider13_2,
+                ])
+                ?>
             </div>
             <div class="tab-pane" id="page14">
                 <h3 class="text-center">در دست اقدام</h3>

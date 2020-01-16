@@ -148,8 +148,11 @@ use app\modules\tcoding\models\DAL\ListMonthDay;
  * @property ListMonth $toMonth
  * @property ListMonthDay $toDay
  * @property UsersListModeUseSip $modeUseSip
+ * @property UsersCompilations[] $usersCompilations
+ * @property UsersDescriptions[] $usersDescriptions
  * @property UsersEducations[] $usersEducations
  * @property UsersFamilies[] $usersFamilies
+ * @property UsersFavorites[] $usersFavorites
  * @property UsersHonors[] $usersHonors
  * @property UsersOrders[] $usersOrders
  * @property UsersReagents[] $usersReagents
@@ -748,6 +751,22 @@ class Users extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getUsersCompilations()
+    {
+        return $this->hasMany(UsersCompilations::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersDescriptions()
+    {
+        return $this->hasMany(UsersDescriptions::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getUsersEducations()
     {
         return $this->hasMany(UsersEducations::className(), ['user_id' => 'id']);
@@ -759,6 +778,14 @@ class Users extends \yii\db\ActiveRecord
     public function getUsersFamilies()
     {
         return $this->hasMany(UsersFamilies::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersFavorites()
+    {
+        return $this->hasMany(UsersFavorites::className(), ['user_id' => 'id']);
     }
 
     /**
