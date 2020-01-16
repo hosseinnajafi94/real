@@ -411,6 +411,22 @@ use wbraganca\dynamicform\DynamicFormWidget;
 </div>
 <!--  -->
 <?php
+$this->registerJsFile('@web/themes/custom/js/moment.min.js', ['depends' => AdminAsset::class]);
+$this->registerJsFile('@web/themes/custom/js/moment-jalaali.js', ['depends' => AdminAsset::class]);
+$this->registerJsFile('@web/themes/custom/js/fullcalendar.min.js', ['depends' => AdminAsset::class]);
+$this->registerJsFile('@web/themes/custom/js/locale-all.js', ['depends' => AdminAsset::class]);
+$this->registerJsFile('@web/themes/custom/js/calendars.js?ver=2', ['depends' => AdminAsset::class]);
+$this->registerCssFile('@web/themes/custom/css/fullcalendar.min.css', ['depends' => AdminAsset::class]);
+$this->registerJs("
+    var types         = " . json_encode($types) . ";
+    var events        = " . json_encode($model->getEvents()) . ";
+    var areYouSure    = '" . Yii::t('app', 'Are you sure?') . "';
+    var urlDeleteType = '" . Url::to(['delete-type']) . "';
+    var urlDelete     = '" . Url::to(['delete-event']) . "';
+    var urlCalendars  = '" . Yii::getAlias('@web/uploads/calendars') . "/';
+    var today         = '" . functions::getjdate() . "';
+    var urlSearch     = '" . Url::to(['search']) . "';
+", View::POS_HEAD);
 $this->registerJs('
     $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
         //console.log("beforeInsert");
@@ -432,8 +448,12 @@ $this->registerJs('
         //alert("Limit reached");
     });
 ');
-$this->registerCssFile('@web/themes/custom/css/fullcalendar.min.css', ['depends' => AdminAsset::class]);
 $this->registerCss('
+    .menu2 span.fa {display: none !important;}
+    .menu2 span.fa.active {display: inline-block !important;}
+    @media (min-width: 992px) {
+        .menu2:hover span.fa {display: inline-block !important;}
+    }
     #fulldate {direction: ltr;text-align: center;max-width: 150px;}
     #search {max-width: 150px;}
     #search_event {
@@ -496,7 +516,7 @@ $this->registerCss('
     .r li {cursor: pointer;padding: 5px;}
     .r li:hover {background: rgba(0,0,0,0.2);}
     .fc-view-container {
-        overflow-x: scroll;
+        overflow: auto;
     }
     .fc-view > table {
         min-width: 700px;
@@ -517,18 +537,3 @@ $this->registerCss('
         #search_event_result {width: 100%;}
     }
 ');
-$this->registerJsFile('@web/themes/custom/js/moment.min.js', ['depends' => AdminAsset::class]);
-$this->registerJsFile('@web/themes/custom/js/moment-jalaali.js', ['depends' => AdminAsset::class]);
-$this->registerJsFile('@web/themes/custom/js/fullcalendar.min.js', ['depends' => AdminAsset::class]);
-$this->registerJsFile('@web/themes/custom/js/locale-all.js', ['depends' => AdminAsset::class]);
-$this->registerJsFile('@web/themes/custom/js/calendars.js?ver=1', ['depends' => AdminAsset::class]);
-$this->registerJs("
-    var types         = " . json_encode($types) . ";
-    var events        = " . json_encode($model->getEvents()) . ";
-    var areYouSure    = '" . Yii::t('app', 'Are you sure?') . "';
-    var urlDeleteType = '" . Url::to(['delete-type']) . "';
-    var urlDelete     = '" . Url::to(['delete-event']) . "';
-    var urlCalendars  = '" . Yii::getAlias('@web/uploads/calendars') . "/';
-    var today         = '" . functions::getjdate() . "';
-    var urlSearch     = '" . Url::to(['search']) . "';
-", View::POS_HEAD);

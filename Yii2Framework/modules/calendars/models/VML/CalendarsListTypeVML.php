@@ -95,7 +95,7 @@ class CalendarsListTypeVML extends Model {
         return true;
     }
     public function getTypes() {
-        $types = CalendarsListType::find()->orderBy(['id' => SORT_ASC])->asArray()->all();
+        $types = CalendarsListType::find()->select('*, descriptions as description')->orderBy(['id' => SORT_ASC])->asArray()->all();
         foreach ($types as &$type) {
             $rows = CalendarsSections::find()->where(['type_id' => $type['id']])->asArray()->all();
             foreach ($rows as $row) {

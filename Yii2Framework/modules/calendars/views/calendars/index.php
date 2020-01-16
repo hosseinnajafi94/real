@@ -13,11 +13,9 @@ $this->registerCssFile('@web/themes/custom/libs/timepicker/timepicker.css', ['de
 $this->registerJsFile('@web/themes/custom/libs/timepicker/timepicker.js', ['depends' => AdminAsset::class]);
 $types                = $modelType->getTypes();
 Yii::$app->controller->module->params['menu'] = '
-    <li class="nav-item"><a class="menu-item menu2 addType"><span class="menu-title">تقویم جدید</a></li>
-    <li class="nav-item"><a class="menu-item menu2 listType"><span class="menu-title">مدیریت تقویم ها</a></li>
     <li class="nav-item noclose">
         <a class="menu-item menu2" style="padding: 0 !important;">
-            <label class="mb-0" style="padding: 2px 14px 2px 10px !important;display: block;cursor: pointer;">
+            <label class="mb-0" style="padding: 2px 14px 2px 10px !important;display: inline-block;width: 100%;cursor: pointer;">
                 <input type="checkbox" class="calendar_type" data-id="all" checked/>
                 <span class="menu-title">همه</span>
             </label>
@@ -28,14 +26,20 @@ foreach ($types as $type) {
     Yii::$app->controller->module->params['menu'] .= '
         <li class="nav-item noclose">
             <a class="menu-item menu2" style="padding: 0 !important;">
-                <label class="mb-0" style="padding: 2px 14px 2px 10px !important;display: block;cursor: pointer;">
+                <label class="mb-0" style="padding: 2px 14px 2px 10px !important;display: inline-block;width: calc(70% - 24px);cursor: pointer;">
                     <input type="checkbox" class="calendar_type" data-id="' . $type['id'] . '" checked/>
                     <span class="menu-title">' . $type['title'] . '</span>
                 </label>
+                <span class="fa fa-pencil" data-id="' . $type['id'] . '" style="display: inline-block;width: 15%;text-align: center;padding: 8px 0;"></span>
+                <span class="fa fa-times" data-id="' . $type['id'] . '" style="display: inline-block;width: 15%;text-align: center;padding: 8px 0;"></span>
             </a>
         </li>
     ';
 }
+Yii::$app->controller->module->params['menu'] .= '
+    <li class="nav-item"><a class="menu-item menu2 addType"><i class="fa fa-cogs"></i><span class="menu-title">تقویم جدید</a></li>
+    <li class="nav-item"><a class="menu-item menu2 listType d-none"><span class="menu-title">مدیریت تقویم ها</a></li>
+';
 ?>
 <!--  -->
 <div class="calendars-index">

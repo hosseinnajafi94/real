@@ -1,6 +1,47 @@
 /* global urlSearch, today, moment, urlCalendars, events, areYouSure, urlDelete, types, urlDeleteType */
 
 $(function () {
+    
+    $(document).on('click', '.nav-item a', function (e) {
+        $('.menu2 span.fa').removeClass('active');
+        if ($(e.target).is('.menu2')) {
+            $(this).find('span.fa').addClass('active');
+        }
+    });
+    $(document).on('click', '.menu2 span.fa-pencil', function () {
+        var id = $(this).data('id');
+        var row = types.find(function (type) {
+            return type.id == id;
+        });
+        $('#calendarslisttypevml-id').val(row.id);
+        $('#calendarslisttypevml-title').val(row.title);
+        $('#calendarslisttypevml-description').val(row.description);
+        $('#calendarslisttypevml-sections1').val(row.sections1);
+        $('#calendarslisttypevml-sections1').trigger('change');
+        $('#calendarslisttypevml-sections2').val(row.sections2);
+        $('#calendarslisttypevml-sections2').trigger('change');
+        $('#calendarslisttypevml-sections3').val(row.sections3);
+        $('#calendarslisttypevml-sections3').trigger('change');
+        $('#modalNewType').modal('show');
+    });
+    $(document).on('click', '.menu2 span.fa-times', function () {
+        var id = $(this).data('id');
+        if (confirm(areYouSure)) {
+            ajaxget(urlDeleteType, {id}, function (result) {
+                if (result.saved) {
+                    $('.deleteType[data-id="' + id + '"]').parents('tr').remove();
+                    $('#calendarsvml-type_id option[value="' + id + '"]').remove();
+                    $('.calendar_type[data-id="' + id + '"]').parents('li').remove();
+                    var index = types.findIndex(function (row) {
+                        return row.id == id;
+                    });
+                    if (index !== -1) {
+                        types.splice(index, 1);
+                    }
+                }
+            });
+        }
+    });
     $('#date6').MdPersianDateTimePicker({inLine: true, englishNumber: true}).on('change-dp', function () {
         var url = $(this).data('url');
         var datetime = $(this).data('dp-val');
@@ -36,7 +77,6 @@ $(function () {
             showEvent(result);
         });
     });
-
     $('#calendarsvml-has_reception').change(function () {
         var checked = $(this).prop('checked');
         if (checked) {
@@ -191,12 +231,23 @@ $(function () {
                 var formData = new FormData($('#formNewType').get(0));
                 ajaxpost(url, formData, function (result) {
                     if (result.saved === true) {
-                        $('.deleteType[data-id="' + result.data.id + '"]').parents('tr').remove();
-                        $('#calendarsvml-type_id option[value="' + result.data.id + '"]').remove();
-                        $('.calendar_type[data-id="' + result.data.id + '"]').parents('li').remove();
-                        $('#ulListType').append(`<li><label class="btn btn-sm btn-primary"><input type="checkbox" class="calendar_type" data-id="${result.data.id}"/> <span>${result.data.title}</span></label></li>`);
-                        $('#calendarsvml-type_id').append(`<option value="${result.data.id}">${result.data.title}</option>`);
-                        $('#modalListType tbody').append(`<tr><td>${result.data.id}</td><td>${result.data.title}</td><td><a class="btn btn-sm btn-primary mb-0 editType" data-id="${result.data.id}" data-title="${result.data.title}" data-description="${result.data.description}"><i class="fa fa-edit"></i></a> <a class="btn btn-sm btn-danger mb-0 deleteType" data-id="${result.data.id}"><i class="fa fa-times"></i></a></td></tr>`);
+                        if ($('.calendar_type[data-id="' + result.data.id + '"]').length === 0) {
+                            $('#main-menu-navigation').append(`
+                                <li class="nav-item noclose">
+                                    <a class="menu-item menu2" style="padding: 0 !important;">
+                                        <label class="mb-0" style="padding: 2px 14px 2px 10px !important;display: inline-block;width: calc(70% - 24px);cursor: pointer;">
+                                            <input type="checkbox" class="calendar_type" data-id="${result.data.id}" checked>
+                                            <span class="menu-title">${result.data.title}</span>
+                                        </label>
+                                        <span class="fa fa-pencil" data-id="${result.data.id}" style="display: inline-block;width: 15%;text-align: center;padding: 8px 0;"></span>
+                                        <span class="fa fa-times" data-id="${result.data.id}" style="display: inline-block;width: 15%;text-align: center;padding: 8px 0;"></span>
+                                    </a>
+                                </li>
+                            `);
+                        }
+                        if ($('#calendarsvml-type_id option[value="' + result.data.id + '"]').length === 0) {
+                            $('#calendarsvml-type_id').append(`<option value="${result.data.id}">${result.data.title}</option>`);
+                        }
                         $('#modalNewType').modal('hide');
                         var index = types.findIndex(function (row) {
                             return row.id == result.data.id;

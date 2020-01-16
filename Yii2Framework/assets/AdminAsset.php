@@ -32,7 +32,7 @@ class AdminAsset extends AssetBundle {
         'themes/admin/vendors/js/chartist.min.js',
 //        <!-- END PAGE VENDOR JS-->
 //        <!-- BEGIN CONVEX JS-->
-        'themes/admin/js/app-sidebar.js',
+        'themes/admin/js/app-sidebar.js?ver=2',
         'themes/admin/js/notification-sidebar.js',
 //        'themes/admin/js/customizer.js',
 //        <!-- END CONVEX JS-->
