@@ -14,6 +14,7 @@ use app\modules\calendars\models\VML\CalendarsAlarmsVML;
 use app\modules\calendars\models\VML\CalendarsSearchVML;
 use app\modules\calendars\models\VML\CalendarsListTypeVML;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use app\modules\calendars\models\DAL\CalendarsListRequirements;
 class CalendarsController extends Controller {
     public function behaviors() {
         return [
@@ -196,6 +197,8 @@ class CalendarsController extends Controller {
         $modelAlarm->loaditems();
         $modelType  = CalendarsListTypeVML::newInstance();
         $modelType->loaditems();
+        $modelRequirements = new CalendarsListRequirements();
+        
         return $this->render('index', [
                     'model'      => $model,
                     'modelType'  => $modelType,
@@ -203,7 +206,8 @@ class CalendarsController extends Controller {
                     'data'       => $data,
                     'search4'    => $search4,
                     'data4'      => $data4,
-                    'modelAlarm' => $modelAlarm
+                    'modelAlarm' => $modelAlarm,
+                    'modelRequirements' => $modelRequirements,
         ]);
     }
     public function actionDeleteType($id) {

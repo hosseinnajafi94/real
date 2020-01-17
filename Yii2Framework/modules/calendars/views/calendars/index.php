@@ -79,7 +79,8 @@ Yii::$app->controller->module->params['menu'] .= '
                     <?=
                     $this->render('index4', [
                         'data'   => $data4,
-                        'search' => $search4
+                        'search' => $search4,
+                        'modelRequirements' => $modelRequirements,
                     ])
                     ?>
                 </div>

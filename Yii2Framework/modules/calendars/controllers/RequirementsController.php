@@ -19,11 +19,12 @@ class RequirementsController extends Controller {
     public function actionCreate() {
         $model = new CalendarsListRequirements();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if (Yii::$app->request->isAjax) {
+                return $this->asJson(['saved' => true]);
+            }
             return $this->redirect(['/calendars/calendars/index']);
         }
-        return $this->render('create', [
-                    'model' => $model,
-        ]);
+        return $this->renderView($model);
     }
     public function actionDelete($id) {
         $this->findModel($id)->delete();
@@ -37,7 +38,6 @@ class RequirementsController extends Controller {
         if (($model = CalendarsListRequirements::findOne($id)) !== null) {
             return $model;
         }
-
         throw new NotFoundHttpException(Yii::t('notifications', 'The requested page does not exist.'));
     }
 }
