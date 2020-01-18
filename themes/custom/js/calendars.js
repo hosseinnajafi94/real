@@ -1,7 +1,25 @@
 /* global urlSearch, today, moment, urlCalendars, events, areYouSure, urlDelete, types, urlDeleteType */
 
 $(function () {
-
+    $(document).on('submit', '#importForm', function (e) {
+        e.preventDefault();
+        var $form = $('#importForm');
+        showloading();
+        $form.yiiActiveForm('validate');
+        setTimeout(function () {
+            hideloading();
+            var errors = $form.find('.is-invalid').length;
+            if (errors === 0) {
+                var url = $form.attr('action');
+                var data = new FormData($form.get(0));
+                ajaxpost(url, data, function (result) {
+                    if (result.saved === true) {
+                        
+                    }
+                }, undefined, undefined, undefined, true);
+            }
+        }, 500);
+    });
     $(document).on('click', '.nav-item a', function (e) {
         $('.menu2 span.fa').removeClass('active');
         if ($(e.target).is('.menu2')) {

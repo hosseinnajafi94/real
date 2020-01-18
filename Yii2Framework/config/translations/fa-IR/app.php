@@ -4,6 +4,7 @@ return [
     'Details'                                    => 'نمایش جزئیات',
     'Confirm'                                    => 'تایید',
     'Reject'                                     => 'عدم تایید',
+    'Reset'                                      => 'پاک کردن',
     'Create'                                     => 'افزودن',
     'Update'                                     => 'بروز رسانی',
     'Delete'                                     => 'حذف',

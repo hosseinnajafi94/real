@@ -23,6 +23,22 @@ foreach ($calendars as $model) {
     $date = jdf::jdate('Y/m/d', strtotime($model->datetime));
     $time = jdf::jdate('H:i', strtotime($model->datetime));
     $message  = str_replace(['date', 'time'], [$date, $time], $alarm->message);
+    foreach ($calendar->calendarsForInformations as $user) {
+        switch ($alarm->alarm_type_id) {
+            case 1:
+                NotificationsSRL::newNote('تقویم', $message, 'calendar', 1, $user->user_id);
+                break;
+            case 2:
+                //sms_parsgreen($message, $user->user->mobile);
+                sms_saba($message, $user->user->mobile);
+                break;
+            case 3:
+                NotificationsSRL::newNote('تقویم', $message, 'calendar', 1, $user->user_id);
+                //sms_parsgreen($message, $user->user->mobile);
+                sms_saba($message, $user->user->mobile);
+                break;
+        }
+    }
     foreach ($calendar->calendarsUsers as $user) {
         switch ($alarm->alarm_type_id) {
             case 1:

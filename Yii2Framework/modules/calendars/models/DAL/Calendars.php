@@ -21,6 +21,7 @@ use app\modules\users\models\DAL\Users;
  * @property int|null $period_id
  * @property int|null $alarm_type_id
  * @property string|null $description
+ * @property string|null $implementation_steps
  * @property string|null $file
  * @property string|null $message
  * @property int|null $has_reception
@@ -58,7 +59,7 @@ class Calendars extends \yii\db\ActiveRecord
             [['user_id', 'title', 'favcolor', 'type_id', 'status_id', 'location', 'start_time', 'end_time'], 'required'],
             [['user_id', 'type_id', 'status_id', 'time_id', 'period_id', 'alarm_type_id', 'has_reception', 'catering_id'], 'integer'],
             [['start_time', 'end_time'], 'safe'],
-            [['description', 'message'], 'string'],
+            [['description', 'implementation_steps', 'message'], 'string'],
             [['title', 'favcolor', 'location', 'file'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['type_id'], 'exist', 'skipOnError' => true, 'targetClass' => CalendarsListType::className(), 'targetAttribute' => ['type_id' => 'id']],
@@ -89,6 +90,7 @@ class Calendars extends \yii\db\ActiveRecord
             'period_id' => Yii::t('calendars', 'Period ID'),
             'alarm_type_id' => Yii::t('calendars', 'Alarm Type ID'),
             'description' => Yii::t('calendars', 'Description'),
+            'implementation_steps' => Yii::t('calendars', 'Implementation Steps'),
             'file' => Yii::t('calendars', 'File'),
             'message' => Yii::t('calendars', 'Message'),
             'has_reception' => Yii::t('calendars', 'Has Reception'),

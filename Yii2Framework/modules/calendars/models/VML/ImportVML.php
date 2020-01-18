@@ -1,35 +1,122 @@
 <?php
-
 namespace app\modules\calendars\models\VML;
-
 use Yii;
 use yii\base\Model;
 use yii\web\UploadedFile;
-
+use app\config\components\functions;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use app\modules\calendars\models\DAL\Calendars;
+use app\modules\calendars\models\DAL\CalendarsForInformation;
 class ImportVML extends Model {
-
     public $file;
-    public $model;
-
+    public $favcolor;
+    public $type_id;
+    public $status_id;
+    public $location;
+    public $for_informations;
+    public $start_time = '07:00:00';
+    public $end_time = '07:00:00';
     public function rules() {
         return [
+
+                [['favcolor', 'type_id', 'status_id', 'location', 'start_time', 'end_time'], 'required'],
+                [['type_id', 'status_id'], 'integer'],
+                [['start_date', 'end_date', 'start_time', 'end_time'], 'safe'],
+                [['favcolor', 'location'], 'string', 'max' => 255],
+                [['for_informations'], 'each', 'rule' => ['integer']],
+
                 [['file'], 'required'],
                 [['file'], 'file', 'extensions' => 'xlsx'],
+
         ];
     }
-
     public function attributeLabels() {
         return [
             'file' => Yii::t('calendars', 'File'),
+            'favcolor'         => Yii::t('calendars', 'Favcolor'),
+            'type_id'          => Yii::t('calendars', 'Type ID'),
+            'status_id'        => Yii::t('calendars', 'Status ID'),
+            'location'         => Yii::t('calendars', 'Location'),
+            'start_time'       => Yii::t('calendars', 'Start Time'),
+            'end_time'         => Yii::t('calendars', 'End Time'),
+            'for_informations' => Yii::t('calendars', 'For Informations'),
         ];
     }
-
     public function attributeHints() {
         return [
             'file' => Yii::t('calendars', 'Extensions: {exts}', ['exts' => 'xlsx'])
         ];
     }
+    private function getItems($sheets = []) {
+        /* @var $sheets \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet[] */
+        $items = [];
 
+        if (count($sheets) === 0) {
+            return $items;
+        }
+        $rows    = $sheets[0]->toArray();
+        $matches = [];
+        preg_match('/([0-9]+)/', $rows[0][0], $matches);
+        if (count($matches) === 0) {
+            return $items;
+        }
+        $year    = $matches[0];
+        $monthes = [
+            'فروردین'  => '01',
+            'اردیبهشت' => '02',
+            'خرداد'    => '03',
+            'تیر'      => '04',
+            'مرداد'    => '05',
+            'شهریور'   => '06',
+            'مهر'      => '07',
+            'آبان'     => '08',
+            'آذر'      => '09',
+            'دی'       => '10',
+            'بهمن'     => '11',
+            'اسفند'    => '12'
+        ];
+        foreach ($sheets as $sheet) {
+            $title = $sheet->getTitle();
+            if (!isset($monthes[$title])) {
+                continue;
+            }
+            $month = $monthes[$title];
+            $rows  = $sheet->toArray();
+            for ($index = 2, $count = count($rows); $index < $count; $index++) {
+                $row                  = $rows[$index];
+                $day                  = (int) $row[1];
+                $implementation_steps = $row[7];
+                $description          = $row[8];
+                
+                if ($day === 0) {
+                    continue;
+                }
+                if (!$implementation_steps && !$description) {
+                    continue;
+                }
+                $subjects = [];
+                if ($row[4]) {
+                    $subjects[] = $row[4];
+                }
+                if ($row[5]) {
+                    $subjects[] = $row[5];
+                }
+                if ($row[6]) {
+                    $subjects[] = $row[6];
+                }
+                $subject = implode(' - ', $subjects);
+                if (empty($subject)) {
+                    continue;
+                }
+
+                $day2    = $day < 10 ? '0' . $day : "$day";
+                $jdate   = "$year/$month/$day2";
+                $gdate   = functions::togdate($jdate);
+                $items[] = [$subject, $gdate, $description, $implementation_steps];
+            }
+        }
+        return $items;
+    }
     public function save($post) {
         if (!$this->load($post)) {
             return false;
@@ -41,77 +128,38 @@ class ImportVML extends Model {
         $filename = uniqid(time(), true) . '.' . $this->file->extension;
         $this->file->saveAs("uploads/calendars/$filename");
         try {
-            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load("uploads/calendars/$filename");
-            $sheets = $spreadsheet->getAllSheets();
-            foreach ($sheets as $sheet) {
-                $title = $sheet->getTitle();
-                $rows = $sheet->toArray();
-                for ($index = 1, $count = count($rows); $index < $count; $index++) {
-                    $row = $rows[$index];
-                    switch ($title) {
-                        case 'Calendars':
-                            $model = new \app\modules\calendars\models\DAL\Calendars();
-                            //$model->id = $row[0];
-                            $model->user_id = (int) $row[1];
-                            $model->title = (string) $row[2];
-                            $model->favcolor = (string) $row[3];
-                            $model->type_id = (int) $row[4];
-                            $model->status_id = (int) $row[5];
-                            $model->location = (string) $row[6];
-                            $model->start_time = (string) $row[7];
-                            $model->end_time = (string) $row[8];
-                            $model->description = (string) $row[9];
-                            $model->has_reception = (int) $row[10];
-                            $model->catering_id = (int) $row[11];
-                            $model->save();
-                            break;
-                        case 'Users':
-                            $model = new \app\modules\calendars\models\DAL\CalendarsUsers();
-                            $model->calendar_id = (int) $row[1];
-                            $model->user_id = (int) $row[2];
-                            $model->save();
-                            break;
-                        case 'Alarms':
-                            $model = new \app\modules\calendars\models\DAL\CalendarsAlarms();
-                            $model->calendar_id = (int) $row[1];
-                            $model->time_id = (int) $row[2];
-                            $model->period_id = (int) $row[3];
-                            $model->alarm_type_id = (int) $row[4];
-                            $model->message = (string) $row[5];
-                            $model->save();
-                            break;
-                        case 'Events':
-                            $model = new \app\modules\calendars\models\DAL\CalendarsEvents();
-                            $model->calendar_id = (int) $row[1];
-                            $model->datetime = (string) $row[2];
-                            $model->done = (int) $row[3];
-                            $model->save();
-                            break;
-                        case 'For Info':
-                            $model = new \app\modules\calendars\models\DAL\CalendarsForInformation();
-                            $model->calendar_id = (int) $row[1];
-                            $model->user_id = (int) $row[2];
-                            $model->save();
-                            break;
-                        case 'Types':
-                            $model = new \app\modules\calendars\models\DAL\CalendarsListType();
-                            $model->title = (int) $row[1];
-                            $model->save();
-                            break;
-                        case 'Requirements':
-                            $model = new \app\modules\calendars\models\DAL\CalendarsRequirements();
-                            $model->calendar_id = (int) $row[1];
-                            $model->requirement_id = (int) $row[2];
-                            $model->save();
-                            break;
+            $spreadsheet = IOFactory::load("uploads/calendars/$filename");
+            $sheets      = $spreadsheet->getAllSheets();
+            $items       = $this->getItems($sheets);
+            foreach ($items as $item) {
+                list($subject, $gdate, $description, $implementation_steps) = $item;
+                $model                       = new Calendars();
+                $model->user_id              = Yii::$app->user->id;
+                $model->title                = $subject;
+                $model->favcolor             = $this->favcolor;
+                $model->type_id              = $this->type_id;
+                $model->status_id            = $this->status_id;
+                $model->location             = $this->location;
+                $model->start_time           = $gdate . ' ' . $this->start_time;
+                $model->end_time             = $gdate . ' ' . $this->end_time;
+                $model->description          = $description;
+                $model->implementation_steps = $implementation_steps;
+                $model->save();
+                
+                if (is_array($this->for_informations)) {
+                    foreach ($this->for_informations as $userId) {
+                        $row              = new CalendarsForInformation();
+                        $row->calendar_id = $model->id;
+                        $row->user_id     = $userId;
+                        $row->save();
                     }
                 }
             }
             return true;
-        } catch (\Exception $exc) {
+        }
+        catch (\Exception $exc) {
             $exc->getCode();
             return false;
         }
     }
-
 }

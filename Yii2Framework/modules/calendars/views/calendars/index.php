@@ -1,5 +1,7 @@
 <?php
 use app\assets\AdminAsset;
+use yii\bootstrap4\Html;
+use app\config\widgets\ActiveForm;
 /* @var $this \yii\web\View */
 /* @var $model \app\modules\calendars\models\VML\CalendarsVML */
 /* @var $modelType \app\modules\calendars\models\VML\CalendarsListTypeVML */
@@ -50,8 +52,8 @@ Yii::$app->controller->module->params['menu'] .= '
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page2">لیست رویدادها</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page3">مدیریت زمان</a></li>
                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page4">مقدمات برگزاری</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= \yii\helpers\Url::to(['import']) ?>">درون ریزی</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= \yii\helpers\Url::to(['export']) ?>">برون ریزی</a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page5">درون ریزی</a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#page6">برون ریزی</a></li>
             </ul>
             <div class="tab-content p-0 pt-1">
                 <div class="tab-pane active show" id="page1">
@@ -84,7 +86,126 @@ Yii::$app->controller->module->params['menu'] .= '
                     ])
                     ?>
                 </div>
+                <div class="tab-pane" id="page5">
+                    <?php $formImport = ActiveForm::begin(['id' => 'importForm', 'action' => ['import']]); ?>
+                    <?= $formImport->field($modelImport, 'file')->fileInput() ?>
+                    <div class="row">
+                        <div class="col">
+                            <?= $formImport->field($modelImport, 'favcolor')->textInput(['type' => 'color']) ?>
+                        </div>
+                        <div class="col">
+                            <?= $formImport->field($modelImport, 'type_id')->dropDownList($model->list_type) ?>
+                        </div>
+                        <div class="col">
+                            <?= $formImport->field($modelImport, 'status_id')->dropDownList($model->list_status) ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <?= $formImport->field($modelImport, 'location')->textInput() ?>
+                        </div>
+                        <div class="col">
+                            <?= $formImport->field($modelImport, 'start_time')->textInput(['style' => 'direction: ltr;text-align: left;']) ?>
+                        </div>
+                        <div class="col">
+                            <?= $formImport->field($modelImport, 'end_time')->textInput(['style' => 'direction: ltr;text-align: left;']) ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <?= $formImport->field($modelImport, 'for_informations')->select2($model->list_users, ['multiple' => true]) ?>
+                        </div>
+                        <div class="col">
+                        </div>
+                        <div class="col">
+                        </div>
+                    </div>
+                    <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-sm mb-0 btn-success']) ?>
+                    <?php ActiveForm::end(); ?>
+                </div>
+                <div class="tab-pane" id="page6">
+                    <?php $formExport = ActiveForm::begin(['id' => 'exportForm', 'action' => ['export']]); ?>
+                    <div class="row">
+                        <div class="col">
+                            <?= $formImport->field($modelExport, 'title')->textInput() ?>
+                        </div>
+                        <div class="col">
+                            <?= $formImport->field($modelExport, 'favcolor')->textInput(['type' => 'color']) ?>
+                        </div>
+                        <div class="col">
+                        </div>
+                        <div class="col">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <?= $formImport->field($modelExport, 'type_id')->dropDownList($model->list_type) ?>
+                        </div>
+                        <div class="col">
+                            <?= $formImport->field($modelExport, 'status_id')->dropDownList($model->list_status) ?>
+                        </div>
+                        <div class="col">
+                        </div>
+                        <div class="col">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <?= $formImport->field($modelExport, 'location')->textInput() ?>
+                        </div>
+                        <div class="col">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <?= $formImport->field($modelExport, 'start_date')->textInput(['readonly' => true, 'style' => 'direction: ltr;text-align: left;']) ?>
+                        </div>
+                        <div class="col">
+                            <?= $formImport->field($modelExport, 'start_time')->textInput(['style' => 'direction: ltr;text-align: left;']) ?>
+                        </div>
+                        <div class="col">
+                        </div>
+                        <div class="col">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <?= $formImport->field($modelExport, 'end_date')->textInput(['readonly' => true, 'style' => 'direction: ltr;text-align: left;']) ?>
+                        </div>
+                        <div class="col">
+                            <?= $formImport->field($modelExport, 'end_time')->textInput(['style' => 'direction: ltr;text-align: left;']) ?>
+                        </div>
+                        <div class="col">
+                        </div>
+                        <div class="col">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <?= $formImport->field($modelExport, 'description')->textarea(['rows' => 6]) ?>
+                        </div>
+                        <div class="col">
+                        </div>
+                    </div>
+                    <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-sm mb-0 btn-warning']) ?>
+                    <?= Html::submitButton(Yii::t('app', 'Submit'), ['class' => 'btn btn-sm mb-0 btn-success']) ?>
+                    <?php ActiveForm::end(); ?>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<?php
+$this->registerJs("
+    $('#importvml-start_time, #importvml-end_time, #exportvml-start_time, #exportvml-end_time').timeDropper({format: 'HH:mm:00'}).val('');
+    $('#exportvml-start_date').MdPersianDateTimePicker({
+        targetTextSelector: '#exportvml-start_date',
+        isGregorian: false,
+        yearOffset: 60
+    }).val('');
+    $('#exportvml-end_date').MdPersianDateTimePicker({
+        targetTextSelector: '#exportvml-end_date',
+        isGregorian: false,
+        yearOffset: 60
+    }).val('');
+");
