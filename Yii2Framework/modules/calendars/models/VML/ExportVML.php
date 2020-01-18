@@ -53,26 +53,28 @@ class ExportVML extends Model {
         return true;
     }
     public function getRows() {
-        $query  = Calendars::find()
+        $query = Calendars::find()
                 ->andFilterWhere([
-                    'id'         => $this->id,
-                    'type_id'    => $this->type_id,
-                    'status_id'  => $this->status_id,
-                    'start_time' => $this->start_time,
-                    'end_time'   => $this->end_time,
+                    'id'        => $this->id,
+                    'type_id'   => $this->type_id,
+                    'status_id' => $this->status_id,
                 ])
                 ->andFilterWhere(['like', 'title', $this->title])
                 ->andFilterWhere(['like', 'favcolor', $this->favcolor])
                 ->andFilterWhere(['like', 'location', $this->location])
                 ->andFilterWhere(['like', 'description', $this->description]);
+        if ($this->start_date && $this->end_date) {
+            $query->andWhere("cast(start_time as date) BETWEEN '" . \app\config\components\functions::togdate($this->start_date) . "' AND '" . \app\config\components\functions::togdate($this->end_date) . "'");
+        }
+        if ($this->start_time && $this->end_time) {
+            $query->andWhere("cast(start_time as time) BETWEEN '$this->start_time' AND '$this->end_time'");
+        }
         $models = $query->orderBy(['start_time' => SORT_ASC])->all();
-
-        $rows = [];
-
+        $rows   = [];
         /* @var $models Calendars[] */
         foreach ($models as $model) {
             $time  = strtotime($model->start_time);
-            $year = jdf::jdate('Y', $time);
+            $year  = jdf::jdate('Y', $time);
             $row   = [];
             $row[] = jdf::jdate('l', $time);
             $row[] = jdf::jdate('d', $time);
@@ -88,9 +90,9 @@ class ExportVML extends Model {
             if ($index === -1) {
                 $rows[] = [
                     'title' => $month,
-                    'rows' => [
-                        [$year],
-                        ['روزهای هفته', 'هجری شمسی', 'هجری قمری', 'میلادی', 'مناسبت های هجری شمسی', 'مناسبت های هجری قمری', 'مناسبت های میلادی', 'مراحل اجرا', 'توضیحات'],
+                    'rows'  => [
+                            [$year],
+                            ['روزهای هفته', 'هجری شمسی', 'هجری قمری', 'میلادی', 'مناسبت های هجری شمسی', 'مناسبت های هجری قمری', 'مناسبت های میلادی', 'مراحل اجرا', 'توضیحات'],
                         $row
                     ]
                 ];

@@ -267,6 +267,7 @@ $this->beginPage();
         }
         ?>
         <?php $this->endBody() ?>
+        <div id="loading"><span>لطفا صبر کنید...</span></div>
     </body>
 </html>
 <?php $this->endPage() ?>

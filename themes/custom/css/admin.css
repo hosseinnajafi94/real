@@ -22,6 +22,8 @@ thead th,thead td {padding: 5px !important;}
 i.far {font: normal normal normal 14px/1 FontAwesome;}
 .app-sidebar.hide-sidebar, .off-canvas-sidebar.hide-sidebar {transform : translate3d(0, 0, 0);}
 .content-wrapper {padding: 0;}
+#loading {position: fixed;z-index: 999999;top: 0;right: 0;bottom: 0;left: 0;background: rgba(0,0,0,0.3);color: #fff;display: none;}
+#loading span {position: absolute;top: calc(50% - 24px);right: calc(50% - 125px);font-size: 40px;width: 250px;text-align: center;}
 .app-sidebar .navigation li.has-sub > a.menu2::after {
     top: 2px !important;
 }

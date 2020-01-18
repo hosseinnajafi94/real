@@ -122,10 +122,10 @@ function showConfirm(message, action, title, type) {
 //    });
 }
 function showloading() {
-
+    $('#loading').show();
 }
 function hideloading() {
-
+    $('#loading').hide();
 }
 //------------------------------------------------------------------------------
 // Prototype
