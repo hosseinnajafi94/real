@@ -19,7 +19,7 @@ class AdminAsset extends AssetBundle {
     ];
     public $js       = [
 //        '<!-- BEGIN VENDOR JS-->',
-        'themes/custom/js/functions.js',
+        'themes/custom/js/functions.js?ver=2',
         'themes/admin/js/persian-datepicker.min.js',
         'themes/admin/vendors/js/core/popper.min.js',
         'themes/admin/vendors/js/perfect-scrollbar.jquery.min.js',
