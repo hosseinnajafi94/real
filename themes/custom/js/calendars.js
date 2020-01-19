@@ -401,44 +401,7 @@ $(function () {
     });
     $('.update').on('click', function (e) {
         var row = $(this).data('row');
-        var s = row.start_date.split('/');
-        var e = row.end_date.split('/');
-        var start_date = {year: parseInt(s[0]), month: parseInt(s[1]), day: parseInt(s[2])};
-        var end_date = {year: parseInt(e[0]), month: parseInt(e[1]), day: parseInt(e[2])};
-        $('#calendarsvml-id').val(row.id);
-        $('#calendarsvml-title').val(row.title);
-        $('#calendarsvml-favcolor').val(row.favcolor);
-        $('#calendarsvml-type_id').val(row.type_id);
-        $('#calendarsvml-status_id').val(row.status_id);
-        $('#calendarsvml-location').val(row.location);
-        $('#calendarsvml-start_date').MdPersianDateTimePicker('setDatePersian', start_date);
-        $('#calendarsvml-start_time').val(row.start_time);
-        $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', end_date);
-        $('#calendarsvml-end_time').val(row.end_time);
-//        $('#calendarsvml-time_id').val(row.time_id);
-//        $('#calendarsvml-period_id').val(row.period_id);
-//        $('#calendarsvml-alarm_type_id').val(row.alarm_type_id);
-        $('#calendarsvml-users').val(row.users).trigger('change');
-        $('#calendarsvml-for_informations').val(row.for_informations).trigger('change');
-        $('#calendarsvml-description').val(row.description);
-
-        $('#calendarsvml-has_reception').prop('checked', row.has_reception == 1).trigger('change');
-        $('#calendarsvml-catering_id').val(row.catering_id);
-        $('#calendarsvml-requirements').val(row.requirements).trigger('change');
-
-        var dynamicform = window[$('.dynamicform_wrapper').data('dynamicform')];
-        for (var i = 0, max = row.alarms.length; i < max; i++) {
-            $(".dynamicform_wrapper").yiiDynamicForm("addItem", dynamicform, null, $('.dynamicform_wrapper'));
-            var alarm = row.alarms[i];
-            $('[name="CalendarsAlarmsVML[' + i + '][time_id]"]').val(alarm.time_id);
-            $('[name="CalendarsAlarmsVML[' + i + '][alarm_type_id]"]').val(alarm.alarm_type_id);
-            $('[name="CalendarsAlarmsVML[' + i + '][period_id]"]').val(alarm.period_id);
-            $('[name="CalendarsAlarmsVML[' + i + '][message]"]').val(alarm.message);
-        }
-        $(".dynamicform_wrapper").yiiDynamicForm("deleteItem", dynamicform, null, $("#formNew .remove-item").last());
-
-        $('#modalView').modal('hide');
-        $('#modalNew').modal('show');
+        updateEvent(row);
     });
     $('.delete').on('click', function (e) {
         var row = $(this).data('row');
@@ -679,4 +642,43 @@ function showEvent(event) {
     });
     $modal.find('#alarms').html(alarms ? alarms : '<li class="no">---</li>');
     $modal.modal('show');
+}
+function updateEvent(row) {
+    var s = row.start_date.split('/');
+    var e = row.end_date.split('/');
+    var start_date = {year: parseInt(s[0]), month: parseInt(s[1]), day: parseInt(s[2])};
+    var end_date = {year: parseInt(e[0]), month: parseInt(e[1]), day: parseInt(e[2])};
+    $('#calendarsvml-id').val(row.id);
+    $('#calendarsvml-title').val(row.title);
+    $('#calendarsvml-favcolor').val(row.favcolor);
+    $('#calendarsvml-type_id').val(row.type_id);
+    $('#calendarsvml-status_id').val(row.status_id);
+    $('#calendarsvml-location').val(row.location);
+    $('#calendarsvml-start_date').MdPersianDateTimePicker('setDatePersian', start_date);
+    $('#calendarsvml-start_time').val(row.start_time);
+    $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', end_date);
+    $('#calendarsvml-end_time').val(row.end_time);
+//        $('#calendarsvml-time_id').val(row.time_id);
+//        $('#calendarsvml-period_id').val(row.period_id);
+//        $('#calendarsvml-alarm_type_id').val(row.alarm_type_id);
+    $('#calendarsvml-users').val(row.users).trigger('change');
+    $('#calendarsvml-for_informations').val(row.for_informations).trigger('change');
+    $('#calendarsvml-description').val(row.description);
+
+    $('#calendarsvml-has_reception').prop('checked', row.has_reception == 1).trigger('change');
+    $('#calendarsvml-catering_id').val(row.catering_id);
+    $('#calendarsvml-requirements').val(row.requirements).trigger('change');
+
+    var dynamicform = window[$('.dynamicform_wrapper').data('dynamicform')];
+    for (var i = 0, max = row.alarms.length; i < max; i++) {
+        $(".dynamicform_wrapper").yiiDynamicForm("addItem", dynamicform, null, $('.dynamicform_wrapper'));
+        var alarm = row.alarms[i];
+        $('[name="CalendarsAlarmsVML[' + i + '][time_id]"]').val(alarm.time_id);
+        $('[name="CalendarsAlarmsVML[' + i + '][alarm_type_id]"]').val(alarm.alarm_type_id);
+        $('[name="CalendarsAlarmsVML[' + i + '][period_id]"]').val(alarm.period_id);
+        $('[name="CalendarsAlarmsVML[' + i + '][message]"]').val(alarm.message);
+    }
+    $(".dynamicform_wrapper").yiiDynamicForm("deleteItem", dynamicform, null, $("#formNew .remove-item").last());
+    $('#modalView').modal('hide');
+    $('#modalNew').modal('show');
 }

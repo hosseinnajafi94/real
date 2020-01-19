@@ -18,6 +18,20 @@ $this->registerCss("
     #list2 thead th {padding: 5px 13px !important;}
 ");
 $this->registerJs("
+    $(document).on('click', '[data-view]', function (e) {
+        e.preventDefault();
+        var url = $(this).data('view');
+        ajaxget(url, {}, function (result) {
+            showEvent(result);
+        });
+    });
+    $(document).on('click', '[data-update]', function (e) {
+        e.preventDefault();
+        var url = $(this).data('update');
+        ajaxget(url, {}, function (result) {
+            updateEvent(result);
+        });
+    });
     $(document).on('click', 'a.fields', function () {
         $('div.fields').toggleClass('active');
     });
@@ -135,11 +149,11 @@ $columns[] = [
         'delete' => function ($url) {
             return Html::a('<i class="fa fa-times"></i>', $url, ['class' => 'ajaxDelete', 'data' => ['pjax' => 0, 'container' => 'list2', 'confirm2' => Yii::t('app', 'Are you sure?')]]);
         },
-        'update'  => function ($url) {
-            return '<a href="' . $url . '" title="بروز رسانی" data-pjax="0"><span class="fa fa-pencil"></span></a>';
+        'update'  => function ($url, $model) {
+            return '<a href="#" data-update="' . \yii\helpers\Url::to(['details', 'id' => $model->id]) . '" title="بروز رسانی"><span class="fa fa-pencil"></span></a>';
         },
-        'view'     => function ($url) {
-            return '<a href="' . $url . '" class="view" title="جزئیات" data-pjax="0"><span class="fa fa-eye"></span></a>';
+        'view'     => function ($url, $model) {
+            return '<a href="#" data-view="' . \yii\helpers\Url::to(['details', 'id' => $model->id]) . '" title="جزئیات" ><span class="fa fa-eye"></span></a>';
         },
     ],
 ];
@@ -165,6 +179,8 @@ echo '<li class="fields_footer">
 </ul>
 </div>
 ';
+
+echo '<div class="table-responsive">';
 echo GridView::widget([
     'layout'         => '
         {items}
@@ -182,6 +198,7 @@ echo GridView::widget([
     'filterModel'    => $search,
     'columns'        => $columns,
 ]);
+echo '</div>';
 echo Html::a('حذف', null, ['class' => 'btn btn-sm btn-danger list2DeleteAll pull-left disabled']);
 
 Pjax::end();
