@@ -8,13 +8,21 @@ use app\config\components\functions;
         <div class="border p-3 bg-light card-header" style="border-radius: 4px;">
             <h4 class="bar-success card-title-wrap mb-3">ساعت جلسه</h4>
             <div class="row">
-                <div class="col-lg-6 col-md-6">
-                    <label>از ساعت</label>
-                    <input class="form-control form-control-sm" id="session_start_time" style="direction: ltr;text-align: left;"/>
+                <div class="col-12 col-md-6">
+                    <div class="row">
+                        <label class="col-4">از ساعت</label>
+                        <div class="col-8">
+                            <input class="form-control form-control-sm" id="session_start_time" style="direction: ltr;text-align: left;"/>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-6 col-md-6">
-                    <label>تا ساعت</label>
-                    <input class="form-control form-control-sm" id="session_end_time" style="direction: ltr;text-align: left;"/>
+                <div class="col-12 col-md-6">
+                    <div class="row">
+                        <label class="col-4">تا ساعت</label>
+                        <div class="col-8">
+                            <input class="form-control form-control-sm" id="session_end_time" style="direction: ltr;text-align: left;"/>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,13 +31,21 @@ use app\config\components\functions;
         <div class="border p-3 bg-light card-header" style="border-radius: 4px;">
             <h4 class="bar-success card-title-wrap mb-3">تاریخ</h4>
             <div class="row">
-                <div class="col-lg-6 col-md-6">
-                    <label>از تاریخ</label>
-                    <input class="form-control form-control-sm" id="session_start_date" readonly style="direction: ltr;text-align: left;" value="<?= functions::getjdate() ?>"/>
+                <div class="col-12 col-md-6">
+                    <div class="row">
+                        <label class="col-4">از تاریخ</label>
+                        <div class="col-8">
+                            <input class="form-control form-control-sm" id="session_start_date" readonly style="direction: ltr;text-align: left;" value="<?= functions::getjdate() ?>"/>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-6 col-md-6">
-                    <label>تا تاریخ</label>
-                    <input class="form-control form-control-sm" id="session_end_date" readonly style="direction: ltr;text-align: left;" value="<?= functions::getjdate() ?>"/>
+                <div class="col-12 col-md-6">
+                    <div class="row">
+                        <label class="col-4">تا تاریخ</label>
+                        <div class="col-8">
+                            <input class="form-control form-control-sm" id="session_end_date" readonly style="direction: ltr;text-align: left;" value="<?= functions::getjdate() ?>"/>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,23 +75,30 @@ $this->registerJs("
 $('#session_table').on('click', 'a', function () {
     
     var row = $(this).parents('tr').data('row')
-    var start_time = row.start_time;
-    var end_time = row.end_time;
-    
-    var d = row.date.split('/');
-    
-    var year = parseInt(d[0]);
-    var month = parseInt(d[1]);
-    var day = parseInt(d[2]);
-    
-    $('#calendarsvml-start_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
-    $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
-    
-    $('#calendarsvml-start_time').val(start_time);
-    $('#calendarsvml-end_time').val(end_time);
-    
-    $('#calendarsvml-id').val('');
-    $('#modalNew').modal('show');
+    if ($(this).hasClass('btn')) {
+        var start_time = row.start_time;
+        var end_time = row.end_time;
+
+        var d = row.date.split('/');
+
+        var year = parseInt(d[0]);
+        var month = parseInt(d[1]);
+        var day = parseInt(d[2]);
+
+        $('#calendarsvml-start_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
+        $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
+
+        $('#calendarsvml-start_time').val(start_time);
+        $('#calendarsvml-end_time').val(end_time);
+
+        $('#calendarsvml-id').val('');
+        $('#modalNew').modal('show');
+    }
+    else {
+        ajaxget(row.url, {id: row.rowId}, function (result) {
+            showEvent(result);
+        });
+    }
 });
 $('#session_start_date').MdPersianDateTimePicker({
     targetTextSelector: '#session_start_date',
@@ -119,7 +142,7 @@ $('#session_search').click(function () {
                     <td class=\"text-center\" style=\"vertical-align: middle;\">\${row.day}</td>
                     <td class=\"text-center\" style=\"vertical-align: middle;direction: ltr;\">\${row.date}</td>
                     <td class=\"text-center\" style=\"vertical-align: middle;direction: ltr;\">\${row.start_time} الی \${row.end_time}</td>
-                    <td>\${(row.rowId === null ? '<a class=\"btn btn-sm btn-primary mb-0\">انتخاب</a>' : '')}</td>
+                    <td>\${(row.rowId === null ? '<a class=\"btn btn-sm btn-primary mb-0\">انتخاب</a>' : '<a><i class=\"fa fa-eye\"></i></a>')}</td>
                 </tr>
             `).data('row', row).appendTo('#session_table tbody');
         }

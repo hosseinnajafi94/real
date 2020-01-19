@@ -2,6 +2,8 @@
 return [
     'components' => [
     ],
-    'params' => [
+    'params'     => [
+        'title' => 'داشبورد',
+        'menu'  => '',
     ],
 ];

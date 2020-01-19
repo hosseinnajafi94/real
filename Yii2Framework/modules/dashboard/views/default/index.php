@@ -1,6 +1,6 @@
 <?php
 /* @var $this yii\web\View */
-$this->params['breadcrumbs'][] = Yii::t('dashboard', 'Dashboard');
+//$this->params['breadcrumbs'][] = Yii::t('dashboard', 'Dashboard');
 $this->title = Yii::t('dashboard', 'Dashboard');
 ?>
 <div class="dashboard-default-index">

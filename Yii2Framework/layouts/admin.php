@@ -52,11 +52,11 @@ $this->beginPage();
                             <li class="nav-item has-sub">
                                 <a><i class="fa fa-bars"></i> <span class="menu-title"><?= isset(Yii::$app->controller->module->params['title']) ? Yii::$app->controller->module->params['title'] : '???' ?></span></a>
                                 <ul class="menu-content">
-                                    <li><a class="menu-item" href="<?= Url::to(['/dashboard/default/index']) ?>"><i class="fa fa-home"></i> <span class="menu-title">خانه</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/dashboard/default/index']) ?>"><i class="fa fa-tachometer"></i> <span class="menu-title">داشبورد</span></a></li>
                                     <li><a class="menu-item" href="<?= Url::to(['/ticketing/tickets/index']) ?>"><i class="fa fa-ticket"></i> <span class="menu-title">پشتیبانی</span></a></li>
-                                    <li><a class="menu-item" href="<?= Url::to(['/organizations/organizations/index']) ?>"><i class="fa fa-sitemap"></i> <span class="menu-title">شعبه</span></a></li>
-                                    <li><a class="menu-item" href="<?= Url::to(['/users/default/index']) ?>"><i class="fa fa-user" style="position: relative;"><i class="fa fa-search" style="position: absolute;bottom: -5px;right: -5px;font-size: 11px;color: white;text-shadow: 0 0 2px #000;"></i></i> <span class="menu-title">پرسنلی</span></a></li>
                                     <li><a class="menu-item" href="<?= Url::to(['/calendars/calendars/index']) ?>"><i class="fa fa-calendar"></i> <span class="menu-title">تقویم</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/users/default/index']) ?>"><i class="fa fa-user" style="position: relative;"><i class="fa fa-search" style="position: absolute;bottom: -5px;right: -5px;font-size: 11px;color: white;text-shadow: 0 0 2px #000;"></i></i> <span class="menu-title">پرسنلی</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/organizations/organizations/index']) ?>"><i class="fa fa-sitemap"></i> <span class="menu-title">شعبه</span></a></li>
                                     <li><a class="menu-item" href="<?= Url::to(['/correspondence/default/index']) ?>"><i class="fa fa-file"></i> <span class="menu-title">مکاتبات</span></a></li>
                                 </ul>
                             </li>

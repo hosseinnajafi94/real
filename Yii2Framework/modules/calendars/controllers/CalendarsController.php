@@ -246,31 +246,37 @@ class CalendarsController extends Controller {
         $session_end_date   = Yii::$app->request->post('session_end_date');
         $gstart             = functions::togdate($session_start_date);
         $days               = $this->getDiffDays($session_start_date, $session_end_date);
-        $select             = [];
         $output             = [];
-        if ($days === 0) {
+        for ($index = 0; $index <= $days; $index++) {
+
+            $start_time = date('Y/m/d H:i:s', strtotime($gstart . ' ' . $session_start_time . ' +' . $index . ' days'));
+            $end_time   = date('Y/m/d H:i:s', strtotime($gstart . ' ' . $session_end_time . ' +' . $index . ' days'));
+
             $rows  = functions::queryAll("
                 SELECT c.* FROM (
                     SELECT 
                         1 AS id,
+                        0 AS id1,
                         TIME_TO_SEC('$session_start_time') as `start`,
                         TIME_TO_SEC('$session_end_time') as `end`
                     UNION
                     SELECT
-                        2,
+                        2     as id,
+                        m2.id as id1,
                         TIME_TO_SEC(CAST(start_time AS time)),
                         TIME_TO_SEC(CAST(end_time AS time))
                     FROM `calendars` as m2
                     WHERE (
-                        (m2.start_time <= '$gstart $session_start_time' AND m2.end_time >= '$gstart $session_start_time')
+                        (m2.start_time <= '$start_time' AND m2.end_time >= '$start_time')
                             OR
-                        (m2.start_time <  '$gstart $session_end_time' AND m2.end_time >= '$gstart $session_end_time')
+                        ('$start_time' <= m2.start_time AND '$end_time' >= m2.start_time)
                             OR
-                        ('$gstart $session_start_time' <= m2.start_time AND '$gstart $session_end_time' >= m2.start_time)
+                        (m2.start_time <  '$end_time' AND m2.end_time >= '$end_time')
                     )
                     UNION
                     SELECT 
                         3 AS id,
+                        0 AS id1,
                         TIME_TO_SEC('$session_start_time') as `start`,
                         TIME_TO_SEC('$session_end_time') as `end`
                 ) AS c ORDER BY 1,2,3
@@ -290,87 +296,86 @@ class CalendarsController extends Controller {
                     $e = (int) $row['end'];
                     if ($s <= $end2) {
                         $end2 = $e;
+                        $output[] = [
+                            'rowId'      => $row['id1'],
+                            'day'        => jdf::jdate('l', strtotime($start_time)),
+                            'date'       => jdf::jdate('Y/m/d', strtotime($start_time)),
+                            'start_time' => sec_to_time($s),
+                            'end_time'   => sec_to_time($e),
+                            'url'        => Url::to(['details', 'id'  => $row['id1']]),
+                        ];
                     }
                     else {
                         if ($start !== $end2) {
                             $output[] = [
-                                'day'        => jdf::jdate('l', strtotime("$gstart")),
-                                'date'       => jdf::tr_num($session_start_date),
+                                'rowId'      => $row['id1'],
+                                'day'        => jdf::jdate('l', strtotime($start_time)),
+                                'date'       => jdf::jdate('Y/m/d', strtotime($start_time)),
                                 'start_time' => sec_to_time($start),
                                 'end_time'   => sec_to_time($end2),
-                                'url'        => Url::to(['create', 'date' => jdf::tr_num($session_start_date), 'time1' => sec_to_time($start), 'time2' => sec_to_time($end2)]),
-                                'rowId'      => 1
+                                'url'        => Url::to(['details', 'id'  => $row['id1']]),
                             ];
                         }
                         $output[] = [
-                            'day'        => jdf::jdate('l', strtotime("$gstart")),
-                            'date'       => jdf::tr_num($session_start_date),
+                            'rowId'      => null,
+                            'day'        => jdf::jdate('l', strtotime($start_time)),
+                            'date'       => jdf::jdate('Y/m/d', strtotime($start_time)),
                             'start_time' => sec_to_time($end2),
                             'end_time'   => sec_to_time($s),
-                            'url'        => Url::to(['create', 'date' => jdf::tr_num($session_start_date), 'time1' => sec_to_time($end2), 'time2' => sec_to_time($s)]),
-                            'rowId'      => null
+                            'url'        => Url::to([
+                                'create',
+                                'date'  => jdf::jdate('Y/m/d', strtotime($start_time)),
+                                'time1' => sec_to_time($end2),
+                                'time2' => sec_to_time($s)
+                            ]),
                         ];
                         $start    = $s;
                         $end2     = $e;
-                        $last     = 1;
+                        $last     = $row['id1'];
                     }
                 }
                 elseif ($row['id'] == 3) {
-                    if ($last == 1) {
+                    if ($last != 0) {
                         $output[] = [
-                            'day'        => jdf::jdate('l', strtotime("$gstart")),
-                            'date'       => jdf::tr_num($session_start_date),
+                            'rowId'      => $last,
+                            'day'        => jdf::jdate('l', strtotime($start_time)),
+                            'date'       => jdf::jdate('Y/m/d', strtotime($start_time)),
                             'start_time' => sec_to_time($start),
                             'end_time'   => sec_to_time($end2 > $end ? $end : $end2),
-                            'url'        => Url::to(['create', 'date' => jdf::tr_num($session_start_date), 'time1' => sec_to_time($start), 'time2' => sec_to_time($end2 > $end ? $end : $end2)]),
-                            'rowId'      => 1
+                            'url'        => Url::to(['details', 'id'  => $last]),
                         ];
                         if ($end2 < $end) {
                             $output[] = [
-                                'day'        => jdf::jdate('l', strtotime("$gstart")),
-                                'date'       => jdf::tr_num($session_start_date),
+                                'rowId'      => null,
+                                'day'        => jdf::jdate('l', strtotime($start_time)),
+                                'date'       => jdf::jdate('Y/m/d', strtotime($start_time)),
                                 'start_time' => sec_to_time($end2),
                                 'end_time'   => sec_to_time($end),
-                                'url'        => Url::to(['create', 'date' => jdf::tr_num($session_start_date), 'time1' => sec_to_time($end2), 'time2' => sec_to_time($end)]),
-                                'rowId'      => null
+                                'url'        => Url::to([
+                                    'create',
+                                    'date'  => jdf::jdate('Y/m/d', strtotime($start_time)),
+                                    'time1' => sec_to_time($end2),
+                                    'time2' => sec_to_time($end)
+                                ]),
                             ];
                         }
                     }
                     else {
                         $output[] = [
-                            'day'        => jdf::jdate('l', strtotime("$gstart")),
-                            'date'       => jdf::tr_num($session_start_date),
+                            'rowId'      => null,
+                            'day'        => jdf::jdate('l', strtotime($start_time)),
+                            'date'       => jdf::jdate('Y/m/d', strtotime($start_time)),
                             'start_time' => sec_to_time($start),
                             'end_time'   => sec_to_time($end),
-                            'url'        => Url::to(['create', 'date' => jdf::tr_num($session_start_date), 'time1' => sec_to_time($start), 'time2' => sec_to_time($end)]),
-                            'rowId'      => null
+                            'url'        => Url::to([
+                                'create',
+                                'date'  => jdf::jdate('Y/m/d', strtotime($start_time)),
+                                'time1' => sec_to_time($start),
+                                'time2' => sec_to_time($end)
+                            ]),
                         ];
                     }
                 }
-            }
-        }
-        else {
-            for ($index = 0; $index <= $days; $index++) {
-                $day           = jdf::jdate('l', strtotime($gstart . ' +' . $index . ' days'));
-                $date          = jdf::jdate('Y/m/d', strtotime($gstart . ' +' . $index . ' days'));
-                $start_time    = date('Y/m/d H:i:s', strtotime($gstart . ' ' . $session_start_time . ' +' . $index . ' days'));
-                $end_time      = date('Y/m/d H:i:s', strtotime($gstart . ' ' . $session_end_time . ' +' . $index . ' days'));
-                $select[]      = "SELECT '$date' as date, id FROM `calendars` as m2 WHERE ((m2.start_time <= '$start_time' AND m2.end_time >= '$start_time') OR (m2.start_time <  '$end_time' AND m2.end_time >= '$end_time') OR ('$start_time' <= m2.start_time AND '$end_time' >= m2.start_time))";
-                $output[$date] = [
-                    'day'        => $day,
-                    'date'       => $date,
-                    'start_time' => $session_start_time,
-                    'end_time'   => $session_end_time,
-                    'url'        => Url::to(['create', 'date' => $date, 'time1' => $session_start_time, 'time2' => $session_end_time]),
-                    'rowId'      => null,
-                        //'rowId'      => $day === 'جمعه' ? false : null,
-                ];
-            }
-        }
-        if ($select) {
-            $rows = functions::queryAll('SELECT c.date, c.id FROM (' . implode(' UNION ', $select) . ') as c GROUP BY c.date');
-            foreach ($rows as $row) {
-                $output[$row['date']]['rowId'] = $row['id'];
             }
         }
         return $this->asJson(['rows' => $output]);

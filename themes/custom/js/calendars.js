@@ -15,8 +15,7 @@ $(function () {
                 ajaxpost(url, data, function (result) {
                     if (result.saved === true) {
                         alert('اطلاعات با موفقیت ثبت شد!');
-                    }
-                    else {
+                    } else {
                         alert('خطا در ذخیره اطلاعات!');
                     }
                 }, undefined, undefined, undefined, true);
@@ -565,94 +564,7 @@ $(function () {
         $('#search_event_result').removeClass('active');
     });
     //-------------------------------------------------------------------------- 
-    function showEvent(event) {
 
-        console.log(event);
-
-        var list = [];
-        for (var i in event.users) {
-            list.push(event.list_users[event.users[i]]);
-        }
-        var users = list.join('، ');
-
-        list = [];
-        for (var i in event.for_informations) {
-            list.push(event.list_users[event.for_informations[i]]);
-        }
-        var for_informations = list.join('، ');
-
-        list = [];
-        for (var i in event.requirements) {
-            list.push(event.list_requirements[event.requirements[i]]);
-        }
-        var requirements = list.join('، ');
-
-
-        var $modal = $('#modalView');
-        $modal.find('.update').data('row', event);
-        $modal.find('.delete').data('row', event);
-        $modal.find('.add-alarm').data('row', event);
-        $modal.find('#title').text(event.title);
-        $modal.find('#favcolor').css('background', event.favcolor);
-        $modal.find('#type_id').text(event.list_type[event.type_id]);
-        $modal.find('#status_id').text(event.list_status[event.status_id]);
-        $modal.find('#location').text(event.location);
-        $modal.find('#start_date').text(event.start_date);
-        $modal.find('#start_time').text(event.start_time);
-        $modal.find('#end_date').text(event.end_date);
-        $modal.find('#end_time').text(event.end_time);
-        $modal.find('#time_id').text(event.list_time[event.time_id]);
-        $modal.find('#period_id').text(event.list_period[event.period_id]);
-        $modal.find('#alarm_type_id').text(event.list_alarm_type[event.alarm_type_id]);
-        $modal.find('#users').text(users);
-        $modal.find('#for_informations').text(for_informations);
-        $modal.find('#description').text(event.description);
-        $modal.find('#file').attr('src', urlCalendars + event.file);
-        $('#implementation_steps').parent().hide();
-        $modal.find('#implementation_steps').text(event.implementation_steps);
-        if (event.implementation_steps) {
-            $('#implementation_steps').parent().show();
-        }
-
-        $modal.find('#has_reception').text(event.has_reception == 1 ? 'بله' : 'خیر');
-        if (event.has_reception == 1) {
-            $modal.find('#catering_id').parent().show();
-            $modal.find('#requirements').parent().show();
-            $modal.find('#catering_id').text(event.list_users[event.catering_id]);
-            $modal.find('#requirements').text(requirements);
-        } else {
-            $modal.find('#catering_id').parent().hide();
-            $modal.find('#requirements').parent().hide();
-        }
-
-        var alarms = '';
-        event.alarms.forEach(function (alarm) {
-            alarms += `
-                <li data-id="${alarm.id}">
-                    <table class="table table-bordered table-sm mb-1">
-                        <thead>
-                            <tr class="table-primary">
-                                <th>${alarm.list_time[alarm.time_id]}</th>
-                                <th>${alarm.list_period[alarm.period_id]}</th>
-                                <th>${alarm.list_alarm_type[alarm.alarm_type_id]}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="3">
-                                    <div>
-                                        ${alarm.message}
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </li>
-            `;
-        });
-        $modal.find('#alarms').html(alarms ? alarms : '<li class="no">---</li>');
-        $modal.modal('show');
-    }
 
 //    $("#formNew").on("click", ".add-item", function (e) {
 //        e.preventDefault();
@@ -681,4 +593,90 @@ function tr_num(fa) {
             .replace(/۷/g, '7')
             .replace(/۸/g, '8')
             .replace(/۹/g, '9');
+}
+function showEvent(event) {
+
+    var list = [];
+    for (var i in event.users) {
+        list.push(event.list_users[event.users[i]]);
+    }
+    var users = list.join('، ');
+
+    list = [];
+    for (var i in event.for_informations) {
+        list.push(event.list_users[event.for_informations[i]]);
+    }
+    var for_informations = list.join('، ');
+
+    list = [];
+    for (var i in event.requirements) {
+        list.push(event.list_requirements[event.requirements[i]]);
+    }
+    var requirements = list.join('، ');
+
+
+    var $modal = $('#modalView');
+    $modal.find('.update').data('row', event);
+    $modal.find('.delete').data('row', event);
+    $modal.find('.add-alarm').data('row', event);
+    $modal.find('#title').text(event.title);
+    $modal.find('#favcolor').css('background', event.favcolor);
+    $modal.find('#type_id').text(event.list_type[event.type_id]);
+    $modal.find('#status_id').text(event.list_status[event.status_id]);
+    $modal.find('#location').text(event.location);
+    $modal.find('#start_date').text(event.start_date);
+    $modal.find('#start_time').text(event.start_time);
+    $modal.find('#end_date').text(event.end_date);
+    $modal.find('#end_time').text(event.end_time);
+    $modal.find('#time_id').text(event.list_time[event.time_id]);
+    $modal.find('#period_id').text(event.list_period[event.period_id]);
+    $modal.find('#alarm_type_id').text(event.list_alarm_type[event.alarm_type_id]);
+    $modal.find('#users').text(users);
+    $modal.find('#for_informations').text(for_informations);
+    $modal.find('#description').text(event.description);
+    $modal.find('#file').attr('src', urlCalendars + event.file);
+    $('#implementation_steps').parent().hide();
+    $modal.find('#implementation_steps').text(event.implementation_steps);
+    if (event.implementation_steps) {
+        $('#implementation_steps').parent().show();
+    }
+
+    $modal.find('#has_reception').text(event.has_reception == 1 ? 'بله' : 'خیر');
+    if (event.has_reception == 1) {
+        $modal.find('#catering_id').parent().show();
+        $modal.find('#requirements').parent().show();
+        $modal.find('#catering_id').text(event.list_users[event.catering_id]);
+        $modal.find('#requirements').text(requirements);
+    } else {
+        $modal.find('#catering_id').parent().hide();
+        $modal.find('#requirements').parent().hide();
+    }
+
+    var alarms = '';
+    event.alarms.forEach(function (alarm) {
+        alarms += `
+                <li data-id="${alarm.id}">
+                    <table class="table table-bordered table-sm mb-1">
+                        <thead>
+                            <tr class="table-primary">
+                                <th>${alarm.list_time[alarm.time_id]}</th>
+                                <th>${alarm.list_period[alarm.period_id]}</th>
+                                <th>${alarm.list_alarm_type[alarm.alarm_type_id]}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">
+                                    <div>
+                                        ${alarm.message}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </li>
+            `;
+    });
+    $modal.find('#alarms').html(alarms ? alarms : '<li class="no">---</li>');
+    $modal.modal('show');
 }
