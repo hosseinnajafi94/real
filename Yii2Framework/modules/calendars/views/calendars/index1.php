@@ -75,20 +75,18 @@ use wbraganca\dynamicform\DynamicFormWidget;
         'layout'      => 'horizontal',
         'fieldConfig' => [
             'horizontalCssClasses' => [
-                'label'   => 'col-4',
-                'wrapper' => 'col-8',
+                'label'   => 'col-5',
+                'wrapper' => 'col-7',
             ],
         ],
     ]);
     ?>
     <?= Html::activeHiddenInput($model, 'id') ?>
-    <div class="row">
-        <div class="col" style="margin-bottom: -25px;">
             <?=
             $form->field($model, 'title', [
                 'template'             => '
                     {label}
-                    <div class="input-group col-sm-12">
+                    <div class="col-7 input-group">
                         {input}
                         <div class="input-group-append" style="position: relative;">
                             <a class="btn btn-sm btn-outline-primary" id="searchTitle" data-url="' . Url::to(['search-title']) . '"><i class="fa fa-search"></i></a>
@@ -98,70 +96,18 @@ use wbraganca\dynamicform\DynamicFormWidget;
                     </div>
                 ',
                 'horizontalCssClasses' => [
-                    'label'   => 'col-12',
-                    'wrapper' => 'col-12',
+                    'label'   => 'col-5',
+                    'wrapper' => 'col-7',
                 ],
-            ])->textInput(['maxlength' => true])
-            ?>
-        </div>
-        <div class="col" style="margin-bottom: -10px;">
-            <?=
-            $form->field($model, 'favcolor', [
-                'horizontalCssClasses' => [
-                    'label'   => 'col-12',
-                    'wrapper' => 'col-12',
-                ],
-            ])->textInput(['type' => 'color'])
-            ?>
-        </div>
-    </div>
+            ])->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'favcolor')->textInput(['type' => 'color']) ?>
     <?= $form->field($model, 'type_id')->dropDownList($model->list_type) ?>
     <?= $form->field($model, 'status_id')->dropDownList($model->list_status) ?>
     <?= $form->field($model, 'location')->textInput(['maxlength' => true]) ?>
-    <div class="row">
-        <div class="col-md-6 col-xs-12">
-            <?=
-            $form->field($model, 'start_date', [
-                'horizontalCssClasses' => [
-                    'label'   => 'col-md-5 col-xs-12',
-                    'wrapper' => 'col-md-7 col-xs-12',
-                ],
-            ])->textInput(['readonly' => true, 'style' => 'direction: ltr;text-align: left;'])
-            ?>
-        </div>
-        <div class="col-md-6 col-xs-12">
-            <?=
-            $form->field($model, 'start_time', [
-                'horizontalCssClasses' => [
-                    'label'   => 'col-md-5 col-xs-12',
-                    'wrapper' => 'col-md-7 col-xs-12',
-                ],
-            ])->textInput(['style' => 'direction: ltr;text-align: left;'])
-            ?>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6 col-xs-12">
-            <?=
-            $form->field($model, 'end_date', [
-                'horizontalCssClasses' => [
-                    'label'   => 'col-md-5 col-xs-12',
-                    'wrapper' => 'col-md-7 col-xs-12',
-                ],
-            ])->textInput(['readonly' => true, 'style' => 'direction: ltr;text-align: left;'])
-            ?>
-        </div>
-        <div class="col-md-6 col-xs-12">
-            <?=
-            $form->field($model, 'end_time', [
-                'horizontalCssClasses' => [
-                    'label'   => 'col-md-5 col-xs-12',
-                    'wrapper' => 'col-md-7 col-xs-12',
-                ],
-            ])->textInput(['style' => 'direction: ltr;text-align: left;'])
-            ?>
-        </div>
-    </div>
+    <?= $form->field($model, 'start_date')->textInput(['readonly' => true, 'style' => 'direction: ltr;text-align: left;']) ?>
+    <?= $form->field($model, 'start_time')->textInput(['style' => 'direction: ltr;text-align: left;']) ?>
+    <?= $form->field($model, 'end_date')->textInput(['readonly' => true, 'style' => 'direction: ltr;text-align: left;']) ?>
+    <?= $form->field($model, 'end_time')->textInput(['style' => 'direction: ltr;text-align: left;']) ?>
     <?= $form->field($model, 'users')->select2($model->list_users, ['multiple' => true, 'class' => 'form-control form-control-sm'], ['closeOnSelect' => false]) ?>
     <?= $form->field($model, 'for_informations')->select2($model->list_users, ['multiple' => true, 'class' => 'form-control form-control-sm'], ['closeOnSelect' => false]) ?>
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
@@ -315,6 +261,10 @@ use wbraganca\dynamicform\DynamicFormWidget;
             <div class="col-8" id="description"></div>
         </div>
         <div class="row form-group">
+            <label class="col-4">مراحل اجرا</label>
+            <div class="col-8" id="implementation_steps"></div>
+        </div>
+        <div class="row form-group">
             <label class="col-4"><?= $model->getAttributeLabel('file') ?></label>
             <div class="col-8">
                 <img id="file" src="" style="max-width: 100%;max-height: 150px;"/>
@@ -332,7 +282,6 @@ use wbraganca\dynamicform\DynamicFormWidget;
             <label class="col-4"><?= $model->getAttributeLabel('requirements') ?></label>
             <div class="col-8" id="requirements"></div>
         </div>
-        
         <div class="row form-group">
             <label class="col-4">هشدارها</label>
         </div>
@@ -449,6 +398,8 @@ $this->registerJs('
     });
 ');
 $this->registerCss('
+    .input-group {margin-bottom: 0 !important;}
+    form .form-group {margin-bottom: 3px !important;}
     .menu2 span.fa {display: none !important;}
     .menu2 span.fa.active {display: inline-block !important;}
     @media (min-width: 992px) {

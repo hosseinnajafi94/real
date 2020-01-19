@@ -6,6 +6,8 @@ use yii\web\UploadedFile;
 use app\config\components\functions;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use app\modules\calendars\models\DAL\Calendars;
+use app\modules\calendars\models\DAL\CalendarsEvents;
+use app\modules\calendars\models\VML\CalendarsAlarmsVML;
 use app\modules\calendars\models\DAL\CalendarsForInformation;
 class ImportVML extends Model {
     public $file;
@@ -15,24 +17,21 @@ class ImportVML extends Model {
     public $location;
     public $for_informations;
     public $start_time = '07:00:00';
-    public $end_time = '07:00:00';
+    public $end_time   = '07:00:00';
     public function rules() {
         return [
-
                 [['favcolor', 'type_id', 'status_id', 'location', 'start_time', 'end_time'], 'required'],
                 [['type_id', 'status_id'], 'integer'],
                 [['start_date', 'end_date', 'start_time', 'end_time'], 'safe'],
                 [['favcolor', 'location'], 'string', 'max' => 255],
                 [['for_informations'], 'each', 'rule' => ['integer']],
-
                 [['file'], 'required'],
                 [['file'], 'file', 'extensions' => 'xlsx'],
-
         ];
     }
     public function attributeLabels() {
         return [
-            'file' => Yii::t('calendars', 'File'),
+            'file'             => Yii::t('calendars', 'File'),
             'favcolor'         => Yii::t('calendars', 'Favcolor'),
             'type_id'          => Yii::t('calendars', 'Type ID'),
             'status_id'        => Yii::t('calendars', 'Status ID'),
@@ -87,7 +86,7 @@ class ImportVML extends Model {
                 $day                  = (int) $row[1];
                 $implementation_steps = $row[7];
                 $description          = $row[8];
-                
+
                 if ($day === 0) {
                     continue;
                 }
@@ -125,9 +124,13 @@ class ImportVML extends Model {
         if (!$this->validate()) {
             return false;
         }
+
+
+
         $filename = uniqid(time(), true) . '.' . $this->file->extension;
         $this->file->saveAs("uploads/calendars/$filename");
         try {
+
             $spreadsheet = IOFactory::load("uploads/calendars/$filename");
             $sheets      = $spreadsheet->getAllSheets();
             $items       = $this->getItems($sheets);
@@ -145,13 +148,41 @@ class ImportVML extends Model {
                 $model->description          = $description;
                 $model->implementation_steps = $implementation_steps;
                 $model->save();
-                
+
                 if (is_array($this->for_informations)) {
                     foreach ($this->for_informations as $userId) {
                         $row              = new CalendarsForInformation();
                         $row->calendar_id = $model->id;
                         $row->user_id     = $userId;
                         $row->save();
+                    }
+                }
+                
+                $models = [];
+                if (isset($post['CalendarsAlarmsVML'])) {
+                    for ($index = 0, $count = count($post['CalendarsAlarmsVML']); $index < $count; $index++) {
+                        $models[] = CalendarsAlarmsVML::newInstance();
+                    }
+                    $loaded = CalendarsAlarmsVML::loadMultiple($models, $post);
+                    if (!$loaded) {
+                        continue;
+                    }
+                }
+
+                $days = getDiffDays($model->start_time, $model->end_time) + 1;
+                foreach ($models as $row) {
+                    $row->calendar_id = $model->id;
+                    if ($row->save()) {
+                        for ($index = 0; $index < $days; $index += $row->model->period->days) {
+                            $datetime1           = date('Y-m-d H:i:s', strtotime($model->start_time . " +$index days"));
+                            $datetime2           = date('Y-m-d H:i:s', strtotime($datetime1) - $row->model->time->times);
+                            $model1              = new CalendarsEvents();
+                            $model1->alarm_id    = $row->id;
+                            $model1->calendar_id = $model->id;
+                            $model1->datetime    = $datetime2;
+                            $model1->done        = 0;
+                            $model1->save();
+                        }
                     }
                 }
             }

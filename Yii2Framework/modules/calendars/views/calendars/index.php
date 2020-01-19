@@ -2,18 +2,19 @@
 use app\assets\AdminAsset;
 use yii\bootstrap4\Html;
 use app\config\widgets\ActiveForm;
+use wbraganca\dynamicform\DynamicFormWidget;
 /* @var $this \yii\web\View */
 /* @var $model \app\modules\calendars\models\VML\CalendarsVML */
 /* @var $modelType \app\modules\calendars\models\VML\CalendarsListTypeVML */
 /* @var $data \yii\data\ActiveDataProvider */
 /* @var $search \app\modules\calendars\models\VML\CalendarsSearchVML */
-$this->title          = Yii::t('calendars', 'Calendars');
+$this->title           = Yii::t('calendars', 'Calendars');
 $this->params['title'] = $this->title;
 
 //$this->params['breadcrumbs'][] = $this->title;
 $this->registerCssFile('@web/themes/custom/libs/timepicker/timepicker.css', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/libs/timepicker/timepicker.js', ['depends' => AdminAsset::class]);
-$types                = $modelType->getTypes();
+$types                                        = $modelType->getTypes();
 Yii::$app->controller->module->params['menu'] = '
     <li class="nav-item noclose">
         <a class="menu-item menu2" style="padding: 0 !important;">
@@ -80,111 +81,151 @@ Yii::$app->controller->module->params['menu'] .= '
                 <div class="tab-pane" id="page4">
                     <?=
                     $this->render('index4', [
-                        'data'   => $data4,
-                        'search' => $search4,
+                        'data'              => $data4,
+                        'search'            => $search4,
                         'modelRequirements' => $modelRequirements,
                     ])
                     ?>
                 </div>
                 <div class="tab-pane" id="page5">
-                    <?php $formImport = ActiveForm::begin(['id' => 'importForm', 'action' => ['import']]); ?>
+                    <?php $formImport                                   = ActiveForm::begin(['id' => 'importForm', 'action' => ['import']]); ?>
                     <?= $formImport->field($modelImport, 'file')->fileInput() ?>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-4 col-sm-12">
                             <?= $formImport->field($modelImport, 'favcolor')->textInput(['type' => 'color']) ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-4 col-sm-12">
                             <?= $formImport->field($modelImport, 'type_id')->dropDownList($model->list_type) ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-4 col-sm-12">
                             <?= $formImport->field($modelImport, 'status_id')->dropDownList($model->list_status) ?>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-4 col-sm-12">
                             <?= $formImport->field($modelImport, 'location')->textInput() ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-4 col-sm-12">
                             <?= $formImport->field($modelImport, 'start_time')->textInput(['style' => 'direction: ltr;text-align: left;']) ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-4 col-sm-12">
                             <?= $formImport->field($modelImport, 'end_time')->textInput(['style' => 'direction: ltr;text-align: left;']) ?>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-4 col-sm-12">
                             <?= $formImport->field($modelImport, 'for_informations')->select2($model->list_users, ['multiple' => true]) ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-4 col-sm-12">
                         </div>
-                        <div class="col">
+                        <div class="col-md-4 col-sm-12">
                         </div>
                     </div>
+                    <?php
+                    DynamicFormWidget::begin([
+                        'widgetContainer' => 'dynamicform_wrapper2', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
+                        'widgetBody'      => '.container-items2', // required: css class selector
+                        'widgetItem'      => '.item2', // required: css class
+                        //'limit' => 4, // the maximum times, an element can be cloned (default 999)
+                        //'min' => 1, // 0 or 1 (default 1)
+                        'insertButton'    => '.add-item2', // css class
+                        'deleteButton'    => '.remove-item2', // css class
+                        'model'           => $modelAlarm,
+                        'formId'          => 'importForm',
+                        'formFields'      => [
+                            'time_id',
+                            'period_id',
+                            'alarm_type_id',
+                            'message'
+                        ],
+                    ]);
+                    ?>
+                    <div class="container-items2 row">
+                        <div class="item2 col-md-4 col-sm-12">
+                            <div class="card border">
+                                <div class="card-header">
+                                    <h3 class="card-title pull-right">اعلان</h3>
+                                    <div class="pull-left">
+                                        <button type="button" class="add-item2 btn btn-success btn-sm mb-0" style="line-height: 1;padding: 4px 4px 1px 4px;"><i class="fa fa-plus"></i></button>
+                                        <button type="button" class="remove-item2 btn btn-danger btn-sm mb-0" style="line-height: 1;padding: 4px 4px 1px 4px;"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="card-block">
+                                    <?= $formImport->field($modelAlarm, '[0]time_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_time) ?>
+                                    <?= $formImport->field($modelAlarm, '[0]period_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_period) ?>
+                                    <?= $formImport->field($modelAlarm, '[0]alarm_type_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_alarm_type) ?>
+                                    <?= $formImport->field($modelAlarm, '[0]message', ['options' => ['class' => 'form-group row mb-1']])->textarea(['rows' => 6]) ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php DynamicFormWidget::end(); ?>
                     <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-sm mb-0 btn-success']) ?>
                     <?php ActiveForm::end(); ?>
                 </div>
                 <div class="tab-pane" id="page6">
-                    <?php $formExport = ActiveForm::begin(['id' => 'exportForm', 'action' => ['export']]); ?>
+                    <?php $formExport                                   = ActiveForm::begin(['id' => 'exportForm', 'action' => ['export']]); ?>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                             <?= $formImport->field($modelExport, 'title')->textInput() ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                             <?= $formImport->field($modelExport, 'favcolor')->textInput(['type' => 'color']) ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                         </div>
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                             <?= $formImport->field($modelExport, 'type_id')->dropDownList($model->list_type) ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                             <?= $formImport->field($modelExport, 'status_id')->dropDownList($model->list_status) ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                         </div>
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-6 col-sm-12">
                             <?= $formImport->field($modelExport, 'location')->textInput() ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-6 col-sm-12">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                             <?= $formImport->field($modelExport, 'start_date')->textInput(['readonly' => true, 'style' => 'direction: ltr;text-align: left;']) ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                             <?= $formImport->field($modelExport, 'start_time')->textInput(['style' => 'direction: ltr;text-align: left;']) ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                         </div>
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                             <?= $formImport->field($modelExport, 'end_date')->textInput(['readonly' => true, 'style' => 'direction: ltr;text-align: left;']) ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                             <?= $formImport->field($modelExport, 'end_time')->textInput(['style' => 'direction: ltr;text-align: left;']) ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                         </div>
-                        <div class="col">
+                        <div class="col-md-3 col-sm-6">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-6 col-sm-12">
                             <?= $formImport->field($modelExport, 'description')->textarea(['rows' => 6]) ?>
                         </div>
-                        <div class="col">
+                        <div class="col-md-6 col-sm-12">
                         </div>
                     </div>
                     <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-sm mb-0 btn-warning']) ?>

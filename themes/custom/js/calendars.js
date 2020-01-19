@@ -14,7 +14,10 @@ $(function () {
                 var data = new FormData($form.get(0));
                 ajaxpost(url, data, function (result) {
                     if (result.saved === true) {
-                        
+                        alert('اطلاعات با موفقیت ثبت شد!');
+                    }
+                    else {
+                        alert('خطا در ذخیره اطلاعات!');
                     }
                 }, undefined, undefined, undefined, true);
             }
@@ -605,6 +608,11 @@ $(function () {
         $modal.find('#for_informations').text(for_informations);
         $modal.find('#description').text(event.description);
         $modal.find('#file').attr('src', urlCalendars + event.file);
+        $('#implementation_steps').parent().hide();
+        $modal.find('#implementation_steps').text(event.implementation_steps);
+        if (event.implementation_steps) {
+            $('#implementation_steps').parent().show();
+        }
 
         $modal.find('#has_reception').text(event.has_reception == 1 ? 'بله' : 'خیر');
         if (event.has_reception == 1) {
