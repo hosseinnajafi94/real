@@ -85,7 +85,9 @@ function validResult(result) {
     var message = '';
     if (result.messages) {
         for (var i in result.messages) {
-            message += result.messages[i] + '<br/>';
+            for (var x in result.messages[i]) {
+                message += result.messages[i][x] + "\n"; // + '<br/>';
+            }
         }
         if (message !== '') {
             if (result.saved === true) {
@@ -99,6 +101,7 @@ function validResult(result) {
     return result.saved === true;
 }
 function showmessage(message, type, title) {
+    alert(message);
 //    $.alert({
 //        title: title ? title : '',
 //        content: message,

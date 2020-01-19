@@ -171,7 +171,7 @@ class CalendarsController extends Controller {
 //            unset($data['model']);
             return $this->asJson(['saved' => true, 'data' => $this->actionDetails($model->id, 2)]);
         }
-        return $this->asJson(['saved' => false, 'errors' => $model->getErrors()]);
+        return $this->asJson(['saved' => false, 'messages' => $model->getErrors()]);
     }
     public function actionType() {
         $model = CalendarsListTypeVML::newInstance();
@@ -180,7 +180,7 @@ class CalendarsController extends Controller {
             unset($data['model']);
             return $this->asJson(['saved' => true, 'data' => $data]);
         }
-        return $this->asJson(['saved' => false, 'errors' => $model->getErrors()]);
+        return $this->asJson(['saved' => false, 'messages' => $model->getErrors()]);
     }
     public function actionAlarm() {
         $model = CalendarsAlarmsVML::newInstance();
@@ -190,7 +190,7 @@ class CalendarsController extends Controller {
             $data['url'] = Url::to(['delete-alarm', 'id' => $data['id']]);
             return $this->asJson(['saved' => true, 'data' => $data]);
         }
-        return $this->asJson(['saved' => false, 'errors' => $model->getErrors()]);
+        return $this->asJson(['saved' => false, 'messages' => $model->getErrors()]);
     }
     public function actionGetList($datetime) {
         $start = functions::togdate($datetime) . ' 00:00:00';

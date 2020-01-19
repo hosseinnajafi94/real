@@ -13,10 +13,11 @@ $(function () {
                 var url = $form.attr('action');
                 var data = new FormData($form.get(0));
                 ajaxpost(url, data, function (result) {
-                    if (result.saved === true) {
+                    var isValid = validResult(result);
+                    if (isValid) {
                         alert('اطلاعات با موفقیت ثبت شد!');
                     } else {
-                        alert('خطا در ذخیره اطلاعات!');
+//                        alert('خطا در ذخیره اطلاعات!');
                     }
                 }, undefined, undefined, undefined, true);
             }
@@ -250,7 +251,8 @@ $(function () {
                 var url = $('#formNewType').attr('action');
                 var formData = new FormData($('#formNewType').get(0));
                 ajaxpost(url, formData, function (result) {
-                    if (result.saved === true) {
+                    var isValid = validResult(result);
+                    if (isValid) {
                         if ($('.calendar_type[data-id="' + result.data.id + '"]').length === 0) {
                             $('#main-menu-navigation').append(`
                                 <li class="nav-item noclose">
@@ -310,7 +312,8 @@ $(function () {
                 var url = $('#formNew').attr('action');
                 var formData = new FormData($('#formNew').get(0));
                 ajaxpost(url, formData, function (result) {
-                    if (result.saved === true) {
+                    var isValid = validResult(result);
+                    if (isValid) {
                         if ($('#calendar').fullCalendar('clientEvents', result.data.id).length > 0) {
                             var events = $('#calendar').fullCalendar('clientEvents', result.data.id);
                             $('#calendar').fullCalendar('updateEvent', $.extend(events[0], result.data));
@@ -344,7 +347,8 @@ $(function () {
                 var url = $('#formNewAlarm').attr('action');
                 var formData = new FormData($('#formNewAlarm').get(0));
                 ajaxpost(url, formData, function (result) {
-                    if (result.saved === true) {
+                    var isValid = validResult(result);
+                    if (isValid) {
                         var alarms = `
                             <li data-id="${result.data.id}">
                                 <table class="table table-bordered table-sm mb-1">
