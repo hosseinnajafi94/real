@@ -18,6 +18,16 @@ $this->registerCss("
     #list2 thead th {padding: 5px 13px !important;}
 ");
 $this->registerJs("
+    $('#calendarssearchvml-start_time').MdPersianDateTimePicker({
+        targetTextSelector: '#calendarssearchvml-start_time',
+        isGregorian: false,
+        yearOffset: 60
+    });
+    $('#calendarssearchvml-end_time').MdPersianDateTimePicker({
+        targetTextSelector: '#calendarssearchvml-end_time',
+        isGregorian: false,
+        yearOffset: 60
+    });
     $(document).on('click', '[data-view]', function (e) {
         e.preventDefault();
         var url = $(this).data('view');
@@ -88,42 +98,62 @@ function set($name) {
 }
 $fields = [
         [
-        'attribute' => 'title',
-        'label'     => $search->getAttributeLabel('title')
-    ],
+            'attribute' => 'title',
+            'label'     => $search->getAttributeLabel('title'),
+        ],
         [
-        'attribute' => 'type_id',
-        'label'     => $search->getAttributeLabel('type_id'),
-        'value'     => function ($model) {
-            return $model->type->title;
-        }
-    ],
+            'attribute' => 'type_id',
+            'label'     => $search->getAttributeLabel('type_id'),
+            'filter' => Html::activeDropDownList($search, 'type_id', $search->list_type, ['class' => 'form-control form-control-sm', 'prompt' => '']),
+            'value'     => function ($model) {
+                return $model->type->title;
+            }
+        ],
         [
-        'attribute' => 'status_id',
-        'label'     => $search->getAttributeLabel('status_id'),
-        'value'     => function ($model) {
-            return $model->status->title;
-        }
-    ],
-        ['attribute' => 'location', 'label' => $search->getAttributeLabel('location')],
-        ['attribute' => 'start_time', 'label' => $search->getAttributeLabel('start_time'), 'format' => 'jdate'],
-        ['attribute' => 'end_time', 'label' => $search->getAttributeLabel('end_time'), 'format' => 'jdate'],
-        ['attribute' => 'description', 'label' => $search->getAttributeLabel('description')],
+            'attribute' => 'status_id',
+            'label'     => $search->getAttributeLabel('status_id'),
+            'filter' => Html::activeDropDownList($search, 'status_id', $search->list_status, ['class' => 'form-control form-control-sm', 'prompt' => '']),
+            'value'     => function ($model) {
+                return $model->status->title;
+            }
+        ],
         [
-        'attribute' => 'has_reception',
-        'label'     => $search->getAttributeLabel('has_reception'),
-        'format'    => 'bool'
-    ],
+            'attribute' => 'location',
+            'label' => $search->getAttributeLabel('location')
+        ],
         [
-        'attribute' => 'catering_id',
-        'label'     => $search->getAttributeLabel('catering_id'),
-        'value'     => function ($model) {
-            return app\modules\users\models\SRL\UsersSRL::getUserFullname($model->catering);
-        }
-    ],
+            'attribute' => 'start_time',
+            'label' => $search->getAttributeLabel('start_time'),
+            'filter' => Html::activeTextInput($search, 'start_time', ['class' => 'form-control form-control-sm', 'style' => 'direction: ltr !important;text-align: left;']),
+            'format' => 'jdate'
+        ],
+        [
+            'attribute' => 'end_time',
+            'label' => $search->getAttributeLabel('end_time'),
+            'filter' => Html::activeTextInput($search, 'end_time', ['class' => 'form-control form-control-sm', 'style' => 'direction: ltr !important;text-align: left;']),
+            'format' => 'jdate'
+        ],
+        [
+            'attribute' => 'description',
+            'label' => $search->getAttributeLabel('description')
+        ],
+        [
+            'attribute' => 'has_reception',
+            'label'     => $search->getAttributeLabel('has_reception'),
+            'filter' => Html::activeCheckbox($search, 'has_reception', ['label' => false]),
+            'format'    => 'bool'
+        ],
+        [
+            'attribute' => 'catering_id',
+            'filter' => Html::activeDropDownList($search, 'catering_id', $search->list_users, ['class' => 'form-control form-control-sm', 'prompt' => '']),
+            'label'     => $search->getAttributeLabel('catering_id'),
+            'value'     => function ($model) {
+                return app\modules\users\models\SRL\UsersSRL::getUserFullname($model->catering);
+            }
+        ],
 ];
 $columns = [
-        [
+    [
         'class'  => app\config\widgets\SerialColumn::class,
         'header' => 'ردیف',
         'filter' => '<a class="fields btn btn-sm btn-secondary mb-0"><i class="fa fa-caret-down"></i></a>'
@@ -159,7 +189,7 @@ $columns[] = [
 ];
 
 Pjax::begin([
-    'id' => 'list2'
+    'id' => 'list2',
 ]);
 
 echo '<div class="fields">
@@ -200,6 +230,21 @@ echo GridView::widget([
 ]);
 echo '</div>';
 echo Html::a('حذف', null, ['class' => 'btn btn-sm btn-danger list2DeleteAll pull-left disabled']);
-
+echo "
+<script>
+if (typeof $ !== 'undefined') {
+    $('#calendarssearchvml-start_time').MdPersianDateTimePicker({
+        targetTextSelector: '#calendarssearchvml-start_time',
+        isGregorian: false,
+        yearOffset: 60
+    });
+    $('#calendarssearchvml-end_time').MdPersianDateTimePicker({
+        targetTextSelector: '#calendarssearchvml-end_time',
+        isGregorian: false,
+        yearOffset: 60
+    });    
+}
+</script>
+";
 Pjax::end();
 
