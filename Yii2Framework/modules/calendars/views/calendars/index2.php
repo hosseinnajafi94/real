@@ -1,8 +1,8 @@
 <?php
 use yii\bootstrap4\Html;
-use yii\widgets\Pjax;
-use app\config\widgets\GridView;
 use yii\grid\ActionColumn;
+use app\config\widgets\Pjax;
+use app\config\widgets\GridView;
 /* @var $this \yii\web\View */
 /* @var $data \yii\data\ActiveDataProvider */
 /* @var $search \app\modules\calendars\models\VML\CalendarsSearchVML */
@@ -15,18 +15,27 @@ $this->registerCss("
     div.fields .fields_header {background: #EEE;margin: -6px -6px 6px -6px;padding: 6px;border-bottom: 1px solid #ccc;}
     div.fields .fields_header label {margin: 0;}
     div.fields .fields_footer {background: #EEE;margin: 0 -6px -6px -6px;padding: 6px;border-bottom: 1px solid #ccc;text-align: center;}
-    #list2 thead th {padding: 5px 13px !important;}
+    #list2 thead th {padding: 5px 13px !important;white-space: nowrap;}
+    #list2 * {vertical-align: middle;}
+    #list2 .action-column {text-align: center;}
 ");
 $this->registerJs("
+    $('#list2grid thead .filters td:last').html('<a class=\"btn btn-sm btn-danger mb-0 btn-block reset-list2\">باز نشانی</a>');
     $('#calendarssearchvml-start_time').MdPersianDateTimePicker({
         targetTextSelector: '#calendarssearchvml-start_time',
         isGregorian: false,
-        yearOffset: 60
+        yearOffset: 60,
+        placement: 'right',
     });
     $('#calendarssearchvml-end_time').MdPersianDateTimePicker({
         targetTextSelector: '#calendarssearchvml-end_time',
         isGregorian: false,
-        yearOffset: 60
+        yearOffset: 60,
+        placement: 'right',
+    });
+    $(document).on('click', '.reset-list2', function (e) {
+        $('#list2 select, #list2 input').val('');
+        $.pjax.reload({url: '?', async: false, container: '#list2', data: {list2columns: selected_fields}});
     });
     $(document).on('click', '[data-view]', function (e) {
         e.preventDefault();
@@ -100,6 +109,9 @@ $fields = [
         [
             'attribute' => 'title',
             'label'     => $search->getAttributeLabel('title'),
+            'contentOptions' => [
+                'style' => 'max-width: 300px;'
+            ]
         ],
         [
             'attribute' => 'type_id',
@@ -171,10 +183,15 @@ if (Yii::$app->request->get('list2columns')) {
     }
 }
 $columns[] = [
-    'class' => 'yii\grid\CheckboxColumn',
+    'class' => \app\config\widgets\CheckboxColumn::class,
+    'header' => 'حذف دسته جمعی',
 ];
 $columns[] = [
     'class'   => ActionColumn::class,
+    'contentOptions' => [
+        'style' => 'min-width: 80px;text-align: center;'
+    ],
+    'header' => 'عملیات',
     'buttons' => [
         'delete' => function ($url) {
             return Html::a('<i class="fa fa-times"></i>', $url, ['class' => 'ajaxDelete', 'data' => ['pjax' => 0, 'container' => 'list2', 'confirm2' => Yii::t('app', 'Are you sure?')]]);
@@ -212,6 +229,7 @@ echo '<li class="fields_footer">
 
 echo '<div class="table-responsive">';
 echo GridView::widget([
+    'id' => 'list2grid',
     'layout'         => '
         {items}
         {summary}
@@ -236,13 +254,16 @@ if (typeof $ !== 'undefined') {
     $('#calendarssearchvml-start_time').MdPersianDateTimePicker({
         targetTextSelector: '#calendarssearchvml-start_time',
         isGregorian: false,
-        yearOffset: 60
+        yearOffset: 60,
+        placement: 'right',
     });
     $('#calendarssearchvml-end_time').MdPersianDateTimePicker({
         targetTextSelector: '#calendarssearchvml-end_time',
         isGregorian: false,
-        yearOffset: 60
-    });    
+        yearOffset: 60,
+        placement: 'right',
+    });
+    $('#list2grid thead .filters td:last').html('<a class=\"btn btn-sm btn-danger mb-0 btn-block reset-list2\">باز نشانی</a>');
 }
 </script>
 ";

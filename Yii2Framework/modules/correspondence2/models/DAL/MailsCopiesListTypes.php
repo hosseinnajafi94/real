@@ -5,21 +5,21 @@ namespace app\modules\correspondence\models\DAL;
 use Yii;
 
 /**
- * This is the model class for table "mails_list_sizes".
+ * This is the model class for table "mails_copies_list_types".
  *
  * @property int $id
- * @property string|null $title
+ * @property string $title
  *
- * @property MailsListPatterns[] $mailsListPatterns
+ * @property MailsCopies[] $mailsCopies
  */
-class MailsListSizes extends \yii\db\ActiveRecord
+class MailsCopiesListTypes extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'mails_list_sizes';
+        return 'mails_copies_list_types';
     }
 
     /**
@@ -28,6 +28,7 @@ class MailsListSizes extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['title'], 'required'],
             [['title'], 'string', 'max' => 255],
         ];
     }
@@ -46,8 +47,8 @@ class MailsListSizes extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getMailsListPatterns()
+    public function getMailsCopies()
     {
-        return $this->hasMany(MailsListPatterns::className(), ['size_id' => 'id']);
+        return $this->hasMany(MailsCopies::className(), ['type_id' => 'id']);
     }
 }

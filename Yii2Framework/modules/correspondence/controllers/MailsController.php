@@ -1,87 +1,127 @@
 <?php
+
 namespace app\modules\correspondence\controllers;
+
 use Yii;
-use yii\filters\VerbFilter;
+use app\modules\correspondence\models\DAL\Mails;
+use app\modules\correspondence\models\VML\MailsSearchModel;
 use app\config\widgets\Controller;
-use app\config\components\functions;
-use app\modules\correspondence\models\VML\MailsVML;
-use app\modules\correspondence\models\DAL\MailsSignatures;
-class MailsController extends Controller {
-    public function behaviors() {
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+
+/**
+ * MailsController implements the CRUD actions for Mails model.
+ */
+class MailsController extends Controller
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
         return [
             'verbs' => [
-                'class'   => VerbFilter::className(),
+                'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
                 ],
             ],
         ];
     }
-    public function actionReference($id) {
-        $model = MailsVML::findReference($id);
-        if ($model === null) {
-            return functions::httpNotFound();
-        }
-        if ($model->save(Yii::$app->request->post())) {
-            return $this->redirect(['view', 'id' => $model->mail_id]);
-        }
-        $model->loaditems();
-        return $this->renderView($model);
-    }
-    public function actionSignature($id) {
-        $data = MailsVML::find($id);
-        if ($data === null) {
-            return functions::httpNotFound();
-        }
-        $row = new MailsSignatures();
-        $row->mail_id = $data->id;
-        $row->user_id = Yii::$app->user->id;
-        $row->save();
-        $model = $data->model;
-        $model->type_id = 2;
-        $model->save();
-        return $this->redirect(['view', 'id' => $data->id]);
-    }
-    public function actionOngoing($type_id) {
-        list($searchModel, $dataProvider)  = MailsVML::search(Yii::$app->request->queryParams, $type_id);
-        return $this->renderView([
-            'searchModel'  => $searchModel,
+
+    /**
+     * Lists all Mails models.
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        $searchModel = new MailsSearchModel();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'type_id' => $type_id,
         ]);
     }
-    public function actionView($id) {
-        $model = MailsVML::find($id);
-        if ($model === null) {
-            return functions::httpNotFound();
-        }
-        return $this->renderView($model);
+
+    /**
+     * Displays a single Mails model.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
-    public function actionCreate($type_id) {
-        $model = MailsVML::newInstance($type_id);
-        if ($model->save(Yii::$app->request->post())) {
+
+    /**
+     * Creates a new Mails model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new Mails();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-        $model->loaditems();
-        return $this->renderView($model);
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
-    public function actionUpdate($id) {
-        $model = MailsVML::find($id);
-        if ($model === null) {
-            return functions::httpNotFound();
-        }
-        if ($model->save(Yii::$app->request->post())) {
+
+    /**
+     * Updates an existing Mails model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-        $model->loaditems();
-        return $this->renderView($model);
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
-    public function actionDelete($id) {
-        $data = MailsVML::find($id);
-        if ($data === null) {
-            return functions::httpNotFound();
-        }
-        $data->model->delete();
+
+    /**
+     * Deletes an existing Mails model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+
         return $this->redirect(['index']);
+    }
+
+    /**
+     * Finds the Mails model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Mails the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Mails::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException(Yii::t('correspondence', 'The requested page does not exist.'));
     }
 }

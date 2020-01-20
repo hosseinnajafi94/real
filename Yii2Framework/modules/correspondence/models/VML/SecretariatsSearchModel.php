@@ -4,12 +4,12 @@ namespace app\modules\correspondence\models\VML;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\correspondence\models\DAL\MailsListPatterns;
+use app\modules\correspondence\models\DAL\Secretariats;
 
 /**
- * MailsListPatternsSearchVML represents the model behind the search form of `app\modules\correspondence\models\DAL\MailsListPatterns`.
+ * SecretariatsSearchModel represents the model behind the search form of `app\modules\correspondence\models\DAL\Secretariats`.
  */
-class MailsListPatternsSearchVML extends MailsListPatterns
+class SecretariatsSearchModel extends Secretariats
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class MailsListPatternsSearchVML extends MailsListPatterns
     public function rules()
     {
         return [
-            [['id', 'size_id', 'sign_count'], 'integer'],
-            [['title', 'file'], 'safe'],
+            [['id', 'section_1', 'section_2'], 'integer'],
+            [['name', 'splitter_1', 'splitter_2'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class MailsListPatternsSearchVML extends MailsListPatterns
      */
     public function search($params)
     {
-        $query = MailsListPatterns::find();
+        $query = Secretariats::find();
 
         // add conditions that should always apply here
 
@@ -59,12 +59,13 @@ class MailsListPatternsSearchVML extends MailsListPatterns
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'size_id' => $this->size_id,
-            'sign_count' => $this->sign_count,
+            'section_1' => $this->section_1,
+            'section_2' => $this->section_2,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'file', $this->file]);
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'splitter_1', $this->splitter_1])
+            ->andFilterWhere(['like', 'splitter_2', $this->splitter_2]);
 
         return $dataProvider;
     }

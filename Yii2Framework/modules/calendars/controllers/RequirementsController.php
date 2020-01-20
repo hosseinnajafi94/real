@@ -13,6 +13,9 @@ class RequirementsController extends Controller {
             }
             return $this->redirect(['/calendars/calendars/index']);
         }
+        if (Yii::$app->request->isAjax) {
+            return $this->asJson(['saved' => false, 'messages' => $model->getErrors()]);
+        }
         return $this->renderView($model);
     }
     public function actionDelete($id) {

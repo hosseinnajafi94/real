@@ -198,6 +198,7 @@ class CalendarsController extends Controller {
         $data  = Calendars::find()->select('id, title')->where("start_time BETWEEN '$start' AND '$end' OR end_time BETWEEN '$start' AND '$end'")->orderBy(['id' => SORT_DESC])->asArray()->all();
         foreach ($data as &$row) {
             $row['url'] = Url::to(['details', 'id' => $row['id']]);
+            $row['urlDelete'] = Url::to(['delete-event', 'id' => $row['id']]);
         }
         return $this->asJson($data);
     }

@@ -27,7 +27,7 @@ return [
                 <ul class="menu-content">
                     <li><a class="menu-item" href="' . Url::to(['/users/default/index']) . '"><span class="menu-title">درخواست</span></a></li>
                     <li><a class="menu-item" href="' . Url::to(['/users/default/index']) . '"><span class="menu-title">استخدام</span></a></li>
-                    <li><a class="menu-item" href="' . Url::to(['/users/default/index']) . '"><span class="menu-title">احکام</span></a></li>
+                    <li><a class="menu-item" href="' . Url::to(['/users/users-orders/index']) . '"><span class="menu-title">احکام</span></a></li>
                     <li><a class="menu-item" href="' . Url::to(['/users/users/index']) . '"><span class="menu-title">پرونده</span></a></li>
                 </ul>
             </li>

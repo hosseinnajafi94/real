@@ -3,8 +3,9 @@ namespace app\modules\correspondence\controllers;
 use Yii;
 use yii\filters\VerbFilter;
 use app\config\widgets\Controller;
-use app\config\components\functions;
-use app\modules\correspondence\models\VML\SecretariatsVML;
+use yii\web\NotFoundHttpException;
+use app\modules\correspondence\models\DAL\Secretariats;
+use app\modules\correspondence\models\VML\SecretariatsSearchModel;
 class SecretariatsController extends Controller {
     public function behaviors() {
         return [
@@ -17,44 +18,39 @@ class SecretariatsController extends Controller {
         ];
     }
     public function actionIndex() {
-        list($searchModel, $dataProvider) = SecretariatsVML::search(Yii::$app->request->queryParams);
+        $searchModel  = new SecretariatsSearchModel();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->renderView([
-                    'searchModel'  => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel'  => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
     public function actionView($id) {
-        $model = SecretariatsVML::find($id);
-        if ($model === null) {
-            return functions::httpNotFound();
-        }
+        $model = $this->findModel($id);
         return $this->renderView($model);
     }
     public function actionCreate() {
-        $model = SecretariatsVML::newInstance();
-        if ($model->save(Yii::$app->request->post())) {
+        $model = new Secretariats();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-        $model->loaditems();
         return $this->renderView($model);
     }
     public function actionUpdate($id) {
-        $model = SecretariatsVML::find($id);
-        if ($model === null) {
-            return functions::httpNotFound();
-        }
-        if ($model->save(Yii::$app->request->post())) {
+        $model = $this->findModel($id);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-        $model->loaditems();
         return $this->renderView($model);
     }
     public function actionDelete($id) {
-        $data = SecretariatsVML::find($id);
-        if ($data === null) {
-            return functions::httpNotFound();
-        }
-        $data->model->delete();
+        $this->findModel($id)->delete();
         return $this->redirect(['index']);
+    }
+    protected function findModel($id) {
+        if (($model = Secretariats::findOne($id)) !== null) {
+            return $model;
+        }
+        throw new NotFoundHttpException(Yii::t('correspondence', 'The requested page does not exist.'));
     }
 }

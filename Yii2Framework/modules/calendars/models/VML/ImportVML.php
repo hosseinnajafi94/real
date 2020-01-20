@@ -172,6 +172,7 @@ class ImportVML extends Model {
                 $days = getDiffDays($model->start_time, $model->end_time) + 1;
                 foreach ($models as $row) {
                     $row->calendar_id = $model->id;
+                    $row->message = $model->title;
                     if ($row->save()) {
                         for ($index = 0; $index < $days; $index += $row->model->period->days) {
                             $datetime1           = date('Y-m-d H:i:s', strtotime($model->start_time . " +$index days"));

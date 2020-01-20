@@ -3,8 +3,6 @@
 /* @var $model app\modules\correspondence\models\DAL\Secretariats */
 $this->title = Yii::t('app', 'Update');
 ?>
-<div class="secretariats-update">
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+<div class="correspondence-secretariats-update">
+    <?= $this->render('_form', ['model' => $model]) ?>
 </div>

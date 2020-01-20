@@ -3,9 +3,9 @@ namespace app\modules\correspondence\models\VML;
 use Yii;
 use yii\base\Model;
 use yii\web\UploadedFile;
-use app\modules\correspondence\models\DAL\MailsListPatterns;
+use app\modules\correspondence\models\DAL\SecretariatsPatterns;
 use app\modules\correspondence\models\SRL\MailsListSizesSRL;
-use app\modules\correspondence\models\VML\MailsListPatternsSearchVML;
+use app\modules\correspondence\models\VML\PatternsSearchVML;
 class PatternsVML extends Model {
     public $id;
     public $title;
@@ -18,17 +18,17 @@ class PatternsVML extends Model {
     public $model;
     //
     public static function search($params) {
-        $searchModel  = new MailsListPatternsSearchVML();
+        $searchModel  = new PatternsSearchVML();
         $dataProvider = $searchModel->search($params);
         return [$searchModel, $dataProvider];
     }
     public function rules() {
         return [
-                [['title', 'size_id', 'sign_count'], 'required'],
-                [['file'], 'required', 'on' => 'create'],
-                [['size_id', 'sign_count'], 'integer'],
-                [['title'], 'string', 'max' => 255],
-                [['file'], 'file', 'extensions' => 'png, jpg, jpeg'],
+            [['title', 'size_id', 'sign_count'], 'required'],
+            [['file'], 'required', 'on' => 'create'],
+            [['size_id', 'sign_count'], 'integer'],
+            [['title'], 'string', 'max' => 255],
+            [['file'], 'file', 'extensions' => 'png, jpg, jpeg'],
         ];
     }
     public function attributeLabels() {
@@ -46,11 +46,11 @@ class PatternsVML extends Model {
     public static function newInstance() {
         $data           = new static();
         $data->scenario = 'create';
-        $data->model    = new MailsListPatterns();
+        $data->model    = new SecretariatsPatterns();
         return $data;
     }
     public static function find($id) {
-        $model = MailsListPatterns::findOne($id);
+        $model = SecretariatsPatterns::findOne($id);
         if ($model === null) {
             return null;
         }

@@ -1,10 +1,10 @@
 <?php
 use yii\bootstrap4\Html;
-use yii\widgets\Pjax;
-use app\config\widgets\GridView;
-use yii\grid\ActionColumn;
-use app\config\widgets\ActiveForm;
 use yii\bootstrap4\Modal;
+use yii\grid\ActionColumn;
+use app\config\widgets\Pjax;
+use app\config\widgets\GridView;
+use app\config\widgets\ActiveForm;
 /* @var $this \yii\web\View */
 /* @var $data \yii\data\ActiveDataProvider */
 /* @var $search \app\modules\calendars\models\VML\CalendarsSearchVML */
@@ -98,7 +98,8 @@ $this->registerJs("
             var errors = \$form.find('.is-invalid').length;
             if (errors === 0) {
                 ajaxpost(url, formData, function (result) {
-                    if (result.saved === true) {
+                    var isValid = validResult(result);
+                    if (isValid) {
                         $.pjax.reload({container: '#list4', async: false});
                         $('#modalNewRequirements').modal('hide');
                     }

@@ -11,6 +11,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 /* @var $model \app\modules\calendars\models\VML\CalendarsVML */
 /* @var $modelType \app\modules\calendars\models\VML\CalendarsListTypeVML */
 ?>
+<!--  -->
 <div class="d-none border p-1 mb-1 bg-light hidden-print" style="border-radius: 4px;">
     <!--    <ul id="ulListType">
             <li>
@@ -364,7 +365,7 @@ $this->registerJsFile('@web/themes/custom/js/moment.min.js', ['depends' => Admin
 $this->registerJsFile('@web/themes/custom/js/moment-jalaali.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/fullcalendar.min.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/locale-all.js', ['depends' => AdminAsset::class]);
-$this->registerJsFile('@web/themes/custom/js/calendars.js?ver=4', ['depends' => AdminAsset::class]);
+$this->registerJsFile('@web/themes/custom/js/calendars.js?ver=5', ['depends' => AdminAsset::class]);
 $this->registerCssFile('@web/themes/custom/css/fullcalendar.min.css', ['depends' => AdminAsset::class]);
 $this->registerJs("
     var types         = " . json_encode($types) . ";
@@ -376,27 +377,6 @@ $this->registerJs("
     var today         = '" . functions::getjdate() . "';
     var urlSearch     = '" . Url::to(['search']) . "';
 ", View::POS_HEAD);
-$this->registerJs('
-    $(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
-        //console.log("beforeInsert");
-    });
-    $(".dynamicform_wrapper").on("afterInsert", function(e, item) {
-        //console.log(item);
-        //console.log("afterInsert");
-    });
-    $(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
-        //if (! confirm("Are you sure you want to delete this item?")) {
-        //    return false;
-        //}
-        //return true;
-    });
-    $(".dynamicform_wrapper").on("afterDelete", function(e) {
-        //console.log("Deleted item!");
-    });
-    $(".dynamicform_wrapper").on("limitReached", function(e, item) {
-        //alert("Limit reached");
-    });
-');
 $this->registerCss('
     .input-group {margin-bottom: 0 !important;}
     form .form-group {margin-bottom: 3px !important;}

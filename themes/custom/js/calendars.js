@@ -66,20 +66,27 @@ $(function () {
     $('#date6').MdPersianDateTimePicker({inLine: true, englishNumber: true}).on('change-dp', function () {
         var url = $(this).data('url');
         var datetime = $(this).data('dp-val');
+        showList(url, datetime);
+    });
+    function showList(url, datetime) {
         ajaxget(url, {datetime}, function (rows) {
-            $('#getList tbody').html('');
+            $('#getList tbody').data('options', {url, datetime}).html('');
             for (var i = 0, max = rows.length; i < max; i++) {
                 var html = `
                     <tr>
                         <td>${i + 1}</td>
-                        <td>${rows[i].title}</td>
-                        <td><a data-url="${rows[i].url}" data-id="${rows[i].id}"><i class="fa fa-eye"></i></a></td>
+                        <td><a data-url="${rows[i].url}" data-id="${rows[i].id}" data-type="view">${rows[i].title}</a></td>
+                        <td>
+                            <a href="#" data-url="${rows[i].url}" data-id="${rows[i].id}" data-type="view"><i class="fa fa-eye"></i></a>
+                            <a href="#" data-url="${rows[i].url}" data-id="${rows[i].id}" data-type="update"><i class="fa fa-pencil"></i></a>
+                            <a href="#" data-url="${rows[i].urlDelete}" data-id="${rows[i].id}" data-type="delete"><i class="fa fa-times"></i></a>
+                        </td>
                     </tr>
                 `;
                 $('#getList tbody').append(html);
             }
         });
-    });
+    }
     $(document).on('click', '.ajaxDelete', function (e) {
         e.preventDefault();
         var url = $(this).attr('href');
@@ -91,12 +98,31 @@ $(function () {
             });
         }
     });
-    $(document).on('click', '#getList a', function () {
+    $(document).on('click', '#getList a', function (e) {
+        e.preventDefault();
         var url = $(this).data('url');
         var id = $(this).data('id');
-        ajaxget(url, {id}, function (result) {
-            showEvent(result);
-        });
+        var type = $(this).data('type');
+        switch (type) {
+            case 'view':
+                ajaxget(url, {id}, function (result) {
+                    showEvent(result);
+                });
+                break;
+            case 'update':
+                ajaxget(url, {id}, function (result) {
+                    updateEvent(result);
+                });
+                break;
+            case 'delete':
+                if (confirm(areYouSure)) {
+                    ajaxget(url, {id}, function (result) {
+                        var {url, datetime} = $('#getList tbody').data('options');
+                        showList(url, datetime);
+                    });
+                }
+                break;
+        }
     });
     $('#calendarsvml-has_reception').change(function () {
         var checked = $(this).prop('checked');
