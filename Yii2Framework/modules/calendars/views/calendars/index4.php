@@ -21,7 +21,7 @@ Modal::begin([
     'footer'  => Html::a(Yii::t('app', 'Save'), null, ['class' => 'btn btn-sm btn-success', 'id' => 'saveNewRequirements'])
 ]);
 ?>
-<?php $form = ActiveForm::begin(['action' => ['/calendars/requirements/create']]); ?>
+<?php $form                     = ActiveForm::begin(['action' => ['/calendars/requirements/create']]); ?>
 <?= $form->field($modelRequirements, 'title')->textInput(['maxlength' => true]) ?>
 <?php ActiveForm::end(); ?>
 <?php Modal::end(); ?>
@@ -49,11 +49,18 @@ echo GridView::widget([
     'columns'        => [
             ['class' => 'yii\grid\SerialColumn', 'header' => 'ردیف'],
         'title',
-            ['class' => 'yii\grid\CheckboxColumn'],
+            ['class' => \app\config\widgets\CheckboxColumn::class],
             [
-            'class'    => ActionColumn::class,
-            'template' => '{delete}',
-            'buttons'  => [
+            'class'   => \app\config\widgets\ActionColumn::class,
+            'header'  => 'عملیات',
+//            'template' => '{delete}',
+            'buttons' => [
+                'view' => function ($url, $model) {
+                    return Html::a('<i class="fa fa-eye"></i>', ['/calendars/requirements/view', 'id' => $model->id], ['class' => 'ajaxView', 'data' => ['pjax' => 0, 'container' => 'list4', 'confirm2' => Yii::t('app', 'Are you sure?'), 'title' => $model->title]]);
+                },
+                'update'  => function ($url, $model) {
+                    return Html::a('<i class="fa fa-pencil"></i>', ['/calendars/requirements/update', 'id' => $model->id], ['class' => 'ajaxUpdate', 'data' => ['pjax' => 0, 'container' => 'list4', 'confirm2' => Yii::t('app', 'Are you sure?'), 'title' => $model->title]]);
+                },
                 'delete' => function ($url, $model) {
                     return Html::a('<i class="fa fa-times"></i>', ['/calendars/requirements/delete', 'id' => $model->id], ['class' => 'ajaxDelete', 'data' => ['pjax' => 0, 'container' => 'list4', 'confirm2' => Yii::t('app', 'Are you sure?')]]);
                 },
@@ -63,6 +70,28 @@ echo GridView::widget([
 ]);
 echo Html::a('حذف', null, ['class' => 'btn btn-sm btn-danger list4DeleteAll pull-left disabled']);
 Pjax::end();
+
+ob_start();
+Modal::begin([
+    'id'      => 'modalView4',
+    'options' => ['class' => ''],
+    'title'   => Yii::t('app', 'Details'),
+]);
+Modal::end();
+$this->params['modals'][] = ob_get_clean();
+
+ob_start();
+Modal::begin([
+    'id'      => 'modalUpdate4',
+    'options' => ['class' => ''],
+    'title'   => Yii::t('app', 'Update'),
+    'footer'  => Html::a(Yii::t('app', 'Save'), null, ['class' => 'btn btn-sm btn-success', 'onclick' => "$('#modalUpdate4 form').submit();"])
+]);
+$form2 = ActiveForm::begin(['action' => ['/calendars/requirements/update']]);
+echo $form2->field($modelRequirements, 'title')->textInput(['maxlength' => true]);
+ActiveForm::end();
+Modal::end();
+$this->params['modals'][] = ob_get_clean();
 
 $this->registerCss("
     #list4 thead th {padding: 5px 13px !important;}

@@ -1,6 +1,20 @@
 /* global urlSearch, today, moment, urlCalendars, events, areYouSure, urlDelete, types, urlDeleteType */
 
 $(function () {
+
+    $(document).on('click', '.addNew', function (e) {
+        var {url, datetime} = $('#getList tbody').data('options');
+        var d = datetime.split('/');
+        var year = parseInt(d[0]);
+        var month = parseInt(d[1]);
+        var day = parseInt(d[2]);
+        $('#calendarsvml-start_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
+        $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
+        $('#calendarsvml-start_time').val('00:00:00');
+        $('#calendarsvml-end_time').val('00:00:00');
+        $('#calendarsvml-id').val('');
+        $('#modalNew').modal('show');
+    });
     $(document).on('submit', '#importForm', function (e) {
         e.preventDefault();
         var $form = $('#importForm');
@@ -71,6 +85,7 @@ $(function () {
     function showList(url, datetime) {
         ajaxget(url, {datetime}, function (rows) {
             $('#getList tbody').data('options', {url, datetime}).html('');
+            $('.addNew').removeClass('disabled');
             for (var i = 0, max = rows.length; i < max; i++) {
                 var html = `
                     <tr>
@@ -87,6 +102,53 @@ $(function () {
             }
         });
     }
+    $(document).on('click', '.ajaxView', function (e) {
+        e.preventDefault();
+        var title = $(this).data('title');
+        var container = $(this).data('container');
+        var confirm2 = $(this).data('confirm2');
+        var editUrl = $(this).parent().children('.ajaxUpdate').attr('href');
+        var deleteUrl = $(this).parent().children('.ajaxDelete').attr('href');
+        $('#modalView4 .modal-body').html(`
+            <div>
+                <p>
+                    <a class="btn btn-sm btn-warning" onclick="$('#modalView4').modal('hide');">بازگشت</a>
+                    <a class="btn btn-sm btn-primary ajaxUpdate" href="${editUrl}" data-container="${container}" data-confirm2="${confirm2}" data-title="${title}">ویرایش</a>
+                    <a class="btn btn-sm btn-danger ajaxDelete" href="${deleteUrl}" data-container="${container}" data-confirm2="${confirm2}">حذف</a>
+                </p>
+                <div class="form-group row mb-0">
+                    <label class="col-4">عنوان</label>
+                    <div class="col-8">
+                        ${title}
+                    </div>
+                </div>
+            </div>
+        `);
+        $('#modalView4').modal('show');
+    });
+    $(document).on('submit', '#modalUpdate4 form', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('action');
+        var container = $(this).data('container');
+        var data = new FormData(this);
+        ajaxpost(url, data, function (result) {
+            var isValid = validResult(result);
+            if (isValid) {
+                $.pjax.reload({container: '#' + container});
+                $('#modalUpdate4').modal('hide');
+            }
+        }, undefined, undefined, undefined, true);
+    });
+    $(document).on('click', '.ajaxUpdate', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        var container = $(this).data('container');
+        var title = $(this).data('title');
+        $('#modalUpdate4 #calendarslistrequirements-title').val(title);
+        $('#modalUpdate4 form').attr('action', url).data('container', container);
+        $('#modalView4').modal('hide');
+        $('#modalUpdate4').modal('show');
+    });
     $(document).on('click', '.ajaxDelete', function (e) {
         e.preventDefault();
         var url = $(this).attr('href');
@@ -95,6 +157,7 @@ $(function () {
         if (confirm(message)) {
             ajaxget(url, {}, function () {
                 $.pjax.reload({container: '#' + container});
+                $('#modalView4').modal('hide');
             });
         }
     });

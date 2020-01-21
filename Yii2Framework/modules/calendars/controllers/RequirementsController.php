@@ -5,6 +5,13 @@ use yii\web\NotFoundHttpException;
 use app\config\widgets\Controller;
 use app\modules\calendars\models\DAL\CalendarsListRequirements;
 class RequirementsController extends Controller {
+    public function actionUpdate($id) {
+        $model = $this->findModel($id);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->asJson(['saved' => true]);
+        }
+        return $this->asJson(['saved' => false, 'messages' => $model->getErrors()]);
+    }
     public function actionCreate() {
         $model = new CalendarsListRequirements();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {

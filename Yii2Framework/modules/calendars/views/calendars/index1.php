@@ -44,6 +44,9 @@ use wbraganca\dynamicform\DynamicFormWidget;
     </div>
     <div class="tab-pane" id="type2">
         <div id="date6" data-url="<?= Url::to(['get-list']) ?>" class="mb-2"></div>
+        <p>
+            <a class="btn btn-sm btn-success addNew disabled">افزودن</a>
+        </p>
         <table class="table table-bordered table-sm mb-0" id="getList">
             <thead>
                 <tr>
@@ -365,7 +368,7 @@ $this->registerJsFile('@web/themes/custom/js/moment.min.js', ['depends' => Admin
 $this->registerJsFile('@web/themes/custom/js/moment-jalaali.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/fullcalendar.min.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/locale-all.js', ['depends' => AdminAsset::class]);
-$this->registerJsFile('@web/themes/custom/js/calendars.js?ver=5', ['depends' => AdminAsset::class]);
+$this->registerJsFile('@web/themes/custom/js/calendars.js?ver=6', ['depends' => AdminAsset::class]);
 $this->registerCssFile('@web/themes/custom/css/fullcalendar.min.css', ['depends' => AdminAsset::class]);
 $this->registerJs("
     var types         = " . json_encode($types) . ";
