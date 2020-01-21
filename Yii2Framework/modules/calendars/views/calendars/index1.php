@@ -40,7 +40,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 </ul>
 <div class="tab-content p-0 pt-1">
     <div class="tab-pane active show" id="type1">
-        <div id="calendar" class="border" style="background: #F7F9FA;padding: 15px;border-radius: 4px;min-height: 700px;overflow: hidden;"></div>
+        <div id="calendar" class="border" style="background: #F7F9FA;padding: 15px;border-radius: 4px;min-height: 800px;overflow: hidden;"></div>
     </div>
     <div class="tab-pane" id="type2">
         <div id="date6" data-url="<?= Url::to(['get-list']) ?>" class="mb-2"></div>
@@ -52,7 +52,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
                 <tr>
                     <th>ردیف</th>
                     <th>عنوان</th>
-                    <th></th>
+                    <th>عملیات</th>
                 </tr>
             </thead>
             <tbody>
@@ -381,6 +381,13 @@ $this->registerJs("
     var urlSearch     = '" . Url::to(['search']) . "';
 ", View::POS_HEAD);
 $this->registerCss('
+    .fc-event span.fc-title {
+        white-space: nowrap !important;
+        display: block !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        direction: rtl !important;
+    }
     .input-group {margin-bottom: 0 !important;}
     form .form-group {margin-bottom: 3px !important;}
     .menu2 span.fa {display: none !important;}

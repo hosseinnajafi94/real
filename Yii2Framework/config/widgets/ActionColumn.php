@@ -1,6 +1,7 @@
 <?php
 namespace app\config\widgets;
 class ActionColumn extends \yii\grid\ActionColumn {
+    public $header = 'عملیات';
     public function init() {
         if (!isset($this->buttons['export'])) {
             $this->buttons['export'] = function ($url) {

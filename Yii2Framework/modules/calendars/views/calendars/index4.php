@@ -1,7 +1,6 @@
 <?php
 use yii\bootstrap4\Html;
 use yii\bootstrap4\Modal;
-use yii\grid\ActionColumn;
 use app\config\widgets\Pjax;
 use app\config\widgets\GridView;
 use app\config\widgets\ActiveForm;
@@ -47,13 +46,11 @@ echo GridView::widget([
     'dataProvider'   => $data,
     'filterModel'    => $search,
     'columns'        => [
-            ['class' => 'yii\grid\SerialColumn', 'header' => 'ردیف'],
+        ['class' => 'yii\grid\SerialColumn', 'header' => 'ردیف'],
         'title',
-            ['class' => \app\config\widgets\CheckboxColumn::class],
-            [
+        ['class' => \app\config\widgets\CheckboxColumn::class],
+        [
             'class'   => \app\config\widgets\ActionColumn::class,
-            'header'  => 'عملیات',
-//            'template' => '{delete}',
             'buttons' => [
                 'view' => function ($url, $model) {
                     return Html::a('<i class="fa fa-eye"></i>', ['/calendars/requirements/view', 'id' => $model->id], ['class' => 'ajaxView', 'data' => ['pjax' => 0, 'container' => 'list4', 'confirm2' => Yii::t('app', 'Are you sure?'), 'title' => $model->title]]);

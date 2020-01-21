@@ -134,7 +134,7 @@ $(function () {
         ajaxpost(url, data, function (result) {
             var isValid = validResult(result);
             if (isValid) {
-                $.pjax.reload({container: '#' + container});
+                $.pjax.reload({container: '#' + container, async: false});
                 $('#modalUpdate4').modal('hide');
             }
         }, undefined, undefined, undefined, true);
@@ -156,7 +156,7 @@ $(function () {
         var message = $(this).data('confirm2');
         if (confirm(message)) {
             ajaxget(url, {}, function () {
-                $.pjax.reload({container: '#' + container});
+                $.pjax.reload({container: '#' + container, async: false});
                 $('#modalView4').modal('hide');
             });
         }
@@ -514,7 +514,7 @@ $(function () {
     $('#calendar').fullCalendar({
         locale: 'fa',
         height: 'parent',
-        eventLimit: 2,
+        eventLimit: true,
 //        views: {
 //            timeGrid: {
 //                eventLimit: 1 // adjust to 6 only for timeGridWeek/timeGridDay

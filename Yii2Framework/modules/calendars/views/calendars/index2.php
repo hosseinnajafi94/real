@@ -167,7 +167,6 @@ $fields = [
 $columns = [
     [
         'class'  => app\config\widgets\SerialColumn::class,
-        'header' => 'ردیف',
         'filter' => '<a class="fields btn btn-sm btn-secondary mb-0"><i class="fa fa-caret-down"></i></a>'
     ],
     $fields[0]
@@ -182,16 +181,10 @@ if (Yii::$app->request->get('list2columns')) {
         }
     }
 }
-$columns[] = [
-    'class' => \app\config\widgets\CheckboxColumn::class,
-    'header' => 'حذف دسته جمعی',
-];
+$columns[] = ['class' => \app\config\widgets\CheckboxColumn::class];
 $columns[] = [
     'class'   => ActionColumn::class,
-    'contentOptions' => [
-        'style' => 'min-width: 80px;text-align: center;'
-    ],
-    'header' => 'عملیات',
+    'contentOptions' => ['style' => 'min-width: 80px;text-align: center;'],
     'buttons' => [
         'delete' => function ($url) {
             return Html::a('<i class="fa fa-times"></i>', $url, ['class' => 'ajaxDelete', 'data' => ['pjax' => 0, 'container' => 'list2', 'confirm2' => Yii::t('app', 'Are you sure?')]]);

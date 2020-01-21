@@ -60,7 +60,7 @@ use app\config\components\functions;
                 <th class="text-center">زمان</th>
                 <th class="text-center">تاریخ</th>
                 <th class="text-center">ساعت</th>
-                <th></th>
+                <th class="text-center">عملیات</th>
             </tr>
         </thead>
         <tbody>
