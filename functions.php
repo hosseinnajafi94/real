@@ -41,3 +41,14 @@ function sec_to_time($seconds) {
     $secs  = floor($seconds % 60);
     return sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
 }
+function size_format($bytes, $type = 1) {
+    $base      = 1024;
+    $si_prefix = array('B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB');
+    $class     = min((int) log($bytes, $base), count($si_prefix) - 1);
+    return $type == 1 ? sprintf('%1.2f', $bytes / pow($base, $class)) . ' ' . $si_prefix[$class] : sprintf('%1.2f', $bytes / pow($base, $class));
+}
+function getsystemboottime($type = 2) {
+    $info     = exec('systeminfo | find /i "Boot Time"');
+    $datetime = trim(str_replace("System Boot Time:", "", $info));
+    return $type == 1 ? date('Y-m-d H:i:s', strtotime($datetime)) : app\config\components\jdf::jdate('Y/m/d H:i:s', strtotime($datetime));
+}

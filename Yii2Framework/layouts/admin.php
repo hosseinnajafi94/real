@@ -54,6 +54,7 @@ $this->beginPage();
                                 <ul class="menu-content">
                                     <li><a class="menu-item" href="<?= Url::to(['/dashboard/default/index']) ?>"><i class="fa fa-tachometer"></i> <span class="menu-title">داشبورد</span></a></li>
                                     <li><a class="menu-item" href="<?= Url::to(['/ticketing/tickets/index']) ?>"><i class="fa fa-ticket"></i> <span class="menu-title">پشتیبانی</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/administration/default/index']) ?>"><i class="tyf tyf-module3"></i> <span class="menu-title"><?= Yii::t('administration', 'Administration') ?></span></a></li>
                                     <li><a class="menu-item" href="<?= Url::to(['/calendars/calendars/index']) ?>"><i class="fa fa-calendar"></i> <span class="menu-title">تقویم</span></a></li>
                                     <li><a class="menu-item" href="<?= Url::to(['/correspondence/default/index']) ?>"><i class="fa fa-file"></i> <span class="menu-title">مکاتبات</span></a></li>
                                     <li><a class="menu-item" href="<?= Url::to(['/users/default/index']) ?>"><i class="fa fa-user" style="position: relative;"><i class="fa fa-search" style="position: absolute;bottom: -5px;right: -5px;font-size: 11px;color: white;text-shadow: 0 0 2px #000;"></i></i> <span class="menu-title">پرسنلی</span></a></li>
