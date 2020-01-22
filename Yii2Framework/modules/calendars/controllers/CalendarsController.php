@@ -17,6 +17,7 @@ use app\modules\calendars\models\VML\ImportVML;
 use app\modules\calendars\models\VML\ExportVML;
 use app\modules\calendars\models\VML\CalendarsVML;
 use app\modules\calendars\models\VML\CalendarsAlarmsVML;
+use app\modules\calendars\models\VML\CalendarsAlarms2VML;
 use app\modules\calendars\models\VML\CalendarsSearchVML;
 use app\modules\calendars\models\VML\CalendarsListTypeVML;
 use app\modules\calendars\models\VML\CalendarsListRequirementsSearchModel;
@@ -94,16 +95,18 @@ class CalendarsController extends Controller {
         }
     }
     public function actionIndex() {
-        $modelImport       = new ImportVML();
-        $modelExport       = new ExportVML();
         $search            = new CalendarsSearchVML();
         $data              = $search->search(Yii::$app->request->queryParams);
         $search4           = new CalendarsListRequirementsSearchModel();
         $data4             = $search4->search(Yii::$app->request->queryParams);
+        $modelImport       = new ImportVML();
+        $modelExport       = new ExportVML();
         $model             = CalendarsVML::newInstance();
         $model->loaditems();
         $modelAlarm        = CalendarsAlarmsVML::newInstance();
         $modelAlarm->loaditems();
+        $modelAlarm2        = CalendarsAlarms2VML::newInstance();
+        $modelAlarm2->loaditems();
         $modelType         = CalendarsListTypeVML::newInstance();
         $modelType->loaditems();
         $modelRequirements = new CalendarsListRequirements();
@@ -112,12 +115,13 @@ class CalendarsController extends Controller {
                     'modelImport'       => $modelImport,
                     'modelExport'       => $modelExport,
                     'modelType'         => $modelType,
+                    'modelAlarm'        => $modelAlarm,
+                    'modelAlarm2'       => $modelAlarm2,
+                    'modelRequirements' => $modelRequirements,
                     'search'            => $search,
                     'data'              => $data,
                     'search4'           => $search4,
                     'data4'             => $data4,
-                    'modelAlarm'        => $modelAlarm,
-                    'modelRequirements' => $modelRequirements,
         ]);
     }
     public function actionDeleteType($id) {

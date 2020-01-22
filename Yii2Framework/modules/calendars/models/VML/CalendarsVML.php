@@ -105,7 +105,6 @@ class CalendarsVML extends Model {
         return $this;
     }
     public function save($post) {
-//        CalendarsAlarmsVML::news;
         $oldFile = $this->file;
         if (!$this->load($post)) {
             return false;
@@ -139,7 +138,6 @@ class CalendarsVML extends Model {
         $this->populate($model, $this);
         $model->user_id = Yii::$app->user->id;
 
-
         $models = [];
         if (isset($post['CalendarsAlarmsVML'])) {
             for ($index = 0, $count = count($post['CalendarsAlarmsVML']); $index < $count; $index++) {
@@ -151,6 +149,16 @@ class CalendarsVML extends Model {
             }
         }
 
+        $models2 = [];
+        if (isset($post['CalendarsAlarms2VML'])) {
+            for ($index = 0, $count = count($post['CalendarsAlarms2VML']); $index < $count; $index++) {
+                $models2[] = CalendarsAlarms2VML::newInstance();
+            }
+            $loaded = CalendarsAlarms2VML::loadMultiple($models2, $post);
+            if (!$loaded) {
+                return false;
+            }
+        }
 
         if (!$model->save()) {
             return false;
@@ -186,6 +194,16 @@ class CalendarsVML extends Model {
             }
         }
 
+        \app\modules\calendars\models\DAL\CalendarsImplementation::deleteAll(['calendar_id' => $model->id]);
+        if (is_array($this->implementations)) {
+            foreach ($this->implementations as $userId) {
+                $row              = new \app\modules\calendars\models\DAL\CalendarsImplementation();
+                $row->calendar_id = $model->id;
+                $row->user_id     = $userId;
+                $row->save();
+            }
+        }
+
 
 
         CalendarsEvents::deleteAll(['calendar_id' => $model->id]);
@@ -193,6 +211,21 @@ class CalendarsVML extends Model {
 
         $days = getDiffDays($model->start_time, $model->end_time) + 1;
         foreach ($models as $row) {
+            $row->calendar_id = $model->id;
+            if ($row->save()) {
+                for ($index = 0; $index < $days; $index += $row->model->period->days) {
+                    $datetime1           = date('Y-m-d H:i:s', strtotime($model->start_time . " +$index days"));
+                    $datetime2           = date('Y-m-d H:i:s', strtotime($datetime1) - $row->model->time->times);
+                    $model1              = new CalendarsEvents();
+                    $model1->alarm_id    = $row->id;
+                    $model1->calendar_id = $model->id;
+                    $model1->datetime    = $datetime2;
+                    $model1->done        = 0;
+                    $model1->save();
+                }
+            }
+        }
+        foreach ($models2 as $row) {
             $row->calendar_id = $model->id;
             if ($row->save()) {
                 for ($index = 0; $index < $days; $index += $row->model->period->days) {

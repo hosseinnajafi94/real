@@ -23,12 +23,12 @@ use wbraganca\dynamicform\DynamicFormWidget;
     <?php
     foreach ($types as $type) {
         ?>
-                                    <li>
-                                        <label class="btn btn-sm btn-primary">
-                                            <input type="checkbox" class="calendar_type" data-id="<?= $type['id'] ?>" checked/>
-                                            <span><?= $type['title'] ?></span>
-                                        </label>
-                                    </li>
+                                            <li>
+                                                <label class="btn btn-sm btn-primary">
+                                                    <input type="checkbox" class="calendar_type" data-id="<?= $type['id'] ?>" checked/>
+                                                    <span><?= $type['title'] ?></span>
+                                                </label>
+                                            </li>
         <?php
     }
     ?>
@@ -40,7 +40,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 </ul>
 <div class="tab-content p-0 pt-1">
     <div class="tab-pane active show" id="type1">
-        <div id="calendar" class="border" style="background: #F7F9FA;padding: 15px;border-radius: 4px;min-height: 800px;overflow: hidden;"></div>
+        <div id="calendar" class="border" style="background: #F7F9FA;padding: 15px;border-radius: 4px;min-height: 800px;max-height: 800px;overflow: hidden;"></div>
     </div>
     <div class="tab-pane" id="type2">
         <div id="date6" data-url="<?= Url::to(['get-list']) ?>" class="mb-2"></div>
@@ -74,37 +74,38 @@ use wbraganca\dynamicform\DynamicFormWidget;
     ?>
     <?php
     $form                     = ActiveForm::begin([
-        'id'          => 'formNew',
-        'action'      => ['event'],
-        'layout'      => 'horizontal',
-        'fieldConfig' => [
-            'horizontalCssClasses' => [
-                'label'   => 'col-5',
-                'wrapper' => 'col-7',
-            ],
-        ],
+                'id'          => 'formNew',
+                'action'      => ['event'],
+                'layout'      => 'horizontal',
+                'fieldConfig' => [
+                    'horizontalCssClasses' => [
+                        'label'   => 'col-5',
+                        'wrapper' => 'col-7',
+                    ],
+                ],
     ]);
     ?>
     <?= Html::activeHiddenInput($model, 'id') ?>
-            <?=
-            $form->field($model, 'title', [
-                'template'             => '
-                    {label}
-                    <div class="col-7 input-group">
-                        {input}
-                        <div class="input-group-append" style="position: relative;">
-                            <a class="btn btn-sm btn-outline-primary" id="searchTitle" data-url="' . Url::to(['search-title']) . '"><i class="fa fa-search"></i></a>
-                        </div>
-                        {hint}
-                        {error}
-                    </div>
-                ',
-                'horizontalCssClasses' => [
-                    'label'   => 'col-5',
-                    'wrapper' => 'col-7',
-                ],
-            ])->textInput(['maxlength' => true]) ?>
-            <?= $form->field($model, 'favcolor')->textInput(['type' => 'color']) ?>
+    <?=
+    $form->field($model, 'title', [
+        'template'             => '
+            {label}
+            <div class="col-7 input-group">
+                {input}
+                <div class="input-group-append" style="position: relative;">
+                    <a class="btn btn-sm btn-outline-primary" id="searchTitle" data-url="' . Url::to(['search-title']) . '"><i class="fa fa-search"></i></a>
+                </div>
+                {hint}
+                {error}
+            </div>
+        ',
+        'horizontalCssClasses' => [
+            'label'   => 'col-5',
+            'wrapper' => 'col-7',
+        ],
+    ])->textInput(['maxlength' => true])
+    ?>
+    <?= $form->field($model, 'favcolor')->textInput(['type' => 'color']) ?>
     <?= $form->field($model, 'type_id')->dropDownList($model->list_type) ?>
     <?= $form->field($model, 'status_id')->dropDownList($model->list_status) ?>
     <?= $form->field($model, 'location')->textInput(['maxlength' => true]) ?>
@@ -114,6 +115,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
     <?= $form->field($model, 'end_time')->textInput(['style' => 'direction: ltr;text-align: left;']) ?>
     <?= $form->field($model, 'users')->select2($model->list_users, ['multiple' => true, 'class' => 'form-control form-control-sm'], ['closeOnSelect' => false]) ?>
     <?= $form->field($model, 'for_informations')->select2($model->list_users, ['multiple' => true, 'class' => 'form-control form-control-sm'], ['closeOnSelect' => false]) ?>
+    <?= $form->field($model, 'implementations')->select2($model->list_users, ['multiple' => true, 'class' => 'form-control form-control-sm'], ['closeOnSelect' => false]) ?>
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
     <?= $form->field($model, 'file')->fileInput() ?>
     <?= $form->field($model, 'has_reception')->checkbox() ?>
@@ -131,6 +133,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
         'model'           => $modelAlarm,
         'formId'          => 'formNew',
         'formFields'      => [
+            'type_id',
             'time_id',
             'period_id',
             'alarm_type_id',
@@ -141,7 +144,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
     <div class="container-items">
         <div class="item card border">
             <div class="card-header" style="padding: 10px;">
-                <h3 class="card-title pull-right">اعلان</h3>
+                <h3 class="card-title pull-right">اعلان ( حاضرین در جلسه, جهت اطلاع )</h3>
                 <div class="pull-left">
                     <button type="button" class="add-item btn btn-success btn-sm mb-0" style="line-height: 1;padding: 4px 4px 1px 4px;"><i class="fa fa-plus"></i></button>
                     <button type="button" class="remove-item btn btn-danger btn-sm mb-0" style="line-height: 1;padding: 4px 4px 1px 4px;"><i class="fa fa-minus"></i></button>
@@ -149,10 +152,51 @@ use wbraganca\dynamicform\DynamicFormWidget;
                 <div class="clearfix"></div>
             </div>
             <div class="card-block" style="padding: 0 10px;">
+                <?= Html::activeHiddenInput($modelAlarm, '[0]type_id', ['value' => 1])?>
                 <?= $form->field($modelAlarm, '[0]time_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_time) ?>
                 <?= $form->field($modelAlarm, '[0]period_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_period) ?>
                 <?= $form->field($modelAlarm, '[0]alarm_type_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_alarm_type) ?>
                 <?= $form->field($modelAlarm, '[0]message', ['options' => ['class' => 'form-group row mb-1']])->textarea(['rows' => 6]) ?>
+            </div>
+        </div>
+    </div>
+    <?php DynamicFormWidget::end(); ?>
+    <?php
+    DynamicFormWidget::begin([
+        'widgetContainer' => 'dynamicform_wrapper1', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
+        'widgetBody'      => '.container-items1', // required: css class selector
+        'widgetItem'      => '.item1', // required: css class
+        //'limit' => 4, // the maximum times, an element can be cloned (default 999)
+        //'min' => 1, // 0 or 1 (default 1)
+        'insertButton'    => '.add-item1', // css class
+        'deleteButton'    => '.remove-item1', // css class
+        'model'           => $modelAlarm2,
+        'formId'          => 'formNew',
+        'formFields'      => [
+            'type_id',
+            'time_id',
+            'period_id',
+            'alarm_type_id',
+            'message'
+        ],
+    ]);
+    ?>
+    <div class="container-items1">
+        <div class="item1 card border">
+            <div class="card-header" style="padding: 10px;">
+                <h3 class="card-title pull-right">اعلان ( مسئول اجرا )</h3>
+                <div class="pull-left">
+                    <button type="button" class="add-item1 btn btn-success btn-sm mb-0" style="line-height: 1;padding: 4px 4px 1px 4px;"><i class="fa fa-plus"></i></button>
+                    <button type="button" class="remove-item1 btn btn-danger btn-sm mb-0" style="line-height: 1;padding: 4px 4px 1px 4px;"><i class="fa fa-minus"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="card-block" style="padding: 0 10px;">
+                <?= Html::activeHiddenInput($modelAlarm2, '[0]type_id', ['value' => 2])?>
+                <?= $form->field($modelAlarm2, '[0]time_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_time) ?>
+                <?= $form->field($modelAlarm2, '[0]period_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_period) ?>
+                <?= $form->field($modelAlarm2, '[0]alarm_type_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_alarm_type) ?>
+                <?= $form->field($modelAlarm2, '[0]message', ['options' => ['class' => 'form-group row mb-1']])->textarea(['rows' => 6]) ?>
             </div>
         </div>
     </div>
@@ -291,9 +335,17 @@ use wbraganca\dynamicform\DynamicFormWidget;
             <div class="col-8" id="requirements"></div>
         </div>
         <div class="row form-group">
-            <label class="col-4">هشدارها</label>
+            <label class="col-12">هشدارها ( حاضرین در جلسه, جهت اطلاع )</label>
+            <div class="col-12">
+                <ul id="alarms"></ul>
+            </div>
         </div>
-        <ul id="alarms"></ul>
+        <div class="row form-group">
+            <label class="col-12">هشدارها ( مسئول اجرا )</label>
+            <div class="col-12">
+                <ul id="alarms2"></ul>
+            </div>
+        </div>
     </div>
     <?php Modal::end() ?>
     <?php $this->params['modals'][] = ob_get_clean() ?>
@@ -372,7 +424,7 @@ $this->registerJsFile('@web/themes/custom/js/moment.min.js', ['depends' => Admin
 $this->registerJsFile('@web/themes/custom/js/moment-jalaali.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/fullcalendar.min.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/locale-all.js', ['depends' => AdminAsset::class]);
-$this->registerJsFile('@web/themes/custom/js/calendars.js?ver=7', ['depends' => AdminAsset::class]);
+$this->registerJsFile('@web/themes/custom/js/calendars.js?ver=8', ['depends' => AdminAsset::class]);
 $this->registerCssFile('@web/themes/custom/css/fullcalendar.min.css', ['depends' => AdminAsset::class]);
 $this->registerJs("
     var types         = " . json_encode($types) . ";
@@ -385,6 +437,9 @@ $this->registerJs("
     var urlSearch     = '" . Url::to(['search']) . "';
 ", View::POS_HEAD);
 $this->registerCss('
+    .fc-scroller {
+        overflow-y: hidden !important;
+    }
     .fc-event span.fc-title {
         white-space: nowrap !important;
         display: block !important;
@@ -416,8 +471,8 @@ $this->registerCss('
     .bg-light ul li label {margin: 0 !important;}
     .modal-header, .modal-footer {padding: 5px;}
     .fc-view > table * {direction: ltr !important;}
-    #alarms {list-style: none;padding: 0;margin: 0;}
-    #alarms li {}
+    #alarms, #alarms2 {list-style: none;padding: 0;margin: 0;}
+    #alarms li, #alarms2 li {}
     #search_event_result {
         position: absolute;
         top: 48px;

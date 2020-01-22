@@ -63,6 +63,7 @@ Yii::$app->controller->module->params['menu'] .= '
                         'model'      => $model,
                         'modelType'  => $modelType,
                         'modelAlarm' => $modelAlarm,
+                        'modelAlarm2' => $modelAlarm2,
                         'types'      => $types
                     ])
                     ?>
@@ -88,17 +89,19 @@ Yii::$app->controller->module->params['menu'] .= '
                     ?>
                 </div>
                 <div class="tab-pane" id="page5">
-                    <?php $formImport = ActiveForm::begin([
-                        'id' => 'importForm',
-                        'action' => ['import'],
-                        'layout' => 'horizontal',
-                        'fieldConfig' => [
-                            'horizontalCssClasses' => [
-                                'label'   => 'col-4',
-                                'wrapper' => 'col-8',
-                            ],
-                        ],
-                    ]); ?>
+                    <?php
+                    $formImport                                   = ActiveForm::begin([
+                                'id'          => 'importForm',
+                                'action'      => ['import'],
+                                'layout'      => 'horizontal',
+                                'fieldConfig' => [
+                                    'horizontalCssClasses' => [
+                                        'label'   => 'col-4',
+                                        'wrapper' => 'col-8',
+                                    ],
+                                ],
+                    ]);
+                    ?>
                     <div class="row">
                         <div class="col-md-4 col-12">
                             <?= $formImport->field($modelImport, 'file')->fileInput() ?>
@@ -133,68 +136,114 @@ Yii::$app->controller->module->params['menu'] .= '
                     <div class="row">
                         <div class="col-md-4 col-12">
                             <?= $formImport->field($modelImport, 'for_informations')->select2($model->list_users, ['multiple' => true]) ?>
+                            <?php
+                            DynamicFormWidget::begin([
+                                'widgetContainer' => 'dynamicform_wrapper2', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
+                                'widgetBody'      => '.container-items2', // required: css class selector
+                                'widgetItem'      => '.item2', // required: css class
+                                //'limit' => 4, // the maximum times, an element can be cloned (default 999)
+                                //'min' => 1, // 0 or 1 (default 1)
+                                'insertButton'    => '.add-item2', // css class
+                                'deleteButton'    => '.remove-item2', // css class
+                                'model'           => $modelAlarm,
+                                'formId'          => 'importForm',
+                                'formFields'      => [
+                                    'type_id',
+                                    'time_id',
+                                    'period_id',
+                                    'alarm_type_id',
+                                    'message'
+                                ],
+                            ]);
+                            ?>
+                            <div class="container-items2">
+                                <div class="item2">
+                                    <div class="card border">
+                                        <div class="card-header">
+                                            <h3 class="card-title pull-right">اعلان ( جهت اطلاع )</h3>
+                                            <div class="pull-left">
+                                                <button type="button" class="add-item2 btn btn-success btn-sm mb-0" style="line-height: 1;padding: 4px 4px 1px 4px;"><i class="fa fa-plus"></i></button>
+                                                <button type="button" class="remove-item2 btn btn-danger btn-sm mb-0" style="line-height: 1;padding: 4px 4px 1px 4px;"><i class="fa fa-minus"></i></button>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="card-block">
+                                            <?= Html::activeHiddenInput($modelAlarm, '[0]type_id', ['value' => '1']) ?>
+                                            <?= $formImport->field($modelAlarm, '[0]time_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_time) ?>
+                                            <?= $formImport->field($modelAlarm, '[0]period_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_period) ?>
+                                            <?= $formImport->field($modelAlarm, '[0]alarm_type_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_alarm_type) ?>
+                                            <?php // $formImport->field($modelAlarm, '[0]message', ['options' => ['class' => 'form-group row mb-1']])->textarea(['rows' => 6])  ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php DynamicFormWidget::end(); ?>
                         </div>
                         <div class="col-md-4 col-12">
                             <?= $formImport->field($modelImport, 'implementations')->select2($model->list_users, ['multiple' => true]) ?>
+                            <?php
+                            DynamicFormWidget::begin([
+                                'widgetContainer' => 'dynamicform_wrapper3', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
+                                'widgetBody'      => '.container-items3', // required: css class selector
+                                'widgetItem'      => '.item3', // required: css class
+                                //'limit' => 4, // the maximum times, an element can be cloned (default 999)
+                                //'min' => 1, // 0 or 1 (default 1)
+                                'insertButton'    => '.add-item3', // css class
+                                'deleteButton'    => '.remove-item3', // css class
+                                'model'           => $modelAlarm2,
+                                'formId'          => 'importForm',
+                                'formFields'      => [
+                                    'type_id',
+                                    'time_id',
+                                    'period_id',
+                                    'alarm_type_id',
+                                    'message'
+                                ],
+                            ]);
+                            ?>
+                            <div class="container-items3">
+                                <div class="item3">
+                                    <div class="card border">
+                                        <div class="card-header">
+                                            <h3 class="card-title pull-right">اعلان ( مسئول اجرا )</h3>
+                                            <div class="pull-left">
+                                                <button type="button" class="add-item3 btn btn-success btn-sm mb-0" style="line-height: 1;padding: 4px 4px 1px 4px;"><i class="fa fa-plus"></i></button>
+                                                <button type="button" class="remove-item3 btn btn-danger btn-sm mb-0" style="line-height: 1;padding: 4px 4px 1px 4px;"><i class="fa fa-minus"></i></button>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="card-block">
+                                            <?= Html::activeHiddenInput($modelAlarm2, '[0]type_id', ['value' => '2']) ?>
+                                            <?= $formImport->field($modelAlarm2, '[0]time_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_time) ?>
+                                            <?= $formImport->field($modelAlarm2, '[0]period_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_period) ?>
+                                            <?= $formImport->field($modelAlarm2, '[0]alarm_type_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_alarm_type) ?>
+                                            <?php // $formImport->field($modelAlarm, '[0]message', ['options' => ['class' => 'form-group row mb-1']])->textarea(['rows' => 6])  ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php DynamicFormWidget::end(); ?>
                         </div>
                         <div class="col-md-4 col-12">
                         </div>
                     </div>
-                    <?php
-                    DynamicFormWidget::begin([
-                        'widgetContainer' => 'dynamicform_wrapper2', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
-                        'widgetBody'      => '.container-items2', // required: css class selector
-                        'widgetItem'      => '.item2', // required: css class
-                        //'limit' => 4, // the maximum times, an element can be cloned (default 999)
-                        //'min' => 1, // 0 or 1 (default 1)
-                        'insertButton'    => '.add-item2', // css class
-                        'deleteButton'    => '.remove-item2', // css class
-                        'model'           => $modelAlarm,
-                        'formId'          => 'importForm',
-                        'formFields'      => [
-                            'time_id',
-                            'period_id',
-                            'alarm_type_id',
-                            'message'
-                        ],
-                    ]);
-                    ?>
-                    <div class="container-items2 row">
-                        <div class="item2 col-md-4 col-12">
-                            <div class="card border">
-                                <div class="card-header">
-                                    <h3 class="card-title pull-right">اعلان</h3>
-                                    <div class="pull-left">
-                                        <button type="button" class="add-item2 btn btn-success btn-sm mb-0" style="line-height: 1;padding: 4px 4px 1px 4px;"><i class="fa fa-plus"></i></button>
-                                        <button type="button" class="remove-item2 btn btn-danger btn-sm mb-0" style="line-height: 1;padding: 4px 4px 1px 4px;"><i class="fa fa-minus"></i></button>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="card-block">
-                                    <?= $formImport->field($modelAlarm, '[0]time_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_time) ?>
-                                    <?= $formImport->field($modelAlarm, '[0]period_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_period) ?>
-                                    <?= $formImport->field($modelAlarm, '[0]alarm_type_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_alarm_type) ?>
-                                    <?php // $formImport->field($modelAlarm, '[0]message', ['options' => ['class' => 'form-group row mb-1']])->textarea(['rows' => 6]) ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <?php DynamicFormWidget::end(); ?>
                     <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-sm mb-0 btn-success']) ?>
                     <?php ActiveForm::end(); ?>
                 </div>
                 <div class="tab-pane" id="page6">
-                    <?php $formExport = ActiveForm::begin([
-                        'id' => 'exportForm',
-                        'action' => ['export'],
-                        'layout' => 'horizontal',
-                        'fieldConfig' => [
-                            'horizontalCssClasses' => [
-                                'label'   => 'col-4',
-                                'wrapper' => 'col-8',
-                            ],
-                        ],
-                    ]); ?>
+                    <?php
+                    $formExport                                   = ActiveForm::begin([
+                                'id'          => 'exportForm',
+                                'action'      => ['export'],
+                                'layout'      => 'horizontal',
+                                'fieldConfig' => [
+                                    'horizontalCssClasses' => [
+                                        'label'   => 'col-4',
+                                        'wrapper' => 'col-8',
+                                    ],
+                                ],
+                    ]);
+                    ?>
                     <div class="row">
                         <div class="col-md-3 col-12">
                             <?= $formExport->field($modelExport, 'title')->textInput() ?>
@@ -221,12 +270,14 @@ Yii::$app->controller->module->params['menu'] .= '
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-12">
-                            <?= $formExport->field($modelExport, 'location', [
+                            <?=
+                            $formExport->field($modelExport, 'location', [
                                 'horizontalCssClasses' => [
                                     'label'   => 'col-md-2 col-4',
                                     'wrapper' => 'col-md-10 col-8',
                                 ],
-                            ])->textInput() ?>
+                            ])->textInput()
+                            ?>
                         </div>
                         <div class="col-md-6 col-12">
                         </div>
@@ -257,12 +308,14 @@ Yii::$app->controller->module->params['menu'] .= '
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-12">
-                            <?= $formExport->field($modelExport, 'description', [
+                            <?=
+                            $formExport->field($modelExport, 'description', [
                                 'horizontalCssClasses' => [
                                     'label'   => 'col-md-2 col-4',
                                     'wrapper' => 'col-md-10 col-8',
                                 ],
-                            ])->textarea(['rows' => 6]) ?>
+                            ])->textarea(['rows' => 6])
+                            ?>
                         </div>
                         <div class="col-md-6 col-12">
                         </div>

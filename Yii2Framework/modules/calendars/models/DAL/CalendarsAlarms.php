@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $calendar_id
+ * @property int|null $type_id
  * @property int|null $time_id
  * @property int|null $period_id
  * @property int|null $alarm_type_id
@@ -37,7 +38,7 @@ class CalendarsAlarms extends \yii\db\ActiveRecord
     {
         return [
             [['calendar_id'], 'required'],
-            [['calendar_id', 'time_id', 'period_id', 'alarm_type_id'], 'integer'],
+            [['calendar_id', 'type_id', 'time_id', 'period_id', 'alarm_type_id'], 'integer'],
             [['message'], 'string'],
             [['calendar_id'], 'exist', 'skipOnError' => true, 'targetClass' => Calendars::className(), 'targetAttribute' => ['calendar_id' => 'id']],
             [['time_id'], 'exist', 'skipOnError' => true, 'targetClass' => CalendarsListTime::className(), 'targetAttribute' => ['time_id' => 'id']],
@@ -54,6 +55,7 @@ class CalendarsAlarms extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('calendars', 'ID'),
             'calendar_id' => Yii::t('calendars', 'Calendar ID'),
+            'type_id' => Yii::t('calendars', 'Type ID'),
             'time_id' => Yii::t('calendars', 'Time ID'),
             'period_id' => Yii::t('calendars', 'Period ID'),
             'alarm_type_id' => Yii::t('calendars', 'Alarm Type ID'),

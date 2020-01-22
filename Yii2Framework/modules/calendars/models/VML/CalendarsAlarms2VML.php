@@ -6,7 +6,7 @@ use app\modules\calendars\models\DAL\CalendarsAlarms;
 use app\modules\calendars\models\SRL\CalendarsListTimeSRL;
 use app\modules\calendars\models\SRL\CalendarsListPeriodSRL;
 use app\modules\calendars\models\SRL\CalendarsListAlarmTypeSRL;
-class CalendarsAlarmsVML extends Model {
+class CalendarsAlarms2VML extends Model {
     public $id;
     public $calendar_id;
     public $type_id;

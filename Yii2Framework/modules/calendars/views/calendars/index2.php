@@ -168,8 +168,10 @@ $fields = [
         ],
         [
             'attribute' => 'has_reception',
-            'label'     => $search->getAttributeLabel('has_reception'),
-            'filter' => Html::activeCheckbox($search, 'has_reception', ['label' => false]),
+            'encodeLabel' => false,
+            'enableSorting' => false,
+            'label'     => '<label>' . Html::activeCheckbox($search, 'has_reception', ['label' => false]) . ' ' . $search->getAttributeLabel('has_reception') . '</label>',
+            'filter' => '',
             'format'    => 'bool'
         ],
         [
@@ -245,6 +247,7 @@ echo GridView::widget([
         {summary}
         {pager}
     ',
+    'filterSelector' => '[name="CalendarsSearchVML[has_reception]"]',
     'summaryOptions' => ['class' => 'summary pull-right'],
     'pager'          => [
         'options'                       => ['class' => 'pagination pagination-sm pull-left', 'style' => 'margin-left: 2px;'],
