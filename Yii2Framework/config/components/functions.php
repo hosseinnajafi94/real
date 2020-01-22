@@ -139,6 +139,11 @@ class functions {
         $command->setSql($sql);
         return $command->queryAll();
     }
+    public static function queryColumn($sql) {
+        $row = static::queryOne($sql);
+        $keys = array_keys($row);
+        return $row[$keys[0]];
+    }
     public static function queryOne($sql) {
         $query   = new \yii\db\Query();
         $command = $query->createCommand();

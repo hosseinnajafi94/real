@@ -2,15 +2,23 @@
 /* @var $this yii\web\View */
 /* @var $model app\modules\administration\models\VML\Administration */
 $this->registerCss("
-table tbody tr th {text-align: left;padding: 2px 5px;}
-table tbody tr td {text-align: right;padding: 2px 5px;direction: ltr !important;}
+table * {font-size: 13px;line-height: 1.5;}
+table tbody tr th {width: 50%;text-align: left;padding: 2px 5px;}
+table tbody tr th:after {content: ' : ';}
+table tbody tr td {width: 50%;text-align: right;padding: 2px 5px;direction: ltr !important;}
 ");
 ?>
 <div class="administration-default-index">
     <div class="row">
-        <div class="col-6">
+        <div class="col-md-6 col-12">
             <div class="card">
-                <div class="card-block">
+                <div class="card-block" style="min-height: 228px;">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-12">
+            <div class="card">
+                <div class="card-block" style="min-height: 228px;">
                     <table style="width: 100%;">
                         <tbody>
                             <tr>
@@ -47,6 +55,102 @@ table tbody tr td {text-align: right;padding: 2px 5px;direction: ltr !important;
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-12">
+            <div class="card">
+                <div class="card-block" style="min-height: 300px;">
+                    <table style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <th>شماره نسخه اجرایی</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>شماره ساخت SDK</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>تاریخ ایجاد SDK</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>شماره ساخت هسته</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>تاریخ ایجاد هسته</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>نسخه Mysql</th>
+                                <td><?= $model->dbver ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="card">
+                <div class="card-block" style="min-height: 300px;">
+                    <table style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <th>نام مشتری</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>شناسه مجوز</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>نوع مجوز</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>تاریخ انقضاء مجوز</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>تاریخ انقضاء گواهینامه</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>تاریخ انقضاء پشتیبانی</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>حداکثر تعداد شعبه ها</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>تعداد شعبه های فعال</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>حداکثر کاربران آنلاین</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>کاربران فعال</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                            <tr>
+                                <th>حداکثر کاربران آنلاین پورتال</th>
+                                <td><?= '---' ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="card">
+                <div class="card-block" style="min-height: 300px;">
                 </div>
             </div>
         </div>
