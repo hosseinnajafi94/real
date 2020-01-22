@@ -52,3 +52,9 @@ function getsystemboottime($type = 2) {
     $datetime = trim(str_replace("System Boot Time:", "", $info));
     return $type == 1 ? date('Y-m-d H:i:s', strtotime($datetime)) : app\config\components\jdf::jdate('Y/m/d H:i:s', strtotime($datetime));
 }
+function getfoldersize($path) {
+    $f   = realpath(Yii::getAlias($path));
+    $obj = new \COM('scripting.filesystemobject');
+    $ref = $obj->getfolder($f);
+    return $ref->size;
+}

@@ -34,7 +34,11 @@ table tbody tr td {text-align: right;padding: 2px 5px;direction: ltr !important;
                                 <td><?= $model->disk_total_space ?></td>
                             </tr>
                             <tr>
-                                <th>فضای اشغال شده</th>
+                                <th>فضای اشغال شده توسط پروژه</th>
+                                <td><?= $model->projectsize ?></td>
+                            </tr>
+                            <tr>
+                                <th>کل فضای اشغال شده</th>
                                 <td><?= $model->disk_occupied_space ?></td>
                             </tr>
                             <tr>

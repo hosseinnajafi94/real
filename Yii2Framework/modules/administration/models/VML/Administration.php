@@ -9,13 +9,15 @@ class Administration extends \yii\base\Component {
     public $disk_total_space;
     public $disk_occupied_space;
     public $disk_free_space;
+    public $projectsize;
     public function init() {
-//        $this->starttime           = getsystemboottime();
+        //$this->starttime           = getsystemboottime();
         $this->servertime          = jdf::jdate('Y/m/d H:i:s');
         $this->serverip            = gethostbyname(filter_input(INPUT_SERVER, 'SERVER_NAME'));
         $this->serverdomain        = filter_input(INPUT_SERVER, 'SERVER_NAME');
         $this->disk_total_space    = size_format(disk_total_space("."));
         $this->disk_occupied_space = size_format(disk_total_space(".") - disk_free_space("."));
         $this->disk_free_space     = size_format(disk_free_space("."));
+        //$this->projectsize         = size_format(getfoldersize('@app/../'));
     }
 }
