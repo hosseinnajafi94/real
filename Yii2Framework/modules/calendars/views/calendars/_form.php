@@ -11,12 +11,14 @@ $this->registerJs("
 $('#calendarsvml-start_date').MdPersianDateTimePicker({
     targetTextSelector: '#calendarsvml-start_date',
     isGregorian: false,
-    yearOffset: 60
+    yearOffset: 60,
+    englishNumber: true
 });
 $('#calendarsvml-end_date').MdPersianDateTimePicker({
     targetTextSelector: '#calendarsvml-end_date',
     isGregorian: false,
-    yearOffset: 60
+    yearOffset: 60,
+    englishNumber: true
 });
 $('#calendarsvml-start_time, #calendarsvml-end_time').timeDropper({
     format: 'HH:mm:00',

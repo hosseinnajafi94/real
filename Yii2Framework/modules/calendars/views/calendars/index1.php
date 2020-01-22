@@ -261,6 +261,10 @@ use wbraganca\dynamicform\DynamicFormWidget;
             <div class="col-8" id="for_informations"></div>
         </div>
         <div class="row form-group">
+            <label class="col-4"><?= $model->getAttributeLabel('implementations') ?></label>
+            <div class="col-8" id="implementations"></div>
+        </div>
+        <div class="row form-group">
             <label class="col-4"><?= $model->getAttributeLabel('description') ?></label>
             <div class="col-8" id="description"></div>
         </div>
@@ -368,7 +372,7 @@ $this->registerJsFile('@web/themes/custom/js/moment.min.js', ['depends' => Admin
 $this->registerJsFile('@web/themes/custom/js/moment-jalaali.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/fullcalendar.min.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/locale-all.js', ['depends' => AdminAsset::class]);
-$this->registerJsFile('@web/themes/custom/js/calendars.js?ver=6', ['depends' => AdminAsset::class]);
+$this->registerJsFile('@web/themes/custom/js/calendars.js?ver=7', ['depends' => AdminAsset::class]);
 $this->registerCssFile('@web/themes/custom/css/fullcalendar.min.css', ['depends' => AdminAsset::class]);
 $this->registerJs("
     var types         = " . json_encode($types) . ";

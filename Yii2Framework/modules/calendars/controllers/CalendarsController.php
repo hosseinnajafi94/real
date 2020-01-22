@@ -197,7 +197,7 @@ class CalendarsController extends Controller {
         $end   = functions::togdate($datetime) . ' 23:59:59';
         $data  = Calendars::find()->select('id, title')->where("start_time BETWEEN '$start' AND '$end' OR end_time BETWEEN '$start' AND '$end'")->orderBy(['id' => SORT_DESC])->asArray()->all();
         foreach ($data as &$row) {
-            $row['url'] = Url::to(['details', 'id' => $row['id']]);
+            $row['url']       = Url::to(['details', 'id' => $row['id']]);
             $row['urlDelete'] = Url::to(['delete-event', 'id' => $row['id']]);
         }
         return $this->asJson($data);
@@ -259,14 +259,22 @@ class CalendarsController extends Controller {
                         1 AS id,
                         0 AS id1,
                         TIME_TO_SEC('$session_start_time') as `start`,
-                        TIME_TO_SEC('$session_end_time') as `end`
+                        TIME_TO_SEC('$session_end_time') as `end`,
+                        '' as title,
+                        '' as description,
+                        '' AS fullname
                     UNION
                     SELECT
                         2     as id,
                         m2.id as id1,
-                        TIME_TO_SEC(CAST(start_time AS time)),
-                        TIME_TO_SEC(CAST(end_time AS time))
+                        TIME_TO_SEC(CAST(start_time AS time)) as `start`,
+                        TIME_TO_SEC(CAST(end_time AS time)) as `end`,
+                        m2.title,
+                        m2.description,
+                        GROUP_CONCAT(CONCAT(m4.fname, ' ', m4.lname) SEPARATOR ', ') AS fullname
                     FROM `calendars` as m2
+                    LEFT JOIN calendars_users as m3 ON m2.id = m3.calendar_id 
+                    LEFT JOIN users as m4 ON m4.id = m3.user_id
                     WHERE (
                         (m2.start_time <= '$start_time' AND m2.end_time >= '$start_time')
                             OR
@@ -274,12 +282,16 @@ class CalendarsController extends Controller {
                             OR
                         (m2.start_time <  '$end_time' AND m2.end_time >= '$end_time')
                     )
+                    GROUP BY m2.id
                     UNION
                     SELECT 
                         3 AS id,
                         0 AS id1,
                         TIME_TO_SEC('$session_start_time') as `start`,
-                        TIME_TO_SEC('$session_end_time') as `end`
+                        TIME_TO_SEC('$session_end_time') as `end`,
+                        '' as title,
+                        '' as description,
+                        '' AS fullname
                 ) AS c ORDER BY 1,2,3
             ");
             $start = 0;
@@ -296,25 +308,33 @@ class CalendarsController extends Controller {
                     $s = (int) $row['start'];
                     $e = (int) $row['end'];
                     if ($s <= $end2) {
-                        $end2 = $e;
+                        $end2     = $e;
                         $output[] = [
-                            'rowId'      => $row['id1'],
-                            'day'        => jdf::jdate('l', strtotime($start_time)),
-                            'date'       => jdf::jdate('Y/m/d', strtotime($start_time)),
-                            'start_time' => sec_to_time($s),
-                            'end_time'   => sec_to_time($e),
-                            'url'        => Url::to(['details', 'id'  => $row['id1']]),
+                            'rowId'       => $row['id1'],
+                            'title'       => $row['title'],
+                            'description' => $row['description'],
+                            'fullname'    => $row['fullname'],
+                            'day'         => jdf::jdate('l', strtotime($start_time)),
+                            'date'        => jdf::jdate('Y/m/d', strtotime($start_time)),
+                            'start_time'  => sec_to_time($s),
+                            'end_time'    => sec_to_time($e),
+                            'url'         => Url::to(['details', 'id' => $row['id1']]),
+                            'urlDelete'   => Url::to(['delete-event', 'id' => $row['id1']]),
                         ];
                     }
                     else {
                         if ($start !== $end2) {
                             $output[] = [
                                 'rowId'      => $row['id1'],
+                                'title'       => $row['title'],
+                                'description' => $row['description'],
+                                'fullname'    => $row['fullname'],
                                 'day'        => jdf::jdate('l', strtotime($start_time)),
                                 'date'       => jdf::jdate('Y/m/d', strtotime($start_time)),
                                 'start_time' => sec_to_time($start),
                                 'end_time'   => sec_to_time($end2),
-                                'url'        => Url::to(['details', 'id'  => $row['id1']]),
+                                'url'        => Url::to(['details', 'id' => $row['id1']]),
+                                'urlDelete'  => Url::to(['delete-event', 'id' => $row['id1']]),
                             ];
                         }
                         $output[] = [
@@ -332,19 +352,29 @@ class CalendarsController extends Controller {
                         ];
                         $start    = $s;
                         $end2     = $e;
-                        $last     = $row['id1'];
+                        $last = [
+                            'id'       => $row['id1'],
+                            'title'       => $row['title'],
+                            'description' => $row['description'],
+                            'fullname'    => $row['fullname'],
+                        ];
                     }
                 }
                 elseif ($row['id'] == 3) {
                     if ($last != 0) {
                         $output[] = [
-                            'rowId'      => $last,
+                            'rowId'      => $last['id'],
+                            'title'       => $last['title'],
+                            'description' => $last['description'],
+                            'fullname'    => $last['fullname'],
                             'day'        => jdf::jdate('l', strtotime($start_time)),
                             'date'       => jdf::jdate('Y/m/d', strtotime($start_time)),
                             'start_time' => sec_to_time($start),
                             'end_time'   => sec_to_time($end2 > $end ? $end : $end2),
-                            'url'        => Url::to(['details', 'id'  => $last]),
+                            'url'        => Url::to(['details', 'id' => $last['id']]),
+                            'urlDelete'  => Url::to(['delete-event', 'id' => $last['id']]),
                         ];
+                        $last = 0;
                         if ($end2 < $end) {
                             $output[] = [
                                 'rowId'      => null,

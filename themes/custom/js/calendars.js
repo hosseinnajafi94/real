@@ -10,6 +10,12 @@ $(function () {
         var day = parseInt(d[2]);
         $('#calendarsvml-start_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
         $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
+
+        var start_time = moment(datetime, 'jYYYY/jMM/jDD');
+        var sdate = tr_num(start_time.format('YYYY-MM-DD'));
+        var gdate = new Date(sdate);
+        $('#calendarsvml-end_date').MdPersianDateTimePicker('setOption', 'disableBeforeDate', gdate);
+
         $('#calendarsvml-start_time').val('00:00:00');
         $('#calendarsvml-end_time').val('00:00:00');
         $('#calendarsvml-id').val('');
@@ -250,16 +256,31 @@ $(function () {
     $('#calendarsvml-start_date').MdPersianDateTimePicker({
         targetTextSelector: '#calendarsvml-start_date',
         isGregorian: false,
-        yearOffset: 60
+        yearOffset: 60,
+        englishNumber: true
     }).on('hide.bs.popover', function () {
         var s = tr_num(this.value).split('/');
         var date = {year: parseInt(s[0]), month: parseInt(s[1]), day: parseInt(s[2])};
         $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', date);
+
+        var start_time = moment($(this).val(), 'jYYYY/jMM/jDD');
+        var sdate = tr_num(start_time.format('YYYY-MM-DD'));
+        var gdate = new Date(sdate);
+        $('#calendarsvml-end_date').MdPersianDateTimePicker('setOption', 'disableBeforeDate', gdate);
     });
     $('#calendarsvml-end_date').MdPersianDateTimePicker({
         targetTextSelector: '#calendarsvml-end_date',
         isGregorian: false,
-        yearOffset: 60
+        yearOffset: 60,
+        englishNumber: true
+    }).on('hide.bs.popover', function (e) {
+        var start_time = parseInt($('#calendarsvml-start_date').val().toString().replace(/\//g, ''));
+        var end_time = parseInt($('#calendarsvml-end_date').val().toString().replace(/\//g, ''));
+        if (!isNaN(end_time)) {
+            if (start_time > end_time) {
+                alert(' تاریخ پایان نمی تواند کوچکتر از تاریخ شروع باشد.');
+            }
+        }
     });
     $(document).on('click', '[select-year-button]', function () {
         setTimeout(function () {
@@ -552,6 +573,13 @@ $(function () {
                 var day = parseInt(d[2]);
                 $('#calendarsvml-start_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
                 $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
+
+                var start_time = moment(current_date, 'jYYYY/jMM/jDD');
+                var sdate = tr_num(start_time.format('YYYY-MM-DD'));
+                var gdate = new Date(sdate);
+                $('#calendarsvml-end_date').MdPersianDateTimePicker('setOption', 'disableBeforeDate', gdate);
+
+
                 $('#calendarsvml-start_time').val('00:00:00');
                 $('#calendarsvml-end_time').val('00:00:00');
                 $('#calendarsvml-id').val('');
@@ -665,6 +693,12 @@ function showEvent(event) {
     var for_informations = list.join('، ');
 
     list = [];
+    for (var i in event.implementations) {
+        list.push(event.list_users[event.implementations[i]]);
+    }
+    var implementations = list.join('، ');
+
+    list = [];
     for (var i in event.requirements) {
         list.push(event.list_requirements[event.requirements[i]]);
     }
@@ -688,6 +722,7 @@ function showEvent(event) {
     $modal.find('#period_id').text(event.list_period[event.period_id]);
     $modal.find('#alarm_type_id').text(event.list_alarm_type[event.alarm_type_id]);
     $modal.find('#users').text(users);
+    $modal.find('#implementations').text(implementations);
     $modal.find('#for_informations').text(for_informations);
     $modal.find('#description').text(event.description);
     $modal.find('#file').attr('src', urlCalendars + event.file);
@@ -751,6 +786,12 @@ function updateEvent(row) {
     $('#calendarsvml-start_time').val(row.start_time);
     $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', end_date);
     $('#calendarsvml-end_time').val(row.end_time);
+
+    var start_time = moment(row.start_date, 'jYYYY/jMM/jDD');
+    var sdate = tr_num(start_time.format('YYYY-MM-DD'));
+    var gdate = new Date(sdate);
+    $('#calendarsvml-end_date').MdPersianDateTimePicker('setOption', 'disableBeforeDate', gdate);
+
 //        $('#calendarsvml-time_id').val(row.time_id);
 //        $('#calendarsvml-period_id').val(row.period_id);
 //        $('#calendarsvml-alarm_type_id').val(row.alarm_type_id);

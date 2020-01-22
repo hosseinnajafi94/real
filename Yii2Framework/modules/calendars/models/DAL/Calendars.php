@@ -37,6 +37,7 @@ use app\modules\users\models\DAL\Users;
  * @property CalendarsAlarms[] $calendarsAlarms
  * @property CalendarsEvents[] $calendarsEvents
  * @property CalendarsForInformation[] $calendarsForInformations
+ * @property CalendarsImplementation[] $calendarsImplementations
  * @property CalendarsRequirements[] $calendarsRequirements
  * @property CalendarsUsers[] $calendarsUsers
  */
@@ -176,6 +177,14 @@ class Calendars extends \yii\db\ActiveRecord
     public function getCalendarsForInformations()
     {
         return $this->hasMany(CalendarsForInformation::className(), ['calendar_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendarsImplementations()
+    {
+        return $this->hasMany(CalendarsImplementation::className(), ['calendar_id' => 'id']);
     }
 
     /**

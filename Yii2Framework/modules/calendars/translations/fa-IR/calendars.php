@@ -26,4 +26,5 @@ return [
     'Requirements'       => 'مقدمات و الزامات',
     'For Informations'   => 'جهت اطلاع',
     'Catering ID'        => 'مسئول پذیرایی',
+    'Implementations'    => 'مسئول اجرا',
 ];

@@ -7,8 +7,9 @@ use app\config\components\functions;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use app\modules\calendars\models\DAL\Calendars;
 use app\modules\calendars\models\DAL\CalendarsEvents;
-use app\modules\calendars\models\VML\CalendarsAlarmsVML;
+use app\modules\calendars\models\DAL\CalendarsImplementation;
 use app\modules\calendars\models\DAL\CalendarsForInformation;
+use app\modules\calendars\models\VML\CalendarsAlarmsVML;
 class ImportVML extends Model {
     public $file;
     public $favcolor;
@@ -16,6 +17,7 @@ class ImportVML extends Model {
     public $status_id;
     public $location;
     public $for_informations;
+    public $implementations;
     public $start_time = '07:00:00';
     public $end_time   = '07:00:00';
     public function rules() {
@@ -24,7 +26,7 @@ class ImportVML extends Model {
                 [['type_id', 'status_id'], 'integer'],
                 [['start_date', 'end_date', 'start_time', 'end_time'], 'safe'],
                 [['favcolor', 'location'], 'string', 'max' => 255],
-                [['for_informations'], 'each', 'rule' => ['integer']],
+                [['for_informations', 'implementations'], 'each', 'rule' => ['integer']],
                 [['file'], 'required'],
                 [['file'], 'file', 'extensions' => 'xlsx'],
         ];
@@ -39,6 +41,7 @@ class ImportVML extends Model {
             'start_time'       => Yii::t('calendars', 'Start Time'),
             'end_time'         => Yii::t('calendars', 'End Time'),
             'for_informations' => Yii::t('calendars', 'For Informations'),
+            'implementations'  => Yii::t('calendars', 'Implementations'),
         ];
     }
     public function attributeHints() {
@@ -125,8 +128,6 @@ class ImportVML extends Model {
             return false;
         }
 
-
-
         $filename = uniqid(time(), true) . '.' . $this->file->extension;
         $this->file->saveAs("uploads/calendars/$filename");
         try {
@@ -134,6 +135,7 @@ class ImportVML extends Model {
             $spreadsheet = IOFactory::load("uploads/calendars/$filename");
             $sheets      = $spreadsheet->getAllSheets();
             $items       = $this->getItems($sheets);
+//            pre($items);
             foreach ($items as $item) {
                 list($subject, $gdate, $description, $implementation_steps) = $item;
                 $model                       = new Calendars();
@@ -152,6 +154,15 @@ class ImportVML extends Model {
                 if (is_array($this->for_informations)) {
                     foreach ($this->for_informations as $userId) {
                         $row              = new CalendarsForInformation();
+                        $row->calendar_id = $model->id;
+                        $row->user_id     = $userId;
+                        $row->save();
+                    }
+                }
+
+                if (is_array($this->implementations)) {
+                    foreach ($this->implementations as $userId) {
+                        $row              = new CalendarsImplementation();
                         $row->calendar_id = $model->id;
                         $row->user_id     = $userId;
                         $row->save();

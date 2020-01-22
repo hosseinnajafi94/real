@@ -37,6 +37,7 @@ class CalendarsVML extends Model {
     public $message;
     public $has_reception;
     public $catering_id;
+    public $implementations   = [];
     public $users             = [];
     public $requirements      = [];
     public $for_informations  = [];
@@ -59,7 +60,7 @@ class CalendarsVML extends Model {
                 [['description', 'message'], 'string'],
                 [['title', 'favcolor', 'location'], 'string', 'max' => 255],
                 [['file'], 'file', 'extensions' => 'png, jpg, jpeg, gif, zip'],
-                [['users', 'requirements', 'for_informations'], 'each', 'rule' => ['integer']]
+                [['users', 'requirements', 'for_informations', 'implementations'], 'each', 'rule' => ['integer']]
         ];
     }
     public function attributeLabels() {
@@ -85,6 +86,7 @@ class CalendarsVML extends Model {
             'has_reception'    => Yii::t('calendars', 'Has Reception'),
             'requirements'     => Yii::t('calendars', 'Requirements'),
             'for_informations' => Yii::t('calendars', 'For Informations'),
+            'implementations'  => Yii::t('calendars', 'Implementations'),
         ];
     }
     public function attributeHints() {
@@ -184,23 +186,23 @@ class CalendarsVML extends Model {
             }
         }
 
-        
-        
+
+
         CalendarsEvents::deleteAll(['calendar_id' => $model->id]);
         CalendarsAlarms::deleteAll(['calendar_id' => $model->id]);
-        
+
         $days = getDiffDays($model->start_time, $model->end_time) + 1;
         foreach ($models as $row) {
             $row->calendar_id = $model->id;
             if ($row->save()) {
                 for ($index = 0; $index < $days; $index += $row->model->period->days) {
-                    $datetime1 = date('Y-m-d H:i:s', strtotime($model->start_time . " +$index days"));
-                    $datetime2 = date('Y-m-d H:i:s', strtotime($datetime1) - $row->model->time->times);
-                    $model1 = new CalendarsEvents();
-                    $model1->alarm_id = $row->id;
+                    $datetime1           = date('Y-m-d H:i:s', strtotime($model->start_time . " +$index days"));
+                    $datetime2           = date('Y-m-d H:i:s', strtotime($datetime1) - $row->model->time->times);
+                    $model1              = new CalendarsEvents();
+                    $model1->alarm_id    = $row->id;
                     $model1->calendar_id = $model->id;
-                    $model1->datetime = $datetime2;
-                    $model1->done = 0;
+                    $model1->datetime    = $datetime2;
+                    $model1->done        = 0;
                     $model1->save();
                 }
             }
@@ -285,6 +287,12 @@ class CalendarsVML extends Model {
                 $event['for_informations'][] = $row['user_id'];
             }
 
+            $implementations          = \app\modules\calendars\models\DAL\CalendarsImplementation::find()->where(['calendar_id' => $event['id']])->asArray()->orderBy(['id' => SORT_DESC])->all();
+            $event['implementations'] = [];
+            foreach ($implementations as $row) {
+                $event['implementations'][] = $row['user_id'];
+            }
+
             $event['alarms'] = CalendarsAlarms::find()->where(['calendar_id' => $event['id']])->asArray()->orderBy(['id' => SORT_DESC])->all();
             foreach ($event['alarms'] as &$alarm) {
                 $alarm['list_time']       = $list_time;
@@ -297,14 +305,14 @@ class CalendarsVML extends Model {
             foreach ($rows as $row) {
                 $users[] = $row['user_id'];
             }
-            $event['users']           = $users;
-            $event['list_type']       = $this->list_type;
-            $event['list_status']     = $this->list_status;
-            $event['list_time']       = $this->list_time;
-            $event['list_period']     = $this->list_period;
-            $event['list_alarm_type'] = $this->list_alarm_type;
-            $event['list_users']      = $this->list_users;
-            $event['list_requirements']      = $this->list_requirements;
+            $event['users']             = $users;
+            $event['list_type']         = $this->list_type;
+            $event['list_status']       = $this->list_status;
+            $event['list_time']         = $this->list_time;
+            $event['list_period']       = $this->list_period;
+            $event['list_alarm_type']   = $this->list_alarm_type;
+            $event['list_users']        = $this->list_users;
+            $event['list_requirements'] = $this->list_requirements;
         }
         return $events;
     }

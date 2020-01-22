@@ -1,6 +1,5 @@
 <?php
 use yii\bootstrap4\Html;
-use yii\grid\ActionColumn;
 use app\config\widgets\Pjax;
 use app\config\widgets\GridView;
 /* @var $this \yii\web\View */
@@ -26,12 +25,30 @@ $this->registerJs("
         isGregorian: false,
         yearOffset: 60,
         placement: 'right',
+        englishNumber: true,
+    }).on('hide.bs.popover', function (e) {
+        var start_time = parseInt($('#calendarssearchvml-start_time').val().toString().replace(/\//g, ''));
+        var end_time = parseInt($('#calendarssearchvml-end_time').val().toString().replace(/\//g, ''));
+        if (!isNaN(end_time)) {
+            if (start_time > end_time) {
+                alert('تاریخ شروع نمی تواند بزرگتر از تاریخ پایان باشد.');
+            }
+        }
     });
     $('#calendarssearchvml-end_time').MdPersianDateTimePicker({
         targetTextSelector: '#calendarssearchvml-end_time',
         isGregorian: false,
         yearOffset: 60,
         placement: 'right',
+        englishNumber: true,
+    }).on('hide.bs.popover', function (e) {
+        var start_time = parseInt($('#calendarssearchvml-start_time').val().toString().replace(/\//g, ''));
+        var end_time = parseInt($('#calendarssearchvml-end_time').val().toString().replace(/\//g, ''));
+        if (!isNaN(end_time)) {
+            if (start_time > end_time) {
+                alert(' تاریخ پایان نمی تواند کوچکتر از تاریخ شروع باشد.');
+            }
+        }
     });
     $(document).on('click', '.reset-list2', function (e) {
         $('#list2 select, #list2 input').val('');
@@ -183,7 +200,7 @@ if (Yii::$app->request->get('list2columns')) {
 }
 $columns[] = ['class' => \app\config\widgets\CheckboxColumn::class];
 $columns[] = [
-    'class'   => ActionColumn::class,
+    'class'   => \app\config\widgets\ActionColumn::class,
     'contentOptions' => ['style' => 'min-width: 80px;text-align: center;'],
     'buttons' => [
         'delete' => function ($url) {
@@ -244,19 +261,37 @@ echo Html::a('حذف', null, ['class' => 'btn btn-sm btn-danger list2DeleteAll p
 echo "
 <script>
 if (typeof $ !== 'undefined') {
+    $('#list2grid thead .filters td:last').html('<a class=\"btn btn-sm btn-danger mb-0 btn-block reset-list2\">باز نشانی</a>');
     $('#calendarssearchvml-start_time').MdPersianDateTimePicker({
         targetTextSelector: '#calendarssearchvml-start_time',
         isGregorian: false,
         yearOffset: 60,
         placement: 'right',
+        englishNumber: true,
+    }).on('hide.bs.popover', function (e) {
+        var start_time = parseInt($('#calendarssearchvml-start_time').val().toString().replace(/\//g, ''));
+        var end_time = parseInt($('#calendarssearchvml-end_time').val().toString().replace(/\//g, ''));
+        if (!isNaN(end_time)) {
+            if (start_time > end_time) {
+                alert('تاریخ شروع نمی تواند بزرگتر از تاریخ پایان باشد.');
+            }
+        }
     });
     $('#calendarssearchvml-end_time').MdPersianDateTimePicker({
         targetTextSelector: '#calendarssearchvml-end_time',
         isGregorian: false,
         yearOffset: 60,
         placement: 'right',
+        englishNumber: true,
+    }).on('hide.bs.popover', function (e) {
+        var start_time = parseInt($('#calendarssearchvml-start_time').val().toString().replace(/\//g, ''));
+        var end_time = parseInt($('#calendarssearchvml-end_time').val().toString().replace(/\//g, ''));
+        if (!isNaN(end_time)) {
+            if (start_time > end_time) {
+                alert(' تاریخ پایان نمی تواند کوچکتر از تاریخ شروع باشد.');
+            }
+        }
     });
-    $('#list2grid thead .filters td:last').html('<a class=\"btn btn-sm btn-danger mb-0 btn-block reset-list2\">باز نشانی</a>');
 }
 </script>
 ";

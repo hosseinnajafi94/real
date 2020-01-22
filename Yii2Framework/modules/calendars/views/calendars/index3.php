@@ -60,56 +60,96 @@ use app\config\components\functions;
                 <th class="text-center">زمان</th>
                 <th class="text-center">تاریخ</th>
                 <th class="text-center">ساعت</th>
+                <th class="text-center">عنوان جلسه</th>
+                <th class="text-center">توضیحات</th>
+                <th class="text-center">حاضرین</th>
                 <th class="text-center">عملیات</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="text-center" colspan="4" style="color: #999">--&nbsp;بدون محتوی&nbsp;--</td>
+                <td class="text-center" colspan="7" style="color: #999">--&nbsp;بدون محتوی&nbsp;--</td>
             </tr>
         </tbody>
     </table>
 </div>
 <?php
 $this->registerJs("
-$('#session_table').on('click', 'a', function () {
-    
+$(document).on('click', '#session_table a', function (e) {
+    e.preventDefault();
+    var id = $(this).data('id');
+    var url = $(this).data('url');
+    var type = $(this).data('type');
     var row = $(this).parents('tr').data('row')
-    if ($(this).hasClass('btn')) {
-        var start_time = row.start_time;
-        var end_time = row.end_time;
-
-        var d = row.date.split('/');
-
-        var year = parseInt(d[0]);
-        var month = parseInt(d[1]);
-        var day = parseInt(d[2]);
-
-        $('#calendarsvml-start_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
-        $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
-
-        $('#calendarsvml-start_time').val(start_time);
-        $('#calendarsvml-end_time').val(end_time);
-
-        $('#calendarsvml-id').val('');
-        $('#modalNew').modal('show');
-    }
-    else {
-        ajaxget(row.url, {id: row.rowId}, function (result) {
-            showEvent(result);
-        });
+    switch (type) {
+        case 'select':
+            var start_time = row.start_time;
+            var end_time = row.end_time;
+            var d = row.date.split('/');
+            var year = parseInt(d[0]);
+            var month = parseInt(d[1]);
+            var day = parseInt(d[2]);
+            $('#calendarsvml-start_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
+            $('#calendarsvml-end_date').MdPersianDateTimePicker('setDatePersian', {year: year, month: month, day: day});
+            $('#calendarsvml-start_time').val(start_time);
+            $('#calendarsvml-end_time').val(end_time);
+            $('#calendarsvml-id').val('');
+            $('#modalNew').modal('show');
+            break;
+        case 'view':
+            ajaxget(url, {id}, function (result) {
+                showEvent(result);
+            });
+            break;
+        case 'update':
+            ajaxget(url, {id}, function (result) {
+                updateEvent(result);
+            });
+            break;
+        case 'delete':
+            if (confirm(areYouSure)) {
+                ajaxget(url, {id}, function (result) {
+                    $('#session_search').trigger('click');
+                });
+            }
+            break;
     }
 });
 $('#session_start_date').MdPersianDateTimePicker({
     targetTextSelector: '#session_start_date',
     isGregorian: false,
-    yearOffset: 60
+    yearOffset: 60,
+    englishNumber: true
+}).on('hide.bs.popover', function () {
+    var s = tr_num(this.value).split('/');
+    var date = {year: parseInt(s[0]), month: parseInt(s[1]), day: parseInt(s[2])};
+    $('#session_end_date').MdPersianDateTimePicker('setDatePersian', date);
+
+    var start_time = moment($(this).val(), 'jYYYY/jMM/jDD');
+    var sdate = tr_num(start_time.format('YYYY-MM-DD'));
+    var gdate = new Date(sdate);
+    $('#session_end_date').MdPersianDateTimePicker('setOption', 'disableBeforeDate', gdate);
 });
 $('#session_end_date').MdPersianDateTimePicker({
     targetTextSelector: '#session_end_date',
     isGregorian: false,
-    yearOffset: 60
+    yearOffset: 60,
+    englishNumber: true
+}).on('hide.bs.popover', function (e) {
+    var start_time = parseInt($('#session_start_date').val().toString().replace(/\//g, ''));
+    var end_time = parseInt($('#session_end_date').val().toString().replace(/\//g, ''));
+    if (!isNaN(end_time)) {
+        if (start_time > end_time) {
+            alert(' تاریخ پایان نمی تواند کوچکتر از تاریخ شروع باشد.');
+        }
+    }
 });
+
+var start_time = moment($('#session_start_date').val(), 'jYYYY/jMM/jDD');
+var sdate = tr_num(start_time.format('YYYY-MM-DD'));
+var gdate = new Date(sdate);
+$('#session_end_date').MdPersianDateTimePicker('setOption', 'disableBeforeDate', gdate);
+
 $('#session_start_time, #session_end_time').timeDropper({
     format: 'HH:mm:00',
     //autoswitch: true,
@@ -137,14 +177,30 @@ $('#session_search').click(function () {
         $('#session_table tbody').html('');
         for (var i in result.rows) {
             var row = result.rows[i];
-            $(`
+            var tr = `
                 <tr class=\"` + (row.rowId === null ? 'table-success' : 'table-danger') + `\">
                     <td class=\"text-center\" style=\"vertical-align: middle;\">\${row.day}</td>
                     <td class=\"text-center\" style=\"vertical-align: middle;direction: ltr;\">\${row.date}</td>
                     <td class=\"text-center\" style=\"vertical-align: middle;direction: ltr;\">\${row.start_time} الی \${row.end_time}</td>
-                    <td>\${(row.rowId === null ? '<a class=\"btn btn-sm btn-primary mb-0\">انتخاب</a>' : '<a><i class=\"fa fa-eye\"></i></a>')}</td>
+                    <td class=\"text-center\" style=\"vertical-align: middle;direction: rtl;\">\${row.title ? row.title : '---'}</td>
+                    <td class=\"text-center\" style=\"vertical-align: middle;direction: rtl;\">\${row.description ? row.description : '---'}</td>
+                    <td class=\"text-center\" style=\"vertical-align: middle;direction: rtl;\">\${row.fullname ? row.fullname : '---'}</td>
+                    <td>
+            `;
+            if (row.rowId === null) {
+                tr += `<a class=\"btn btn-sm btn-primary mb-0\" data-type=\"select\">انتخاب</a>`;
+            }
+            else {
+                tr += `<a href=\"#\" data-id=\"\${row.rowId}\" data-url=\"\${row.url}\" data-type=\"view\"><i class=\"fa fa-eye\"></i></a> `;
+                tr += `<a href=\"#\" data-id=\"\${row.rowId}\" data-url=\"\${row.url}\" data-type=\"update\"><i class=\"fa fa-pencil\"></i></a> `;
+                tr += `<a href=\"#\" data-id=\"\${row.rowId}\" data-url=\"\${row.urlDelete}\" data-type=\"delete\"><i class=\"fa fa-times\"></i></a> `;
+            }
+            
+            tr += `
+                    </td>
                 </tr>
-            `).data('row', row).appendTo('#session_table tbody');
+            `;
+            $(tr).data('row', row).appendTo('#session_table tbody');
         }
         //$('#text').html('<pre style=\"direction: ltr !important;text-align: left;\">'+JSON.stringify(result, null, 4)+'</pre>');
     }, undefined, undefined, undefined, true);

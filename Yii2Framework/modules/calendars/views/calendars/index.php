@@ -135,6 +135,7 @@ Yii::$app->controller->module->params['menu'] .= '
                             <?= $formImport->field($modelImport, 'for_informations')->select2($model->list_users, ['multiple' => true]) ?>
                         </div>
                         <div class="col-md-4 col-12">
+                            <?= $formImport->field($modelImport, 'implementations')->select2($model->list_users, ['multiple' => true]) ?>
                         </div>
                         <div class="col-md-4 col-12">
                         </div>
@@ -280,11 +281,28 @@ $this->registerJs("
     $('#exportvml-start_date').MdPersianDateTimePicker({
         targetTextSelector: '#exportvml-start_date',
         isGregorian: false,
-        yearOffset: 60
+        yearOffset: 60,
+        englishNumber: true
+    }).on('hide.bs.popover', function () {
+        var s = tr_num(this.value).split('/');
+        var date = {year: parseInt(s[0]), month: parseInt(s[1]), day: parseInt(s[2])};
+        $('#exportvml-end_date').MdPersianDateTimePicker('setDatePersian', date);
+
+        var start_time = moment($(this).val(), 'jYYYY/jMM/jDD');
+        var sdate = tr_num(start_time.format('YYYY-MM-DD'));
+        var gdate = new Date(sdate);
+        $('#exportvml-end_date').MdPersianDateTimePicker('setOption', 'disableBeforeDate', gdate);
     }).val('');
     $('#exportvml-end_date').MdPersianDateTimePicker({
         targetTextSelector: '#exportvml-end_date',
         isGregorian: false,
-        yearOffset: 60
+        yearOffset: 60,
+        englishNumber: true
+    }).on('hide.bs.popover', function (e) {
+        var start_time = parseInt($('#exportvml-start_date').val().toString().replace(/\//g, ''));
+        var end_time = parseInt($('#exportvml-end_date').val().toString().replace(/\//g, ''));
+        if (start_time > end_time) {
+            alert(' تاریخ پایان نمی تواند کوچکتر از تاریخ شروع باشد.');
+        }
     }).val('');
 ");
