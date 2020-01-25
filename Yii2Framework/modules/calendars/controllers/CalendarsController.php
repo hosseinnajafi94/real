@@ -58,16 +58,35 @@ class CalendarsController extends Controller {
                     foreach ($row as $colIndex => $col) {
                         $sheet->setCellValueByColumnAndRow($colIndex + 1, $rowIndex + 1, "$col");
                     }
+                    if (($rowIndex + 1) % 2) {
+                        $sheet->getStyleByColumnAndRow(1, $rowIndex + 1, 9, $rowIndex + 1)->getFill()->setFillType('solid')->getStartColor()->setRGB('d9d9d9');
+                    }
                 }
                 foreach (range('A', 'I') as $columnID) {
                     $sheet->getColumnDimension($columnID)->setAutoSize(true);
                 }
-                foreach ($sheet->getRowIterator() as $row) {
+                foreach ($sheet->getRowIterator() as $rowIndex => $row) {
                     foreach ($row->getCellIterator() as $cell) {
                         $cellCoordinate = $cell->getCoordinate();
                         $sheet->getStyle($cellCoordinate)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                        $sheet->getStyle($cellCoordinate)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+                        $sheet->getRowDimension($rowIndex + 1)->setRowHeight(20);
+                        $sheet->getStyle($cellCoordinate)->applyFromArray([
+                            'borders' => [
+                                'outline' => [
+                                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                                    'color' => ['rgb' => '000000'],
+                                ],
+                            ],
+                        ]);
                     }
                 }
+                $sheet->getStyleByColumnAndRow(1, 1)->getFill()->setFillType('solid')->getStartColor()->setRGB('000000');
+                $sheet->getStyleByColumnAndRow(1, 1)->getFont()->getColor()->setRGB('dddddd');
+                $sheet->getStyleByColumnAndRow(1, 2, 9, 2)->getFill()->setFillType('solid')->getStartColor()->setRGB('70ad47');
+                $sheet->getStyleByColumnAndRow(1, 2, 9, 2)->getFont()->getColor()->setRGB('222222');
+                $sheet->getRowDimension(1)->setRowHeight(20);
+                $sheet->getRowDimension(2)->setRowHeight(40);
             }
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment; filename="file.xlsx"');
@@ -215,16 +234,16 @@ class CalendarsController extends Controller {
         if ($prev == null) {
             return functions::httpNotFound();
         }
-        
-        $first = $prev->sort;
-        $last = $model->sort;
+
+        $first       = $prev->sort;
+        $last        = $model->sort;
         $model->sort = $first;
-        $prev->sort = $last;
+        $prev->sort  = $last;
         $prev->save();
         $model->save();
-        
-        $up = \yii\helpers\Url::to(['type-up']);
-        $down = \yii\helpers\Url::to(['type-down']);
+
+        $up    = \yii\helpers\Url::to(['type-up']);
+        $down  = \yii\helpers\Url::to(['type-down']);
         $items = CalendarsListType::find()->orderBy(['sort' => SORT_ASC])->all();
         return $this->asJson(['saved' => true, 'items' => $items, 'urlUp' => $up, 'urlDown' => $down]);
     }
@@ -237,16 +256,16 @@ class CalendarsController extends Controller {
         if ($prev == null) {
             return functions::httpNotFound();
         }
-        
-        $first = $prev->sort;
-        $last = $model->sort;
+
+        $first       = $prev->sort;
+        $last        = $model->sort;
         $model->sort = $first;
-        $prev->sort = $last;
+        $prev->sort  = $last;
         $prev->save();
         $model->save();
-        
-        $up = \yii\helpers\Url::to(['type-up']);
-        $down = \yii\helpers\Url::to(['type-down']);
+
+        $up    = \yii\helpers\Url::to(['type-up']);
+        $down  = \yii\helpers\Url::to(['type-down']);
         $items = CalendarsListType::find()->orderBy(['sort' => SORT_ASC])->asArray()->all();
         return $this->asJson(['saved' => true, 'items' => $items, 'urlUp' => $up, 'urlDown' => $down]);
     }
