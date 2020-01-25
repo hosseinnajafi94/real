@@ -98,6 +98,43 @@ $(function () {
             });
         }
     });
+    $(document).on('click', '.menu2 span.fa-arrow-up,.menu2 span.fa-arrow-down', function () {
+        var id = $(this).data('id');
+        var url = $(this).data('url');
+        ajaxget(url, {id}, function (result) {
+            if (result.saved) {
+                var rows = '';
+                for (var i = 0, max = result.items.length; i < max; i++) {
+                    var item = result.items[i];
+                    rows += `
+                        <li class="nav-item noclose checkitem">
+                            <a class="menu-item menu2" style="padding: 0 !important;">
+                                <label class="mb-0" style="padding: 2px 14px 2px 10px !important;display: inline-block;width: calc(68% - 24px);cursor: pointer;">
+                                    <input type="checkbox" class="calendar_type" data-id="${item.id}" checked/>
+                                    <span class="menu-title">${item.title}</span>
+                                </label>
+                                <span class="fa fa-pencil" data-id="${item.id}" style="display: inline-block;width: 8%;text-align: center;padding: 8px 0;"></span>
+                                <span class="fa fa-times" data-id="${item.id}" style="display: inline-block;width: 8%;text-align: center;padding: 8px 0;"></span>
+                                ${(i === 0 ? '' : `<span class="fa fa-arrow-up" data-id="${item.id}" data-url="${result.urlUp}" style="display: inline-block;width: 8%;text-align: center;padding: 8px 0;"></span>`)}
+                                ${(i === (max - 1) ? '' : `<span class="fa fa-arrow-down" data-id="${item.id}" data-url="${result.urlDown}" style="display: inline-block;width: 8%;text-align: center;padding: 8px 0;"></span>`)}
+                            </a>
+                        </li>
+                    `;
+                }
+                $('.checkitem').remove();
+                $('.addType').parent().before(rows);
+            }
+        });
+    });
+    $(document).on('click', '.menu2 span.fa-arrow-down', function () {
+        var id = $(this).data('id');
+        var url = $(this).data('url');
+        ajaxget(url, {id}, function (result) {
+            if (result.saved) {
+
+            }
+        });
+    });
     $('#date6').MdPersianDateTimePicker({inLine: true, englishNumber: true}).on('change-dp', function () {
         var url = $(this).data('url');
         var datetime = $(this).data('dp-val');

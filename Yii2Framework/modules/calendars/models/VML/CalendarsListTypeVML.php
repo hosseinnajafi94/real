@@ -60,6 +60,8 @@ class CalendarsListTypeVML extends Model {
         }
         $model->title       = $this->title;
         $model->descriptions = $this->description;
+        $last = CalendarsListType::find()->orderBy(['sort' => SORT_DESC])->one();
+        $model->sort = $last ? $last->sort + 1 : 1;
         if (!$model->save()) {
             return false;
         }
@@ -95,7 +97,7 @@ class CalendarsListTypeVML extends Model {
         return true;
     }
     public function getTypes() {
-        $types = CalendarsListType::find()->select('*, descriptions as description')->orderBy(['id' => SORT_ASC])->asArray()->all();
+        $types = CalendarsListType::find()->select('*, descriptions as description')->orderBy(['sort' => SORT_ASC])->asArray()->all();
         foreach ($types as &$type) {
             $rows = CalendarsSections::find()->where(['type_id' => $type['id']])->asArray()->all();
             foreach ($rows as $row) {

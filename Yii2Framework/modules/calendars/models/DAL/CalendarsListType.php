@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property string $title
  * @property string|null $descriptions
+ * @property int|null $sort
  *
  * @property Calendars[] $calendars
  * @property CalendarsSections[] $calendarsSections
@@ -32,6 +33,7 @@ class CalendarsListType extends \yii\db\ActiveRecord
         return [
             [['title'], 'required'],
             [['descriptions'], 'string'],
+            [['sort'], 'integer'],
             [['title'], 'string', 'max' => 255],
         ];
     }
@@ -45,6 +47,7 @@ class CalendarsListType extends \yii\db\ActiveRecord
             'id' => Yii::t('calendars', 'ID'),
             'title' => Yii::t('calendars', 'Title'),
             'descriptions' => Yii::t('calendars', 'Descriptions'),
+            'sort' => Yii::t('calendars', 'Sort'),
         ];
     }
 

@@ -25,16 +25,19 @@ Yii::$app->controller->module->params['menu'] = '
         </a>
     </li>
 ';
-foreach ($types as $type) {
+$last = count($types) - 1;
+foreach ($types as $index => $type) {
     Yii::$app->controller->module->params['menu'] .= '
-        <li class="nav-item noclose">
+        <li class="nav-item noclose checkitem">
             <a class="menu-item menu2" style="padding: 0 !important;">
-                <label class="mb-0" style="padding: 2px 14px 2px 10px !important;display: inline-block;width: calc(70% - 24px);cursor: pointer;">
+                <label class="mb-0" style="padding: 2px 14px 2px 10px !important;display: inline-block;width: calc(68% - 24px);cursor: pointer;">
                     <input type="checkbox" class="calendar_type" data-id="' . $type['id'] . '" checked/>
                     <span class="menu-title">' . $type['title'] . '</span>
                 </label>
-                <span class="fa fa-pencil" data-id="' . $type['id'] . '" style="display: inline-block;width: 15%;text-align: center;padding: 8px 0;"></span>
-                <span class="fa fa-times" data-id="' . $type['id'] . '" style="display: inline-block;width: 15%;text-align: center;padding: 8px 0;"></span>
+                <span class="fa fa-pencil" data-id="' . $type['id'] . '" style="display: inline-block;width: 8%;text-align: center;padding: 8px 0;"></span>
+                <span class="fa fa-times" data-id="' . $type['id'] . '" style="display: inline-block;width: 8%;text-align: center;padding: 8px 0;"></span>
+                ' . ($index == 0 ? '' : '<span class="fa fa-arrow-up" data-id="' . $type['id'] . '" data-url="' . \yii\helpers\Url::to(['type-up']) . '" style="display: inline-block;width: 8%;text-align: center;padding: 8px 0;"></span>') . '
+                ' . ($index == $last ? '' : '<span class="fa fa-arrow-down" data-id="' . $type['id'] . '" data-url="' . \yii\helpers\Url::to(['type-down']) . '" style="display: inline-block;width: 8%;text-align: center;padding: 8px 0;"></span>') . '
             </a>
         </li>
     ';
@@ -60,11 +63,11 @@ Yii::$app->controller->module->params['menu'] .= '
                 <div class="tab-pane active show" id="page1">
                     <?=
                     $this->render('index1', [
-                        'model'      => $model,
-                        'modelType'  => $modelType,
-                        'modelAlarm' => $modelAlarm,
+                        'model'       => $model,
+                        'modelType'   => $modelType,
+                        'modelAlarm'  => $modelAlarm,
                         'modelAlarm2' => $modelAlarm2,
-                        'types'      => $types
+                        'types'       => $types
                     ])
                     ?>
                 </div>

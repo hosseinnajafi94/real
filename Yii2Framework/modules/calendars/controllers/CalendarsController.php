@@ -105,7 +105,7 @@ class CalendarsController extends Controller {
         $model->loaditems();
         $modelAlarm        = CalendarsAlarmsVML::newInstance();
         $modelAlarm->loaditems();
-        $modelAlarm2        = CalendarsAlarms2VML::newInstance();
+        $modelAlarm2       = CalendarsAlarms2VML::newInstance();
         $modelAlarm2->loaditems();
         $modelType         = CalendarsListTypeVML::newInstance();
         $modelType->loaditems();
@@ -205,6 +205,50 @@ class CalendarsController extends Controller {
             $row['urlDelete'] = Url::to(['delete-event', 'id' => $row['id']]);
         }
         return $this->asJson($data);
+    }
+    public function actionTypeUp($id) {
+        $model = CalendarsListType::findOne($id);
+        if ($model == null) {
+            return functions::httpNotFound();
+        }
+        $prev = CalendarsListType::find()->where("sort < $model->sort")->orderBy(['sort' => SORT_DESC])->limit(1)->one();
+        if ($prev == null) {
+            return functions::httpNotFound();
+        }
+        
+        $first = $prev->sort;
+        $last = $model->sort;
+        $model->sort = $first;
+        $prev->sort = $last;
+        $prev->save();
+        $model->save();
+        
+        $up = \yii\helpers\Url::to(['type-up']);
+        $down = \yii\helpers\Url::to(['type-down']);
+        $items = CalendarsListType::find()->orderBy(['sort' => SORT_ASC])->all();
+        return $this->asJson(['saved' => true, 'items' => $items, 'urlUp' => $up, 'urlDown' => $down]);
+    }
+    public function actionTypeDown($id) {
+        $model = CalendarsListType::findOne($id);
+        if ($model == null) {
+            return functions::httpNotFound();
+        }
+        $prev = CalendarsListType::find()->where("sort > $model->sort")->orderBy(['sort' => SORT_ASC])->limit(1)->one();
+        if ($prev == null) {
+            return functions::httpNotFound();
+        }
+        
+        $first = $prev->sort;
+        $last = $model->sort;
+        $model->sort = $first;
+        $prev->sort = $last;
+        $prev->save();
+        $model->save();
+        
+        $up = \yii\helpers\Url::to(['type-up']);
+        $down = \yii\helpers\Url::to(['type-down']);
+        $items = CalendarsListType::find()->orderBy(['sort' => SORT_ASC])->asArray()->all();
+        return $this->asJson(['saved' => true, 'items' => $items, 'urlUp' => $up, 'urlDown' => $down]);
     }
     //
     public function actionCreate($date, $time1, $time2) {
@@ -329,16 +373,16 @@ class CalendarsController extends Controller {
                     else {
                         if ($start !== $end2) {
                             $output[] = [
-                                'rowId'      => $row['id1'],
+                                'rowId'       => $row['id1'],
                                 'title'       => $row['title'],
                                 'description' => $row['description'],
                                 'fullname'    => $row['fullname'],
-                                'day'        => jdf::jdate('l', strtotime($start_time)),
-                                'date'       => jdf::jdate('Y/m/d', strtotime($start_time)),
-                                'start_time' => sec_to_time($start),
-                                'end_time'   => sec_to_time($end2),
-                                'url'        => Url::to(['details', 'id' => $row['id1']]),
-                                'urlDelete'  => Url::to(['delete-event', 'id' => $row['id1']]),
+                                'day'         => jdf::jdate('l', strtotime($start_time)),
+                                'date'        => jdf::jdate('Y/m/d', strtotime($start_time)),
+                                'start_time'  => sec_to_time($start),
+                                'end_time'    => sec_to_time($end2),
+                                'url'         => Url::to(['details', 'id' => $row['id1']]),
+                                'urlDelete'   => Url::to(['delete-event', 'id' => $row['id1']]),
                             ];
                         }
                         $output[] = [
@@ -356,8 +400,8 @@ class CalendarsController extends Controller {
                         ];
                         $start    = $s;
                         $end2     = $e;
-                        $last = [
-                            'id'       => $row['id1'],
+                        $last     = [
+                            'id'          => $row['id1'],
                             'title'       => $row['title'],
                             'description' => $row['description'],
                             'fullname'    => $row['fullname'],
@@ -367,18 +411,18 @@ class CalendarsController extends Controller {
                 elseif ($row['id'] == 3) {
                     if ($last != 0) {
                         $output[] = [
-                            'rowId'      => $last['id'],
+                            'rowId'       => $last['id'],
                             'title'       => $last['title'],
                             'description' => $last['description'],
                             'fullname'    => $last['fullname'],
-                            'day'        => jdf::jdate('l', strtotime($start_time)),
-                            'date'       => jdf::jdate('Y/m/d', strtotime($start_time)),
-                            'start_time' => sec_to_time($start),
-                            'end_time'   => sec_to_time($end2 > $end ? $end : $end2),
-                            'url'        => Url::to(['details', 'id' => $last['id']]),
-                            'urlDelete'  => Url::to(['delete-event', 'id' => $last['id']]),
+                            'day'         => jdf::jdate('l', strtotime($start_time)),
+                            'date'        => jdf::jdate('Y/m/d', strtotime($start_time)),
+                            'start_time'  => sec_to_time($start),
+                            'end_time'    => sec_to_time($end2 > $end ? $end : $end2),
+                            'url'         => Url::to(['details', 'id' => $last['id']]),
+                            'urlDelete'   => Url::to(['delete-event', 'id' => $last['id']]),
                         ];
-                        $last = 0;
+                        $last     = 0;
                         if ($end2 < $end) {
                             $output[] = [
                                 'rowId'      => null,
