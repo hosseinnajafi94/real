@@ -9,7 +9,7 @@ return [
         'menu' => '
             <li class="nav-item"><a class="menu-item" href="' . Url::to(['/administration/default/index']) . '"><span class="menu-title">مرور کلی</span></a></li>
             <li class="nav-item"><a class="menu-item" href="' . Url::to(['/administration/default/index']) . '"><span class="menu-title">به روز رسانی *</span></a></li>
-            <li class="nav-item"><a class="menu-item" href="' . Url::to(['/administration/default/index']) . '"><span class="menu-title">تنظیمات</span></a></li>
+            <li class="nav-item"><a class="menu-item" href="' . Url::to(['/administration/settings/index']) . '"><span class="menu-title">تنظیمات</span></a></li>
             <li class="nav-item"><a class="menu-item" href="' . Url::to(['/administration/default/index']) . '"><span class="menu-title">پشتیبان</span></a></li>
             <li class="nav-item"><a class="menu-item" href="' . Url::to(['/administration/default/index']) . '"><span class="menu-title">گروه ها</span></a></li>
             <li class="nav-item"><a class="menu-item" href="' . Url::to(['/administration/default/index']) . '"><span class="menu-title">کاربرها</span></a></li>
