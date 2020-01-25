@@ -79,7 +79,7 @@ class ExportVML extends Model {
             $row[] = jdf::jdate('l', $time);
             $row[] = jdf::jdate('d', $time);
             $row[] = null;
-            $row[] = date('Y-m- d', $time);
+            $row[] = date('Y-m-d', $time);
             $row[] = $model->title;
             $row[] = null;
             $row[] = null;
