@@ -182,7 +182,7 @@ class ImportVML extends Model {
                 $models2 = [];
                 if (isset($post['CalendarsAlarms2VML'])) {
                     for ($index = 0, $count = count($post['CalendarsAlarms2VML']); $index < $count; $index++) {
-                        $models2[] = CalendarsAlarms2VML::newInstance();
+                        $models2[] = CalendarsAlarms2VML::newInstance(ImportVML::class);
                     }
                     $loaded = CalendarsAlarms2VML::loadMultiple($models2, $post);
                     if (!$loaded) {
@@ -210,6 +210,7 @@ class ImportVML extends Model {
                 foreach ($models2 as $row) {
                     $row->calendar_id = $model->id;
                     $row->message = $model->title;
+                    $row->implementations = $this->implementations;
                     if ($row->save()) {
                         for ($index = 0; $index < $days; $index += $row->model->period->days) {
                             $datetime1           = date('Y-m-d H:i:s', strtotime($model->start_time . " +$index days"));

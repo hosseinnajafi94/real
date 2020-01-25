@@ -15,16 +15,23 @@ class CalendarsAlarms2VML extends Model {
     public $alarm_type_id;
     public $message;
     //
-    public $list_time = [];
-    public $list_period = [];
+    public $list_time       = [];
+    public $list_period     = [];
     public $list_alarm_type = [];
     //
     public $model;
+    public $implementations;
+    public $type;
     public function rules() {
         return [
-            [['calendar_id', 'type_id', 'time_id', 'period_id', 'alarm_type_id', 'message'], 'required'],
-            [['id', 'type_id', 'calendar_id', 'time_id', 'period_id', 'alarm_type_id'], 'integer'],
-            [['message'], 'string'],
+                [['calendar_id', 'type_id', 'time_id', 'period_id', 'alarm_type_id', 'message'], 'required', 'when' => function ($model) {
+                    return is_array($model->implementations) && !empty($model->implementations);
+                }, 'whenClient' => "function () {
+                    console.log();
+                    return $('#" . ($this->type == ImportVML::class ? "importvml" : ($this->type == CalendarsVML::class ? 'calendarsvml' : '')) . "-implementations').val().length > 0;
+                }"],
+                [['id', 'type_id', 'calendar_id', 'time_id', 'period_id', 'alarm_type_id'], 'integer'],
+                [['message'], 'string'],
         ];
     }
     public function attributeLabels() {
@@ -38,9 +45,10 @@ class CalendarsAlarms2VML extends Model {
             'message'       => Yii::t('calendars', 'Message'),
         ];
     }
-    public static function newInstance() {
+    public static function newInstance($type) {
         $data        = new static();
         $data->model = new CalendarsAlarms();
+        $data->type  = $type;
         return $data;
     }
     public function loaditems() {
@@ -56,19 +64,19 @@ class CalendarsAlarms2VML extends Model {
         if (!$this->validate()) {
             return false;
         }
-        $model              = $this->model;
+        $model = $this->model;
         if ($this->id) {
             $model = CalendarsAlarms::findOne($this->id);
             if ($model === null) {
                 return false;
             }
         }
-        $model->calendar_id = $this->calendar_id;
-        $model->type_id = $this->type_id;
-        $model->time_id = $this->time_id;
-        $model->period_id = $this->period_id;
+        $model->calendar_id   = $this->calendar_id;
+        $model->type_id       = $this->type_id;
+        $model->time_id       = $this->time_id;
+        $model->period_id     = $this->period_id;
         $model->alarm_type_id = $this->alarm_type_id;
-        $model->message = $this->message;
+        $model->message       = $this->message;
         if (!$model->save()) {
             return false;
         }

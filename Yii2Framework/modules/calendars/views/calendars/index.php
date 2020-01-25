@@ -66,7 +66,7 @@ Yii::$app->controller->module->params['menu'] .= '
                         'model'       => $model,
                         'modelType'   => $modelType,
                         'modelAlarm'  => $modelAlarm,
-                        'modelAlarm2' => $modelAlarm2,
+                        'modelAlarm2' => $modelAlarm2Calendar,
                         'types'       => $types
                     ])
                     ?>
@@ -193,7 +193,7 @@ Yii::$app->controller->module->params['menu'] .= '
                                 //'min' => 1, // 0 or 1 (default 1)
                                 'insertButton'    => '.add-item3', // css class
                                 'deleteButton'    => '.remove-item3', // css class
-                                'model'           => $modelAlarm2,
+                                'model'           => $modelAlarm2Import,
                                 'formId'          => 'importForm',
                                 'formFields'      => [
                                     'type_id',
@@ -216,11 +216,11 @@ Yii::$app->controller->module->params['menu'] .= '
                                             <div class="clearfix"></div>
                                         </div>
                                         <div class="card-block">
-                                            <?= Html::activeHiddenInput($modelAlarm2, '[0]type_id', ['value' => '2']) ?>
-                                            <?= $formImport->field($modelAlarm2, '[0]time_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_time) ?>
-                                            <?= $formImport->field($modelAlarm2, '[0]period_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_period) ?>
-                                            <?= $formImport->field($modelAlarm2, '[0]alarm_type_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_alarm_type) ?>
-                                            <?php // $formImport->field($modelAlarm, '[0]message', ['options' => ['class' => 'form-group row mb-1']])->textarea(['rows' => 6])  ?>
+                                            <?= Html::activeHiddenInput($modelAlarm2Import, '[0]type_id', ['value' => '2']) ?>
+                                            <?= $formImport->field($modelAlarm2Import, '[0]time_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_time) ?>
+                                            <?= $formImport->field($modelAlarm2Import, '[0]period_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_period) ?>
+                                            <?= $formImport->field($modelAlarm2Import, '[0]alarm_type_id', ['options' => ['class' => 'form-group row mb-1']])->dropDownList($model->list_alarm_type) ?>
+                                            <?php // $formImport->field($modelAlarm2Import, '[0]message', ['options' => ['class' => 'form-group row mb-1']])->textarea(['rows' => 6])  ?>
                                         </div>
                                     </div>
                                 </div>

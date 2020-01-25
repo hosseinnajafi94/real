@@ -75,7 +75,7 @@ class CalendarsController extends Controller {
                             'borders' => [
                                 'outline' => [
                                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                                    'color' => ['rgb' => '000000'],
+                                    'color'       => ['rgb' => '000000'],
                                 ],
                             ],
                         ]);
@@ -114,33 +114,36 @@ class CalendarsController extends Controller {
         }
     }
     public function actionIndex() {
-        $search            = new CalendarsSearchVML();
-        $data              = $search->search(Yii::$app->request->queryParams);
-        $search4           = new CalendarsListRequirementsSearchModel();
-        $data4             = $search4->search(Yii::$app->request->queryParams);
-        $modelImport       = new ImportVML();
-        $modelExport       = new ExportVML();
-        $model             = CalendarsVML::newInstance();
+        $search              = new CalendarsSearchVML();
+        $data                = $search->search(Yii::$app->request->queryParams);
+        $search4             = new CalendarsListRequirementsSearchModel();
+        $data4               = $search4->search(Yii::$app->request->queryParams);
+        $modelImport         = new ImportVML();
+        $modelExport         = new ExportVML();
+        $model               = CalendarsVML::newInstance();
         $model->loaditems();
-        $modelAlarm        = CalendarsAlarmsVML::newInstance();
+        $modelAlarm          = CalendarsAlarmsVML::newInstance();
         $modelAlarm->loaditems();
-        $modelAlarm2       = CalendarsAlarms2VML::newInstance();
-        $modelAlarm2->loaditems();
-        $modelType         = CalendarsListTypeVML::newInstance();
+        $modelAlarm2Import   = CalendarsAlarms2VML::newInstance(ImportVML::class);
+        $modelAlarm2Import->loaditems();
+        $modelAlarm2Calendar = CalendarsAlarms2VML::newInstance(CalendarsVML::class);
+        $modelAlarm2Calendar->loaditems();
+        $modelType           = CalendarsListTypeVML::newInstance();
         $modelType->loaditems();
-        $modelRequirements = new CalendarsListRequirements();
+        $modelRequirements   = new CalendarsListRequirements();
         return $this->render('index', [
-                    'model'             => $model,
-                    'modelImport'       => $modelImport,
-                    'modelExport'       => $modelExport,
-                    'modelType'         => $modelType,
-                    'modelAlarm'        => $modelAlarm,
-                    'modelAlarm2'       => $modelAlarm2,
-                    'modelRequirements' => $modelRequirements,
-                    'search'            => $search,
-                    'data'              => $data,
-                    'search4'           => $search4,
-                    'data4'             => $data4,
+                    'model'               => $model,
+                    'modelImport'         => $modelImport,
+                    'modelExport'         => $modelExport,
+                    'modelType'           => $modelType,
+                    'modelAlarm'          => $modelAlarm,
+                    'modelAlarm2Import'   => $modelAlarm2Import,
+                    'modelAlarm2Calendar' => $modelAlarm2Calendar,
+                    'modelRequirements'   => $modelRequirements,
+                    'search'              => $search,
+                    'data'                => $data,
+                    'search4'             => $search4,
+                    'data4'               => $data4,
         ]);
     }
     public function actionDeleteType($id) {
