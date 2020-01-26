@@ -58,6 +58,9 @@ class CalendarsAlarms2VML extends Model {
         return $this;
     }
     public function save() {
+        if (!is_array($this->implementations) || empty($this->implementations)) {
+            return false;
+        }
 //        if (!$this->load($post)) {
 //            return false;
 //        }

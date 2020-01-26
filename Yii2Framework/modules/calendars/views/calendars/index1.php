@@ -52,6 +52,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
                 <tr>
                     <th>ردیف</th>
                     <th>عنوان</th>
+                    <th><label><input type="checkbox"/> حذف کلی</label></th>
                     <th>عملیات</th>
                 </tr>
             </thead>
@@ -59,6 +60,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 
             </tbody>
         </table>
+        <a class="btn btn-sm btn-danger mb-0 mt-1 pull-left list1DeleteAll disabled">حذف</a>
     </div>
 </div>
 <!-- Events -->
@@ -424,8 +426,31 @@ $this->registerJsFile('@web/themes/custom/js/moment.min.js', ['depends' => Admin
 $this->registerJsFile('@web/themes/custom/js/moment-jalaali.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/fullcalendar.min.js', ['depends' => AdminAsset::class]);
 $this->registerJsFile('@web/themes/custom/js/locale-all.js', ['depends' => AdminAsset::class]);
-$this->registerJsFile('@web/themes/custom/js/calendars.js?ver=8', ['depends' => AdminAsset::class]);
+$this->registerJsFile('@web/themes/custom/js/calendars.js?ver=9', ['depends' => AdminAsset::class]);
 $this->registerCssFile('@web/themes/custom/css/fullcalendar.min.css', ['depends' => AdminAsset::class]);
+$this->registerJs("
+$(document).on('click', '#getList th input:checkbox', function (e) {
+    $('#getList tbody input:checkbox').prop('checked', this.checked);
+});
+$(document).on('click', '.list1DeleteAll', function (e) {
+    var ids = [];
+    $('#getList tbody input:checkbox:checked').each(function () {
+        ids.push($(this).data('id'));
+    });
+    if (ids.length > 0 && confirm('" . Yii::t('app', 'Are you sure?') . "')) {
+        ajaxget('" . Url::to(['delete-events']) . "', {ids}, function () {
+            var {url, datetime} = $('#getList tbody').data('options');
+            showList(url, datetime);
+        });
+    }
+});
+$(document).on('change', '#getList input:checkbox', function (e) {
+    $('.list1DeleteAll').removeClass('disabled');
+    if ($('#getList tbody input:checkbox:checked').length === 0) {
+        $('.list1DeleteAll').addClass('disabled');
+    }
+});
+");
 $this->registerJs("
     var types         = " . json_encode($types) . ";
     var events        = " . json_encode($model->getEvents()) . ";

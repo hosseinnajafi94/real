@@ -1,9 +1,6 @@
 <?php
-
 namespace app\modules\administration\models\DAL;
-
 use Yii;
-
 /**
  * This is the model class for table "settings".
  *
@@ -43,69 +40,81 @@ use Yii;
  * @property int|null $dl_to_month
  * @property int|null $dl_to_day
  */
-class Settings extends \yii\db\ActiveRecord
-{
+class Settings extends \yii\db\ActiveRecord {
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'settings';
     }
-
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['enable_remember_me', 'rtl'], 'boolean'],
-            [['upload_max_size', 'comment_restrict_editable', 'event_remain', 'notify_remain', 'session_remain', 'journal_remain', 'report_remain', 'restart_after', 'smtp_port', 'security_type_id', 'replace_letter_id', 'language_id', 'language_type_id', 'number_format_id', 'calendar_type_id', 'date_format_type_id', 'time_zone_id', 'first_day_in_week_id', 'daylight_state_id', 'dl_from_month_id', 'dl_from_day', 'dl_to_month', 'dl_to_day'], 'integer'],
-            [['logo', 'background', 'theme', 'title', 'admin_email', 'smtp_server', 'smtp_email', 'smtp_user_name', 'smtp_password'], 'string', 'max' => 255],
+                [['enable_remember_me', 'rtl'], 'boolean'],
+                [['upload_max_size', 'comment_restrict_editable', 'event_remain', 'notify_remain', 'session_remain', 'journal_remain', 'report_remain', 'restart_after', 'smtp_port', 'security_type_id', 'replace_letter_id', 'language_id', 'language_type_id', 'number_format_id', 'calendar_type_id', 'date_format_type_id', 'time_zone_id', 'first_day_in_week_id', 'daylight_state_id', 'dl_from_month_id', 'dl_from_day', 'dl_to_month', 'dl_to_day'], 'integer'],
+                [['logo', 'background', 'theme', 'title', 'admin_email', 'smtp_server', 'smtp_email', 'smtp_user_name', 'smtp_password'], 'string', 'max' => 255],
         ];
     }
-
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
-            'id' => Yii::t('administration', 'ID'),
-            'logo' => Yii::t('administration', 'Logo'),
-            'background' => Yii::t('administration', 'Background'),
-            'theme' => Yii::t('administration', 'Theme'),
-            'enable_remember_me' => Yii::t('administration', 'Enable Remember Me'),
-            'title' => Yii::t('administration', 'Title'),
-            'upload_max_size' => Yii::t('administration', 'Upload Max Size'),
+            'id'                        => Yii::t('administration', 'ID'),
+            'logo'                      => Yii::t('administration', 'Logo'),
+            'background'                => Yii::t('administration', 'Background'),
+            'theme'                     => Yii::t('administration', 'Theme'),
+            'enable_remember_me'        => Yii::t('administration', 'Enable Remember Me'),
+            'title'                     => Yii::t('administration', 'Title'),
+            'upload_max_size'           => Yii::t('administration', 'Upload Max Size'),
             'comment_restrict_editable' => Yii::t('administration', 'Comment Restrict Editable'),
-            'event_remain' => Yii::t('administration', 'Event Remain'),
-            'notify_remain' => Yii::t('administration', 'Notify Remain'),
-            'session_remain' => Yii::t('administration', 'Session Remain'),
-            'journal_remain' => Yii::t('administration', 'Journal Remain'),
-            'report_remain' => Yii::t('administration', 'Report Remain'),
-            'restart_after' => Yii::t('administration', 'Restart After'),
-            'admin_email' => Yii::t('administration', 'Admin Email'),
-            'smtp_server' => Yii::t('administration', 'Smtp Server'),
-            'smtp_port' => Yii::t('administration', 'Smtp Port'),
-            'security_type_id' => Yii::t('administration', 'Security Type ID'),
-            'smtp_email' => Yii::t('administration', 'Smtp Email'),
-            'smtp_user_name' => Yii::t('administration', 'Smtp User Name'),
-            'smtp_password' => Yii::t('administration', 'Smtp Password'),
-            'replace_letter_id' => Yii::t('administration', 'Replace Letter ID'),
-            'language_id' => Yii::t('administration', 'Language ID'),
-            'rtl' => Yii::t('administration', 'Rtl'),
-            'language_type_id' => Yii::t('administration', 'Language Type ID'),
-            'number_format_id' => Yii::t('administration', 'Number Format ID'),
-            'calendar_type_id' => Yii::t('administration', 'Calendar Type ID'),
-            'date_format_type_id' => Yii::t('administration', 'Date Format Type ID'),
-            'time_zone_id' => Yii::t('administration', 'Time Zone ID'),
-            'first_day_in_week_id' => Yii::t('administration', 'First Day In Week ID'),
-            'daylight_state_id' => Yii::t('administration', 'Daylight State ID'),
-            'dl_from_month_id' => Yii::t('administration', 'Dl From Month ID'),
-            'dl_from_day' => Yii::t('administration', 'Dl From Day'),
-            'dl_to_month' => Yii::t('administration', 'Dl To Month'),
-            'dl_to_day' => Yii::t('administration', 'Dl To Day'),
+            'event_remain'              => Yii::t('administration', 'Event Remain'),
+            'notify_remain'             => Yii::t('administration', 'Notify Remain'),
+            'session_remain'            => Yii::t('administration', 'Session Remain'),
+            'journal_remain'            => Yii::t('administration', 'Journal Remain'),
+            'report_remain'             => Yii::t('administration', 'Report Remain'),
+            'restart_after'             => Yii::t('administration', 'Restart After'),
+            'admin_email'               => Yii::t('administration', 'Admin Email'),
+            'smtp_server'               => Yii::t('administration', 'Smtp Server'),
+            'smtp_port'                 => Yii::t('administration', 'Smtp Port'),
+            'security_type_id'          => Yii::t('administration', 'Security Type ID'),
+            'smtp_email'                => Yii::t('administration', 'Smtp Email'),
+            'smtp_user_name'            => Yii::t('administration', 'Smtp User Name'),
+            'smtp_password'             => Yii::t('administration', 'Smtp Password'),
+            'replace_letter_id'         => Yii::t('administration', 'Replace Letter ID'),
+            'language_id'               => Yii::t('administration', 'Language ID'),
+            'rtl'                       => Yii::t('administration', 'Rtl'),
+            'language_type_id'          => Yii::t('administration', 'Language Type ID'),
+            'number_format_id'          => Yii::t('administration', 'Number Format ID'),
+            'calendar_type_id'          => Yii::t('administration', 'Calendar Type ID'),
+            'date_format_type_id'       => Yii::t('administration', 'Date Format Type ID'),
+            'time_zone_id'              => Yii::t('administration', 'Time Zone ID'),
+            'first_day_in_week_id'      => Yii::t('administration', 'First Day In Week ID'),
+            'daylight_state_id'         => Yii::t('administration', 'Daylight State ID'),
+            'dl_from_month_id'          => Yii::t('administration', 'Dl From Month ID'),
+            'dl_from_day'               => Yii::t('administration', 'Dl From Day'),
+            'dl_to_month'               => Yii::t('administration', 'Dl To Month'),
+            'dl_to_day'                 => Yii::t('administration', 'Dl To Day'),
+        ];
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeHints() {
+        return [
+            'upload_max_size'           => 'حداکثر 200MB',
+            'comment_restrict_editable' => 'حداقل 1 روز',
+            'event_remain'              => 'حداقل 1 روز',
+            'notify_remain'             => 'حداقل 10 روز',
+            'session_remain'            => 'حداقل 5 دقیقه',
+            'journal_remain'            => 'حداقل 20 روز',
+            'report_remain'             => 'حداقل 30 روز',
+            'restart_after'             => 'حداقل 10 دقیقه',
+            ''                          => '',
+            ''                          => '',
+            ''                          => '',
         ];
     }
 }

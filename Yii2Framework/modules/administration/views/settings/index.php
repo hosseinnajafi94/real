@@ -17,9 +17,11 @@ $this->title = Yii::t('administration', 'Settings');
         $form        = ActiveForm::begin([
                     'layout'      => 'horizontal',
                     'fieldConfig' => [
+                        'template'             => "{label}\n{beginWrapper}\n{input}{endWrapper}\n{hint}\n{error}\n",
                         'horizontalCssClasses' => [
-                            'label'   => 'col-sm-5 control-label',
-                            'wrapper' => 'col-sm-7',
+                            'label'   => 'col-sm-4 control-label',
+                            'wrapper' => 'col-sm-4',
+                            'hint'    => 'col-sm-4',
                         ],
                         'labelOptions'         => [
                             'style' => 'text-align: left;font-weight: bold;'
@@ -29,15 +31,15 @@ $this->title = Yii::t('administration', 'Settings');
         ?>
         <div class="row">
             <div class="col">
-                <?= $form->field($model, 'logo')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'logo')->fileInput() ?>
             </div>
             <div class="col">
-                <?= $form->field($model, 'background')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'background')->fileInput() ?>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <?= $form->field($model, 'theme')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'theme')->select2([]) ?>
             </div>
             <div class="col">
                 <?= $form->field($model, 'enable_remember_me')->checkbox() ?>
@@ -54,7 +56,8 @@ $this->title = Yii::t('administration', 'Settings');
         <hr/>
         <div class="row">
             <div class="col">
-                <?= $form->field($model, 'upload_max_size')->textInput() ?>
+                <p class="mb-1">دانلود فایل های بیش از اندازه بزرگ، امکان اتلاف منابع سرور را در بر دارد.</p>
+                <?= $form->field($model, 'upload_max_size')->textInput(['type' => 'number']) ?>
             </div>
             <div class="col">
             </div>
@@ -62,7 +65,8 @@ $this->title = Yii::t('administration', 'Settings');
         <hr/>
         <div class="row">
             <div class="col">
-                <?= $form->field($model, 'comment_restrict_editable')->textInput() ?>
+                <p class="mb-1">در تیم‌یار محدودیت زمانی برای ویرایش کامنت ها از لحظه ایجاد آن ها وجود دارد. این محدودیت به شما این امکان را می دهد تا بحث ها و توضیحات مربوط به یک تسک، مشکلات و عناوین تالارهای گفتگو را بعد از گذشت مدت زمان مشخص غیر قابل تغییر کنید. شما می توانید تعداد روزهایی که کاربران می توانند متن کامنت های خود را ویرایش کنند را مشخص کنید.</p>
+                <?= $form->field($model, 'comment_restrict_editable')->textInput(['type' => 'number']) ?>
             </div>
             <div class="col">
             </div>

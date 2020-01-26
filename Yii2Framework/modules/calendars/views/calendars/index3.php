@@ -63,18 +63,44 @@ use app\config\components\functions;
                 <th class="text-center">عنوان جلسه</th>
                 <th class="text-center">توضیحات</th>
                 <th class="text-center">حاضرین</th>
+                <th class="text-center"><label><input type="checkbox"/> حذف کلی</label></th>
                 <th class="text-center">عملیات</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="text-center" colspan="7" style="color: #999">--&nbsp;بدون محتوی&nbsp;--</td>
+                <td class="text-center" colspan="9" style="color: #999">--&nbsp;بدون محتوی&nbsp;--</td>
             </tr>
         </tbody>
     </table>
+    <a class="btn btn-sm btn-danger mb-0 mt-1 pull-left list3DeleteAll disabled">حذف</a>
 </div>
 <?php
+$this->registerCss("
+    #session_table th {vertical-align: middle;}
+    #session_table th label {margin: 0;}
+");
 $this->registerJs("
+$(document).on('click', '#session_table th input:checkbox', function (e) {
+    $('#session_table tbody input:checkbox').prop('checked', this.checked);
+});
+$(document).on('click', '.list3DeleteAll', function (e) {
+    var ids = [];
+    $('#session_table tbody input:checkbox:checked').each(function () {
+        ids.push($(this).data('id'));
+    });
+    if (ids.length > 0 && confirm('" . Yii::t('app', 'Are you sure?') . "')) {
+        ajaxget('" . Url::to(['delete-events']) . "', {ids}, function () {
+            $('#session_search').trigger('click');
+        });
+    }
+});
+$(document).on('change', '#session_table input:checkbox', function (e) {
+    $('.list3DeleteAll').removeClass('disabled');
+    if ($('#session_table tbody input:checkbox:checked').length === 0) {
+        $('.list3DeleteAll').addClass('disabled');
+    }
+});
 $(document).on('click', '#session_table a', function (e) {
     e.preventDefault();
     var id = $(this).data('id');
@@ -186,6 +212,9 @@ $('#session_search').click(function () {
                     <td class=\"text-center\" style=\"vertical-align: middle;direction: rtl;\">\${row.description ? row.description : '---'}</td>
                     <td class=\"text-center\" style=\"vertical-align: middle;direction: rtl;\">\${row.fullname ? row.fullname : '---'}</td>
                     <td>
+                        \${(row.rowId === null ? '' : '<input type=\"checkbox\" data-id=\"' + row.rowId + '\"/>')}
+                    </td>
+                    <td>
             `;
             if (row.rowId === null) {
                 tr += `<a class=\"btn btn-sm btn-primary mb-0\" data-type=\"select\">انتخاب</a>`;
@@ -202,7 +231,8 @@ $('#session_search').click(function () {
             `;
             $(tr).data('row', row).appendTo('#session_table tbody');
         }
-        //$('#text').html('<pre style=\"direction: ltr !important;text-align: left;\">'+JSON.stringify(result, null, 4)+'</pre>');
+        $('.list3DeleteAll').addClass('disabled');
+        $('#session_table th input:checkbox').prop('checked', false);
     }, undefined, undefined, undefined, true);
 });
 ");

@@ -140,26 +140,6 @@ $(function () {
         var datetime = $(this).data('dp-val');
         showList(url, datetime);
     });
-    function showList(url, datetime) {
-        ajaxget(url, {datetime}, function (rows) {
-            $('#getList tbody').data('options', {url, datetime}).html('');
-            $('.addNew').removeClass('disabled');
-            for (var i = 0, max = rows.length; i < max; i++) {
-                var html = `
-                    <tr>
-                        <td>${i + 1}</td>
-                        <td><a data-url="${rows[i].url}" data-id="${rows[i].id}" data-type="view">${rows[i].title}</a></td>
-                        <td>
-                            <a href="#" data-url="${rows[i].url}" data-id="${rows[i].id}" data-type="view"><i class="fa fa-eye"></i></a>
-                            <a href="#" data-url="${rows[i].url}" data-id="${rows[i].id}" data-type="update"><i class="fa fa-pencil"></i></a>
-                            <a href="#" data-url="${rows[i].urlDelete}" data-id="${rows[i].id}" data-type="delete"><i class="fa fa-times"></i></a>
-                        </td>
-                    </tr>
-                `;
-                $('#getList tbody').append(html);
-            }
-        });
-    }
     $(document).on('click', '.ajaxView', function (e) {
         e.preventDefault();
         var title = $(this).data('title');
@@ -901,4 +881,29 @@ function updateEvent(row) {
 
     $('#modalView').modal('hide');
     $('#modalNew').modal('show');
+}
+function showList(url, datetime) {
+    ajaxget(url, {datetime}, function (rows) {
+        $('#getList tbody').data('options', {url, datetime}).html('');
+        $('.addNew').removeClass('disabled');
+        for (var i = 0, max = rows.length; i < max; i++) {
+            var html = `
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td><a data-url="${rows[i].url}" data-id="${rows[i].id}" data-type="view">${rows[i].title}</a></td>
+                        <td>
+                            <input type="checkbox" data-id="${rows[i].id}"/>
+                        </td>
+                        <td>
+                            <a href="#" data-url="${rows[i].url}" data-id="${rows[i].id}" data-type="view"><i class="fa fa-eye"></i></a>
+                            <a href="#" data-url="${rows[i].url}" data-id="${rows[i].id}" data-type="update"><i class="fa fa-pencil"></i></a>
+                            <a href="#" data-url="${rows[i].urlDelete}" data-id="${rows[i].id}" data-type="delete"><i class="fa fa-times"></i></a>
+                        </td>
+                    </tr>
+                `;
+            $('#getList tbody').append(html);
+        }
+        $('.list1DeleteAll').addClass('disabled');
+        $('#getList th input:checkbox').prop('checked', false);
+    });
 }
