@@ -220,20 +220,31 @@ $this->beginPage();
                                     </a>
                                     <div aria-labelledby="dropdownBasic3" class="dropdown-menu dropdown-menu-left">
                                         <div class="arrow_box_right">
-                                            <a href="" class="dropdown-item py-1">
+                                            <?php
+                                            $user = Yii::$app->user->identity;
+                                            if ($user) {
+                                                ?>
+                                                <a class="dropdown-item py-1" style="cursor: default;text-align: center;">
+                                                    <!--<i class="ft-edit ml-2"></i>-->
+                                                    <span><?= $user->fname . ' ' . $user->lname;  ?></span>
+                                                </a>
+                                                <?php
+                                            }
+                                            ?>
+                                            <a href="" class="dropdown-item py-1 d-none">
                                                 <i class="ft-edit ml-2"></i>
                                                 <span>پروفایل من</span>
                                             </a>
-                                            <a href="" class="dropdown-item py-1">
+                                            <a href="" class="dropdown-item py-1 d-none">
                                                 <i class="ft-message-circle ml-2"></i>
                                                 <span>چت من</span>
                                             </a>
-                                            <a href="javascript:;" class="dropdown-item py-1">
+                                            <a href="javascript:;" class="dropdown-item py-1 d-none">
                                                 <i class="ft-settings ml-2"></i>
                                                 <span>تنظیمات</span>
                                             </a>
                                             <div class="dropdown-divider"></div>
-                                            <a href="javascript:;" class="dropdown-item">
+                                            <a href="<?= Url::to(['/users/auth/logout']) ?>" class="dropdown-item">
                                                 <i class="ft-power ml-2"></i>
                                                 <span>خروج</span>
                                             </a>

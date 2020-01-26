@@ -20,7 +20,7 @@ foreach ($modules_names as $module_name) {
 $params      = require __DIR__ . '/params.php';
 $db          = require __DIR__ . '/db.php';
 $config      = [
-    'id'              => 'basic',
+    'id'              => 'erp',
     'language'        => 'fa-IR',
     'timeZone'        => 'Asia/Tehran',
     'on beforeAction' => function () {
@@ -39,7 +39,7 @@ $config      = [
                 //''                                    => 'users/auth/login',
                 //''                                    => 'site/default/index',
                 ''                                    => 'dashboard/default/index',
-                'login'                              => 'users/auth/login',
+                'login'                               => 'users/auth/login',
                 'logout'                              => 'users/auth/logout',
                 '<module>/<controller>/<action>/<id>' => '<module>/<controller>/<action>',
             ],
@@ -48,8 +48,8 @@ $config      = [
             'class' => 'yii\rbac\DbManager'
         ],
         'request'      => [
-            'cookieValidationKey' => 'basic',
-            'csrfParam'           => '_basic_csrf',
+            'cookieValidationKey' => 'erp',
+            'csrfParam'           => '_erp_csrf',
             'csrfCookie'          => [
                 'httpOnly' => true,
             //'secure'   => true,
@@ -69,7 +69,7 @@ $config      = [
             ],
         ],
         'session'      => [
-            'name'         => '_basic_phpsessid',
+            'name'         => '_erp_phpsessid',
             'cookieParams' => [
                 'httpOnly' => true,
             //'secure'   => true,

@@ -7,16 +7,16 @@ use app\config\components\functions;
 use app\modules\geo\models\SRL\GeoProvincesSRL;
 class GeoProvincesController extends Controller {
     public function behaviors() {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                        ['allow' => true, 'actions' => ['index', 'view'], 'roles' => ['GeoProvinces'], 'verbs' => ['GET']],
-                        ['allow' => true, 'actions' => ['delete'], 'roles' => ['GeoProvinces'], 'verbs' => ['POST']],
-                        ['allow' => true, 'actions' => ['create', 'update'], 'roles' => ['GeoProvinces'], 'verbs' => ['GET', 'POST']],
-                ],
-            ],
-        ];
+//        return [
+//            'access' => [
+//                'class' => AccessControl::className(),
+//                'rules' => [
+//                        ['allow' => true, 'actions' => ['index', 'view'], 'roles' => ['GeoProvinces'], 'verbs' => ['GET']],
+//                        ['allow' => true, 'actions' => ['delete'], 'roles' => ['GeoProvinces'], 'verbs' => ['POST']],
+//                        ['allow' => true, 'actions' => ['create', 'update'], 'roles' => ['GeoProvinces'], 'verbs' => ['GET', 'POST']],
+//                ],
+//            ],
+//        ];
     }
     public function actionIndex() {
         list($searchModel, $dataProvider) = GeoProvincesSRL::searchModel();

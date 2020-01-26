@@ -22,19 +22,19 @@ use app\modules\calendars\models\VML\CalendarsSearchVML;
 use app\modules\calendars\models\VML\CalendarsListTypeVML;
 use app\modules\calendars\models\VML\CalendarsListRequirementsSearchModel;
 class CalendarsController extends Controller {
-    public function behaviors() {
-        return [
-            'verbs' => [
-                'class'   => VerbFilter::className(),
-                'actions' => [
-                    'type' => ['POST'],
-//                    'delete' => ['POST'],
-//                    'delete-event'      => ['POST'],
-//                    'delete-type' => ['POST'],
-                ],
-            ],
-        ];
-    }
+//    public function behaviors() {
+//        return [
+//            'verbs' => [
+//                'class'   => VerbFilter::className(),
+//                'actions' => [
+//                    'type' => ['POST'],
+////                    'delete' => ['POST'],
+////                    'delete-event'      => ['POST'],
+////                    'delete-type' => ['POST'],
+//                ],
+//            ],
+//        ];
+//    }
     public function actionImport() {
         $model = new ImportVML();
         if ($model->save(Yii::$app->request->post())) {

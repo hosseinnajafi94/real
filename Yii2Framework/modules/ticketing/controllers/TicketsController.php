@@ -15,23 +15,26 @@ class TicketsController extends Controller {
                         [
                         'allow'   => true,
                         'actions' => ['index'],
-                        'roles'   => ['Ticketing'],
+                        'roles'   => ['@'],
+//                        'roles'   => ['Ticketing'],
                         'verbs'   => ['GET']
                     ],
                         [
                         'allow'         => true,
                         'actions'       => ['delete'],
-                        'roles'         => ['Ticketing'],
+                        'roles'         => ['@'],
+//                        'roles'         => ['Ticketing'],
                         'verbs'         => ['POST'],
-                        'matchCallback' => function () {
-                            $user = UsersSRL::findModel(Yii::$app->user->id);
-                            return $user->group->id == 1;
-                        }
+//                        'matchCallback' => function () {
+//                            $user = UsersSRL::findModel(Yii::$app->user->id);
+//                            return $user->group->id == 1;
+//                        }
                     ],
                         [
                         'allow'   => true,
                         'actions' => ['create', 'view'],
-                        'roles'   => ['Ticketing'],
+                        'roles'   => ['@'],
+//                        'roles'   => ['Ticketing'],
                         'verbs'   => ['GET', 'POST']
                     ],
                 ],

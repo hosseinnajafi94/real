@@ -21,9 +21,9 @@ class TicketsVML extends Model {
         return [
                 [['title', 'support_id', 'category_id', 'message'], 'required'],
                 [['receiver_id'], 'required', 'when' => function ($model) {
-                    return $model->user->group->id == 1;
+                    return $model->user->group->id == 1000;
                 }, 'whenClient' => 'function (attribute) {
-                    return ' . ($this->user->group->id == 1 ? 'false' : 'false') . ';
+                    return ' . ($this->user->group->id == 1000 ? 'false' : 'false') . ';
                 }'],
                 [['receiver_id', 'support_id', 'category_id'], 'integer'],
                 [['title'], 'string', 'max' => 255],

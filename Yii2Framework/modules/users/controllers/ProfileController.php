@@ -12,21 +12,21 @@ use app\modules\users\models\SRL\UsersBanksSRL;
 use app\modules\users\models\SRL\UsersAccountsSRL;
 use app\modules\users\models\DAL\ViewUsersAccounts;
 class ProfileController extends Controller {
-    public function behaviors() {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                        ['allow' => true, 'actions' => ['index', 'account'], 'roles' => ['Profile'], 'verbs' => ['GET']],
-                        ['allow' => true, 'actions' => ['update', 'change-password', 'addmoney'], 'roles' => ['Profile'], 'verbs' => ['GET', 'POST']],
-                        ['allow' => true, 'actions' => ['bank-view'], 'roles' => ['Profile'], 'verbs' => ['GET']],
-                    //'bank-delete', 
-                    ['allow' => true, 'actions' => ['bank-default'], 'roles' => ['Profile'], 'verbs' => ['POST']],
-                        ['allow' => true, 'actions' => ['bank-create', 'bank-update'], 'roles' => ['Profile'], 'verbs' => ['GET', 'POST']],
-                ],
-            ],
-        ];
-    }
+//    public function behaviors() {
+//        return [
+//            'access' => [
+//                'class' => AccessControl::className(),
+//                'rules' => [
+//                        ['allow' => true, 'actions' => ['index', 'account'], 'roles' => ['Profile'], 'verbs' => ['GET']],
+//                        ['allow' => true, 'actions' => ['update', 'change-password', 'addmoney'], 'roles' => ['Profile'], 'verbs' => ['GET', 'POST']],
+//                        ['allow' => true, 'actions' => ['bank-view'], 'roles' => ['Profile'], 'verbs' => ['GET']],
+//                    //'bank-delete', 
+//                    ['allow' => true, 'actions' => ['bank-default'], 'roles' => ['Profile'], 'verbs' => ['POST']],
+//                        ['allow' => true, 'actions' => ['bank-create', 'bank-update'], 'roles' => ['Profile'], 'verbs' => ['GET', 'POST']],
+//                ],
+//            ],
+//        ];
+//    }
     public function actionIndex() {
         $model = UsersSRL::findModel(Yii::$app->user->id);
         if ($model == null) {

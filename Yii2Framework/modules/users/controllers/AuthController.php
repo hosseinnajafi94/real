@@ -24,11 +24,11 @@ class AuthController extends Controller {
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->redirect(['/dashboard/default/index']);
         }
-        if (YII_DEBUG) {
-            $model->mobile   = '09123456789';
-            $model->password = '12345678';
-            $model->captcha  = '2020';
-        }
+//        if (YII_DEBUG) {
+//            $model->mobile   = '09123456789';
+//            $model->password = '12345678';
+//            $model->captcha  = '2020';
+//        }
         return $this->renderView($model);
     }
     public function actionLogout() {

@@ -11,7 +11,8 @@ class DefaultController extends Controller {
                     [
                         'allow'   => true,
                         'actions' => ['index'],
-                        'roles'   => ['Dashboard'],
+                        'roles'   => ['@'],
+//                        'roles'   => ['Dashboard'],
                         'verbs'   => ['GET']
                     ],
                 ],
