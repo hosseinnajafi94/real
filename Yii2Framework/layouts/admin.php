@@ -1,11 +1,39 @@
 <?php
 use yii\helpers\Url;
 use yii\bootstrap4\Nav;
+use yii\bootstrap4\Html;
 use yii\bootstrap4\NavBar;
 use yii\bootstrap4\Breadcrumbs;
 use app\assets\AdminAsset;
 use app\config\widgets\Alert;
 use app\modules\notifications\models\SRL\NotificationsSRL;
+use app\modules\organizations\models\SRL\OrganizationsSRL;
+use app\modules\organizations\models\DAL\OrganizationsListYears;
+use app\modules\accounting\models\DAL\AccountingSettings;
+
+$organizations = OrganizationsSRL::getItems();
+
+$session = Yii::$app->session;
+$organization_id = $session->get('default_organization_id');
+if ($organization_id === null) {
+    $settings = AccountingSettings::findOne(1);
+    if ($settings->id_p06) {
+        $organization_id = $settings->id_p06;
+        $year_id = $settings->id_p07;
+        $session->set('default_organization_id', $organization_id);
+        $session->set('default_year_id', $year_id);
+    }
+}
+if ($organization_id === null && count($organizations) > 0) {
+    $keys = array_keys($organizations);
+    $organization_id = $keys[0];
+    $session->set('default_organization_id', $organization_id);
+    $year = OrganizationsListYears::find()->where(['organization_id' => $$organization_id])->orderBy(['id' => SORT_DESC])->limit(1)->one();
+    if ($year) {
+        $session->set('default_year_id', $year->id);
+    }
+}
+
 /* @var $this \yii\web\View */
 /* @var $content string */
 AdminAsset::register($this);
@@ -42,11 +70,7 @@ $this->beginPage();
                         <ul id="main-menu-navigation" data-menu="menu-navigation" class="navigation navigation-main">
                             <li class="nav-item noclose">
                                 <a style="padding: 0;">
-                                    <select class="form-control">
-                                        <option value="">asd 1</option>
-                                        <option value="">asd 2</option>
-                                        <option value="">asd 3</option>
-                                    </select>
+                                    <?= Html::dropDownList('organization_id', $organization_id, $organizations, ['class' => 'form-control form-control-sm']) ?>
                                 </a>
                             </li>
                             <li class="nav-item has-sub">
@@ -54,11 +78,16 @@ $this->beginPage();
                                 <ul class="menu-content">
                                     <li><a class="menu-item" href="<?= Url::to(['/dashboard/default/index']) ?>"><i class="fa fa-tachometer"></i> <span class="menu-title">داشبورد</span></a></li>
                                     <li><a class="menu-item" href="<?= Url::to(['/ticketing/tickets/index']) ?>"><i class="fa fa-ticket"></i> <span class="menu-title">پشتیبانی</span></a></li>
-                                    <li><a class="menu-item" href="<?= Url::to(['/administration/default/index']) ?>"><i class="tyf tyf-module3"></i> <span class="menu-title"><?= Yii::t('administration', 'Administration') ?></span></a></li>
                                     <li><a class="menu-item" href="<?= Url::to(['/calendars/calendars/index']) ?>"><i class="fa fa-calendar"></i> <span class="menu-title">تقویم</span></a></li>
-                                    <li><a class="menu-item" href="<?= Url::to(['/correspondence/default/index']) ?>"><i class="fa fa-file"></i> <span class="menu-title">مکاتبات</span></a></li>
-                                    <li><a class="menu-item" href="<?= Url::to(['/users/default/index']) ?>"><i class="fa fa-user" style="position: relative;"><i class="fa fa-search" style="position: absolute;bottom: -5px;right: -5px;font-size: 11px;color: white;text-shadow: 0 0 2px #000;"></i></i> <span class="menu-title">پرسنلی</span></a></li>
-                                    <li><a class="menu-item" href="<?= Url::to(['/organizations/organizations/index']) ?>"><i class="fa fa-sitemap"></i> <span class="menu-title">شعبه</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/accounting/default/index']) ?>"><i class="fa fa-calculator"></i> <span class="menu-title">حسابداری</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/accounting/default/index']) ?>"><i class="fa fa-shopping-cart"></i> <span class="menu-title">خرید</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/accounting/default/index']) ?>"><i class="fa fa-bar-chart"></i> <span class="menu-title">فروش</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/accounting/default/index']) ?>"><i class="fa fa-building"></i> <span class="menu-title">انبار</span></a></li>
+                                    <li><a class="menu-item" href="<?= Url::to(['/accounting/default/index']) ?>"><i class="tyf tyf-module24"></i> <span class="menu-title">اموال</span></a></li>
+                                    <!--<li><a class="menu-item" href="<?= Url::to(['/administration/default/index']) ?>"><i class="tyf tyf-module3"></i> <span class="menu-title"><?= Yii::t('administration', 'Administration') ?></span></a></li>-->
+                                    <!--<li><a class="menu-item" href="<?= Url::to(['/correspondence/default/index']) ?>"><i class="fa fa-file"></i> <span class="menu-title">مکاتبات</span></a></li>-->
+                                    <!--<li><a class="menu-item" href="<?= Url::to(['/users/default/index']) ?>"><i class="fa fa-user" style="position: relative;"><i class="fa fa-search" style="position: absolute;bottom: -5px;right: -5px;font-size: 11px;color: white;text-shadow: 0 0 2px #000;"></i></i> <span class="menu-title">پرسنلی</span></a></li>-->
+                                    <!--<li><a class="menu-item" href="<?= Url::to(['/organizations/organizations/index']) ?>"><i class="fa fa-sitemap"></i> <span class="menu-title">شعبه</span></a></li>-->
                                 </ul>
                             </li>
                             <?= isset(Yii::$app->controller->module->params['menu']) ? Yii::$app->controller->module->params['menu'] : '' ?>

@@ -255,16 +255,16 @@ class CalendarsController extends Controller {
         if ($model == null) {
             return functions::httpNotFound();
         }
-        $prev = CalendarsListType::find()->where("sort > $model->sort")->orderBy(['sort' => SORT_ASC])->limit(1)->one();
-        if ($prev == null) {
+        $next = CalendarsListType::find()->where("sort > $model->sort")->orderBy(['sort' => SORT_ASC])->limit(1)->one();
+        if ($next == null) {
             return functions::httpNotFound();
         }
 
-        $first       = $prev->sort;
+        $first       = $next->sort;
         $last        = $model->sort;
         $model->sort = $first;
-        $prev->sort  = $last;
-        $prev->save();
+        $next->sort  = $last;
+        $next->save();
         $model->save();
 
         $up    = \yii\helpers\Url::to(['type-up']);

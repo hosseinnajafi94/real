@@ -54,7 +54,7 @@ class ActiveField extends \yii\bootstrap4\ActiveField {
         }
         return parent::dropDownList($items, $options);
     }
-    public function select2($data, $options = [], $pluginOptions = []) {
+    public function select2($data = [], $options = [], $pluginOptions = []) {
         return $this->widget(Select2::classname(), [
             'data' => $data,
             'options' => ArrayHelper::merge([
@@ -67,6 +67,9 @@ class ActiveField extends \yii\bootstrap4\ActiveField {
                 //'containerCssClass' => 'form-control form-control-sm',
             ], $pluginOptions),
         ]);
+    }
+    public function numberInput($options = []) {
+        return parent::textInput(array_merge(['type' => 'number'], $options));
     }
 //    public function fileInput($options = []) {
 //        if (!isset($this->form->options['enctype'])) {
