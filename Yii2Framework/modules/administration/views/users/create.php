@@ -8,5 +8,6 @@ $this->title = Yii::t('app', 'Create');
 <div class="users-groups-create">
     <?= $this->render('_form', [
         'model' => $model,
+        'items' => $items
     ]) ?>
 </div>

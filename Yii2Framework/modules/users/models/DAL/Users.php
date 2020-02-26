@@ -95,6 +95,8 @@ use app\modules\tcoding\models\DAL\ListTimezone;
  * @property bool|null $use_sip SIP اجازه تماسها از طریق
  * @property int|null $mode_use_sip_id SIP پیشوند تماس از طریق
  * @property bool|null $show_lang نمایش کلمات ترجمه شده درصفحات
+ * @property bool $in_admin
+ * @property bool $in_personeli
  *
  * @property AccountingClients[] $accountingClients
  * @property Calendars[] $calendars
@@ -185,10 +187,11 @@ class Users extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            ['codemelli', 'default', 'value' => null],
             [['organization_id', 'group_id', 'status_id', 'birthplace_province_id', 'birthplace_city_id', 'marital_status_id', 'military_service_status_id', 'gender_id', 'employment_status_id', 'requested_salary', 'total_work_history', 'account_type_id', 'type_id', 'province_id', 'city_id', 'physical_cond_id', 'personnel_share_id', 'insurance_type_id', 'employment_type_id', 'contract_type_id', 'has_machin_id', 'is_owner_id', 'language_id', 'calendar_type_id', 'date_type_id', 'first_day_in_week_id', 'number_format_id', 'daylight_state_id', 'timezone_id', 'from_month_id', 'from_day_id', 'to_month_id', 'to_day_id', 'mode_use_sip_id'], 'integer'],
             [['birthday', 'date_start', 'start_date', 'issuance_date', 'insurance_start_date', 'expiration'], 'safe'],
             [['head_line', 'address'], 'string'],
-            [['force_rollcall', 'rtl', 'use_sip', 'show_lang'], 'boolean'],
+            [['force_rollcall', 'rtl', 'use_sip', 'show_lang', 'in_admin', 'in_personeli'], 'boolean'],
             [['username', 'password_hash', 'password_reset_token', 'code', 'fname', 'lname', 'card_num', 'father_name', 'religion', 'mobile', 'phone', 'email', 'facebook', 'telegram', 'instagram', 'avatar', 'place_of_issue', 'insurance_no', 'mother_birth_place', 'father_birth_place', 'mother_first_name', 'prev_last_name', 'mother_last_name', 'passport_no', 'info_work_place', 'emergency_phone', 'call_receiver', 'physical_desc', 'nationality'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['codemelli'], 'string', 'max' => 10],
@@ -315,6 +318,8 @@ class Users extends \yii\db\ActiveRecord
             'use_sip' => Yii::t('users', 'Use Sip'),
             'mode_use_sip_id' => Yii::t('users', 'Mode Use Sip ID'),
             'show_lang' => Yii::t('users', 'Show Lang'),
+            'in_admin' => Yii::t('users', 'In Admin'),
+            'in_personeli' => Yii::t('users', 'In Personeli'),
         ];
     }
 

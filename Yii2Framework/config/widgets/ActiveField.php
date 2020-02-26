@@ -45,7 +45,7 @@ class ActiveField extends \yii\bootstrap4\ActiveField {
         $options['prompt'] = Yii::t('app', 'Please Select');
         if (strpos($this->attribute, 'province_id') !== false) {
             $city_id = str_replace('province_id', 'city_id', $this->attribute);
-            if (property_exists($this->model, $city_id)) {
+            if (property_exists($this->model, $city_id) || ($this->model instanceof \yii\db\ActiveRecord && $this->model->hasAttribute($city_id))) {
                 $cityId              = '#' . BaseHtml::getInputId($this->model, $city_id);
                 $content             = Yii::t('app', 'Please Select');
                 $url                 = Url::to(['/geo/geo-cities/get-cities']);

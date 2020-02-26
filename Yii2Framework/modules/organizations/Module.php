@@ -1,24 +1,10 @@
 <?php
-
 namespace app\modules\organizations;
-
-/**
- * organizations module definition class
- */
-class Module extends \yii\base\Module
-{
-    /**
-     * {@inheritdoc}
-     */
+use Yii;
+class Module extends \yii\base\Module {
     public $controllerNamespace = 'app\modules\organizations\controllers';
-
-    /**
-     * {@inheritdoc}
-     */
-    public function init()
-    {
+    public function init() {
         parent::init();
-
-        // custom initialization code goes here
+        Yii::configure($this, require 'config.php');
     }
 }

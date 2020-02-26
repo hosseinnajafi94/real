@@ -2,6 +2,7 @@
 namespace app\modules\users\models\VML;
 use Yii;
 use yii\base\Model;
+use app\config\widgets\ArrayHelper;
 use app\config\components\functions;
 //use yii\web\UploadedFile;
 use app\modules\users\models\DAL\Users;
@@ -31,6 +32,10 @@ use app\modules\users\models\SRL\UsersListTimezoneSRL;
 use app\modules\tcoding\models\SRL\ListMonthSRL;
 use app\modules\tcoding\models\SRL\ListMonthDaySRL;
 use app\modules\users\models\SRL\UsersListModeUseSipSRL;
+use app\modules\tcoding\models\DAL\ListCalendarType;
+use app\modules\tcoding\models\DAL\ListDaylightState;
+use app\modules\tcoding\models\DAL\ListTimezone;
+
 class UsersVML extends Model {
     public $id;
     public $organization_id;
@@ -270,12 +275,12 @@ class UsersVML extends Model {
         $this->organizations             = OrganizationsSRL::getItems();
         //
         $this->languages                 = UsersListLanguagesSRL::getItems();
-        $this->calendar_types            = UsersListCalendarTypeSRL::getItems();
+        $this->calendar_types            = ArrayHelper::map(ListCalendarType::find()->all(), 'id', 'title');
         $this->date_types                = UsersListDateTypeSRL::getItems();
         $this->first_day_in_weeks        = UsersListFirstDayInWeekSRL::getItems();
         $this->number_formats            = UsersListNumberFormatSRL::getItems();
-        $this->daylight_states           = UsersListDaylightStateSRL::getItems();
-        $this->timezones                 = UsersListTimezoneSRL::getItems();
+        $this->daylight_states           = ArrayHelper::map(ListDaylightState::find()->all(), 'id', 'title');
+        $this->timezones                 = ArrayHelper::map(ListTimezone::find()->all(), 'id', 'title');
         $this->from_monthes              = ListMonthSRL::getItems();
         $this->from_days                 = ListMonthDaySRL::getItems();
         $this->to_monthes                = $this->from_monthes;
@@ -296,6 +301,7 @@ class UsersVML extends Model {
             return false;
         }
         $model = $this->model;
+        $model->in_personeli = true;
         $this->populate($model, $this);
         if (!$model->save()) {
             return false;
@@ -305,7 +311,7 @@ class UsersVML extends Model {
     }
     public static function newInstance() {
         $data        = new static();
-        $data->model = new Users();
+        $data->model = new Users(['in_admin' => false]);
         return $data;
     }
     public static function find($id) {

@@ -15,7 +15,7 @@ class UsersSearchVML extends Users {
         return Model::scenarios();
     }
     public function search($params) {
-        $query        = Users::find();
+        $query        = Users::find()->where(['in_personeli' => true]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

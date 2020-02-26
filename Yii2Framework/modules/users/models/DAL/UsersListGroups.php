@@ -7,10 +7,13 @@ use Yii;
 /**
  * This is the model class for table "users_list_groups".
  *
- * @property int $id
- * @property string $title
+ * @property int $id آیدی
+ * @property string $name نام گروه
+ * @property int $admin_id مدیر
  *
- * @property Users[] $users
+ * @property UsersGroups[] $usersGroups
+ * @property Users $admin
+ * @property UsersListGroupsPermissions[] $usersListGroupsPermissions
  */
 class UsersListGroups extends \yii\db\ActiveRecord
 {
@@ -28,8 +31,10 @@ class UsersListGroups extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title'], 'required'],
-            [['title'], 'string', 'max' => 255],
+            [['name', 'admin_id'], 'required'],
+            [['admin_id'], 'integer'],
+            [['name'], 'string', 'max' => 255],
+            [['admin_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['admin_id' => 'id']],
         ];
     }
 
@@ -40,15 +45,32 @@ class UsersListGroups extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('users', 'ID'),
-            'title' => Yii::t('users', 'Title'),
+            'name' => Yii::t('users', 'Name'),
+            'admin_id' => Yii::t('users', 'Admin ID'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUsers()
+    public function getUsersGroups()
     {
-        return $this->hasMany(Users::className(), ['group_id' => 'id']);
+        return $this->hasMany(UsersGroups::className(), ['group_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAdmin()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'admin_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersListGroupsPermissions()
+    {
+        return $this->hasMany(UsersListGroupsPermissions::className(), ['group_id' => 'id']);
     }
 }

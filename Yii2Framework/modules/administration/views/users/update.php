@@ -9,5 +9,6 @@ $this->title = Yii::t('app', 'Update');
 <div class="users-groups-update">
     <?= $this->render('_form', [
         'model' => $model,
+        'items' => $items
     ]) ?>
 </div>

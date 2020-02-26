@@ -38,32 +38,11 @@ $this->title = Yii::t('administration', 'کاربران');
                         ) . '
                     </div>
                     {summary}
-                    ' . Html::a('حذف', ['delete-all'], ['class' => 'btn btn-sm btn-danger pull-left deleteAll disabled', 'style' => 'margin: 0;margin-right: 5px;']) . '
+                    ' . Html::a('حذف', ['delete-all'], ['class' => 'btn btn-sm btn-danger pull-left deleteAll disabled', 'style' => 'margin: 0;margin-right: 5px;', 'data' => ['pjax' => 0]]) . '
                     {pager}
                     <div class="clearfix"></div>
                 ',
                 'filterSelector' => '#per-page',
-                'tableOptions' => [
-                    'class' => 'table table-striped table-bordered m-0 mb-1'
-                ],
-                'summaryOptions' => [
-                    'class' => 'summary pull-right'
-                ],
-                'pager' => [
-                    'options' => [
-                        'class' => 'pagination pagination-sm pull-left',
-                        'style' => 'margin: 0;margin-left: 2px;'
-                    ],
-                    'linkContainerOptions' => [
-                        'class' => 'page-item'
-                    ],
-                    'linkOptions' => [
-                        'class' => 'page-link'
-                    ],
-                    'disabledListItemSubTagOptions' => [
-                        'class' => 'page-link disabled'
-                    ]
-                ],
                 'dataProvider' => $dataProvider,
                 'filterModel'  => $searchModel,
                 'columns'      => [
