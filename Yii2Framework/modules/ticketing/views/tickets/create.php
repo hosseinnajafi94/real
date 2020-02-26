@@ -25,7 +25,7 @@ use app\config\widgets\ActiveForm;
                 <?= $form->field($model, 'support_id')->dropDownList($model->supports) ?>
             </div>
             <?php
-            if ($model->user->group->id == 1000) {
+            if ($model->user->group_id == 1000) {
                 ?>
                 <div class="col-md-4 col-xs-12">
                     <?= $form->field($model, 'receiver_id')->dropDownList($model->receivers) ?>

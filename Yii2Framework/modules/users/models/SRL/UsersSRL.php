@@ -191,9 +191,9 @@ class UsersSRL implements SRL {
         if (!$user) {
             return null;
         }
-        if ($user->id == 1) {
-            return 'مدیر سایت';
-        }
+//        if ($user->id == 1) {
+//            return 'مدیر سایت';
+//        }
         $id = '# ' . $user->id . ' / ';
         if ($user->fname && $user->lname) {
             return $id . $user->fname . ' ' . $user->lname;

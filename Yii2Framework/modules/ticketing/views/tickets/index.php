@@ -12,7 +12,7 @@ list($dataProvider, $searchModel) = $model;
 Url::remember();
 //$this->params['breadcrumbs'][] = Yii::t('ticketing', 'Tickets');
 $user                          = UsersSRL::findModel(Yii::$app->user->id);
-$isAdmin                       = $user->group->id == 1;
+$isAdmin                       = $user->group_id == 1;
 ?>
 <div class="tickets-index">
     <div class="card">

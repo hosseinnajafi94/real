@@ -19,7 +19,7 @@ class TicketsSRL {
         $searchModel = new TicketsSearchVML();
         $query = Tickets::find();
         $user  = UsersSRL::findModel(Yii::$app->user->id);
-        if ($user->group->id != 1) {
+        if ($user->group_id != 1) {
             $query->where(['sender_id' => $user->id]);
             $query->orWhere(['receiver_id' => $user->id]);
         }
@@ -58,7 +58,7 @@ class TicketsSRL {
      * @return void
      */
     public static function loadItems($data) {
-        if ($data->user->group->id == 1) {
+        if ($data->user->group_id == 1) {
             $data->receivers = UsersSRL::getItems();
         }
         $data->supports   = TicketsSupportsSRL::getItems();
@@ -132,7 +132,7 @@ class TicketsSRL {
     public static function findModel($id) {
         $query = Tickets::find()->where(['id' => $id]);
         $user  = UsersSRL::findModel(Yii::$app->user->id);
-        if ($user->group->id != 1) {
+        if ($user->group_id != 1) {
             $query->where(['id' => $id, 'sender_id' => $user->id]);
             $query->orWhere(['id' => $id, 'receiver_id' => $user->id]);
         }
@@ -199,7 +199,7 @@ class TicketsSRL {
         $query = Tickets::find();
         $user  = UsersSRL::findModel(Yii::$app->user->id);
         //$query->where(['sender_id' => $user->id, 'status_id' => 3]);
-        if ($user->group->id == 1) {
+        if ($user->group_id == 1) {
             $query->orWhere(['receiver_id' => null, 'status_id' => 1]);
         }
         else {

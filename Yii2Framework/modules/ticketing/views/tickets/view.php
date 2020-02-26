@@ -11,7 +11,7 @@ Url::remember();
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('ticketing', 'Tickets'), 'url' => ['index']];
 //$this->params['breadcrumbs'][] = $model->title;
 $user     = UsersSRL::findModel(Yii::$app->user->id);
-$isAdmin  = $user->group->id == 1;
+$isAdmin  = $user->group_id == 1;
 ?>
 <div class="tickets-view">
     <div class="card">
@@ -78,11 +78,11 @@ $isAdmin  = $user->group->id == 1;
                     }
                     else {
                         ?>
-                        <label><?= $sender->fname . ' ' . $sender->lname ?></label>
+                        <label><?= UsersSRL::getUserFullname($sender) ?></label>
                         <?php
                     }
                     ?>
-                    <label dir="ltr"><?= functions::tojdatetime($message->datetime) ?></label>
+                    <label dir="ltr" style="direction: ltr !important;"><?= functions::tojdatetime($message->datetime) ?></label>
                     <div class="myitems">
                         <?php
                         /* @var $attachments app\modules\ticketing\models\DAL\TicketsMessagesAttachments[] */
