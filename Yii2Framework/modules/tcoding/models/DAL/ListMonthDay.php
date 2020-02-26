@@ -10,6 +10,10 @@ use Yii;
  * @property int $id
  * @property string $title
  *
+ * @property OrganizationsMachines[] $organizationsMachines
+ * @property OrganizationsMachines[] $organizationsMachines0
+ * @property Settings[] $settings
+ * @property Settings[] $settings0
  * @property Users[] $users
  * @property Users[] $users0
  */
@@ -43,6 +47,38 @@ class ListMonthDay extends \yii\db\ActiveRecord
             'id' => Yii::t('tcoding', 'ID'),
             'title' => Yii::t('tcoding', 'Title'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrganizationsMachines()
+    {
+        return $this->hasMany(OrganizationsMachines::className(), ['form_day_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrganizationsMachines0()
+    {
+        return $this->hasMany(OrganizationsMachines::className(), ['to_day_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSettings()
+    {
+        return $this->hasMany(Settings::className(), ['dl_from_day_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSettings0()
+    {
+        return $this->hasMany(Settings::className(), ['dl_to_day_id' => 'id']);
     }
 
     /**

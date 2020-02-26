@@ -50,7 +50,7 @@ $this->title = Yii::t('users', 'داشبورد');
             </a>
         </div>
         <div class="col-md-4 col-12">
-            <a href="">
+            <a href="<?= yii\helpers\Url::to(['/users/users-loans/create']) ?>">
                 <div class="card">
                     <div class="card-body">
                         <div class="px-3 py-3">

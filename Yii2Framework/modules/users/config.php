@@ -40,7 +40,7 @@ return [
                     <li><a class="menu-item" href="' . Url::to(['/users/default/index']) . '"><span class="menu-title">سنوات</span></a></li>
                     <li><a class="menu-item" href="' . Url::to(['/users/default/index']) . '"><span class="menu-title">مانده مرخصی</span></a></li>
                     <li><a class="menu-item" href="' . Url::to(['/users/default/index']) . '"><span class="menu-title">فیش حقوقی /معوقه</span></a></li>
-                    <li><a class="menu-item" href="' . Url::to(['/users/default/index']) . '"><span class="menu-title">وام / مساعده</span></a></li>
+                    <li><a class="menu-item" href="' . Url::to(['/users/users-loans/index']) . '"><span class="menu-title">وام / مساعده</span></a></li>
                 </ul>
             </li>
             <li class="nav-item has-sub">

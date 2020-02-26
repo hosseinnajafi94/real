@@ -12,6 +12,7 @@ use Yii;
  *
  * @property OrganizationsPositions[] $organizationsPositions
  * @property Users[] $users
+ * @property UsersFamilies[] $usersFamilies
  */
 class ListGenders extends \yii\db\ActiveRecord
 {
@@ -59,5 +60,13 @@ class ListGenders extends \yii\db\ActiveRecord
     public function getUsers()
     {
         return $this->hasMany(Users::className(), ['gender_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersFamilies()
+    {
+        return $this->hasMany(UsersFamilies::className(), ['gender_id' => 'id']);
     }
 }

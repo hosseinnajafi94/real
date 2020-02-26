@@ -9,6 +9,9 @@ use app\modules\geo\models\DAL\GeoCities;
 use app\modules\tcoding\models\DAL\ListGenders;
 use app\modules\tcoding\models\DAL\ListMonth;
 use app\modules\tcoding\models\DAL\ListMonthDay;
+use app\modules\tcoding\models\DAL\ListCalendarType;
+use app\modules\tcoding\models\DAL\ListDaylightState;
+use app\modules\tcoding\models\DAL\ListTimezone;
 
 /**
  * This is the model class for table "users".
@@ -93,9 +96,11 @@ use app\modules\tcoding\models\DAL\ListMonthDay;
  * @property int|null $mode_use_sip_id SIP پیشوند تماس از طریق
  * @property bool|null $show_lang نمایش کلمات ترجمه شده درصفحات
  *
+ * @property AccountingClients[] $accountingClients
  * @property Calendars[] $calendars
  * @property Calendars[] $calendars0
  * @property CalendarsForInformation[] $calendarsForInformations
+ * @property CalendarsImplementation[] $calendarsImplementations
  * @property CalendarsSections[] $calendarsSections
  * @property CalendarsUsers[] $calendarsUsers
  * @property Mails[] $mails
@@ -113,18 +118,12 @@ use app\modules\tcoding\models\DAL\ListMonthDay;
  * @property OrganizationsUnits[] $organizationsUnits
  * @property SecretariatsMembers[] $secretariatsMembers
  * @property SecretariatsSignatories[] $secretariatsSignatories
+ * @property SysEvents[] $sysEvents
+ * @property SysLogs[] $sysLogs
  * @property Tickets[] $tickets
  * @property Tickets[] $tickets0
  * @property TicketsMessages[] $ticketsMessages
  * @property UsersListStatuses $status
- * @property UsersListGroups $group
- * @property GeoProvinces $province
- * @property GeoCities $city
- * @property GeoProvinces $birthplaceProvince
- * @property GeoCities $birthplaceCity
- * @property UsersListMaritalStatus $maritalStatus
- * @property UsersListMilitaryServiceStatus $militaryServiceStatus
- * @property ListGenders $gender
  * @property UsersListEmploymentStatus $employmentStatus
  * @property UsersListAccountType $accountType
  * @property UsersListType $type
@@ -137,26 +136,38 @@ use app\modules\tcoding\models\DAL\ListMonthDay;
  * @property UsersListIsOwner $isOwner
  * @property Organizations $organization
  * @property UsersListLanguages $language
- * @property UsersListCalendarType $calendarType
+ * @property ListCalendarType $calendarType
  * @property UsersListDateType $dateType
  * @property UsersListFirstDayInWeek $firstDayInWeek
  * @property UsersListNumberFormat $numberFormat
- * @property UsersListDaylightState $daylightState
- * @property UsersListTimezone $timezone
+ * @property ListDaylightState $daylightState
+ * @property ListTimezone $timezone
  * @property ListMonth $fromMonth
  * @property ListMonthDay $fromDay
+ * @property GeoProvinces $province
  * @property ListMonth $toMonth
  * @property ListMonthDay $toDay
  * @property UsersListModeUseSip $modeUseSip
+ * @property GeoCities $city
+ * @property GeoProvinces $birthplaceProvince
+ * @property GeoCities $birthplaceCity
+ * @property UsersListMaritalStatus $maritalStatus
+ * @property UsersListMilitaryServiceStatus $militaryServiceStatus
+ * @property ListGenders $gender
  * @property UsersCompilations[] $usersCompilations
  * @property UsersDescriptions[] $usersDescriptions
  * @property UsersEducations[] $usersEducations
  * @property UsersFamilies[] $usersFamilies
  * @property UsersFavorites[] $usersFavorites
+ * @property UsersGroups[] $usersGroups
  * @property UsersHonors[] $usersHonors
+ * @property UsersListGroups[] $usersListGroups
+ * @property UsersLoans[] $usersLoans
  * @property UsersOrders[] $usersOrders
+ * @property UsersPermissions[] $usersPermissions
  * @property UsersReagents[] $usersReagents
  * @property UsersResume[] $usersResumes
+ * @property UsersSettingsAdmins[] $usersSettingsAdmins
  */
 class Users extends \yii\db\ActiveRecord
 {
@@ -186,14 +197,6 @@ class Users extends \yii\db\ActiveRecord
             [['username'], 'unique'],
             [['codemelli'], 'unique'],
             [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListStatuses::className(), 'targetAttribute' => ['status_id' => 'id']],
-            [['group_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListGroups::className(), 'targetAttribute' => ['group_id' => 'id']],
-            [['province_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeoProvinces::className(), 'targetAttribute' => ['province_id' => 'id']],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeoCities::className(), 'targetAttribute' => ['city_id' => 'id']],
-            [['birthplace_province_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeoProvinces::className(), 'targetAttribute' => ['birthplace_province_id' => 'id']],
-            [['birthplace_city_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeoCities::className(), 'targetAttribute' => ['birthplace_city_id' => 'id']],
-            [['marital_status_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListMaritalStatus::className(), 'targetAttribute' => ['marital_status_id' => 'id']],
-            [['military_service_status_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListMilitaryServiceStatus::className(), 'targetAttribute' => ['military_service_status_id' => 'id']],
-            [['gender_id'], 'exist', 'skipOnError' => true, 'targetClass' => ListGenders::className(), 'targetAttribute' => ['gender_id' => 'id']],
             [['employment_status_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListEmploymentStatus::className(), 'targetAttribute' => ['employment_status_id' => 'id']],
             [['account_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListAccountType::className(), 'targetAttribute' => ['account_type_id' => 'id']],
             [['type_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListType::className(), 'targetAttribute' => ['type_id' => 'id']],
@@ -206,17 +209,24 @@ class Users extends \yii\db\ActiveRecord
             [['is_owner_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListIsOwner::className(), 'targetAttribute' => ['is_owner_id' => 'id']],
             [['organization_id'], 'exist', 'skipOnError' => true, 'targetClass' => Organizations::className(), 'targetAttribute' => ['organization_id' => 'id']],
             [['language_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListLanguages::className(), 'targetAttribute' => ['language_id' => 'id']],
-            [['calendar_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListCalendarType::className(), 'targetAttribute' => ['calendar_type_id' => 'id']],
+            [['calendar_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => ListCalendarType::className(), 'targetAttribute' => ['calendar_type_id' => 'id']],
             [['date_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListDateType::className(), 'targetAttribute' => ['date_type_id' => 'id']],
             [['first_day_in_week_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListFirstDayInWeek::className(), 'targetAttribute' => ['first_day_in_week_id' => 'id']],
             [['number_format_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListNumberFormat::className(), 'targetAttribute' => ['number_format_id' => 'id']],
-            [['daylight_state_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListDaylightState::className(), 'targetAttribute' => ['daylight_state_id' => 'id']],
-            [['timezone_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListTimezone::className(), 'targetAttribute' => ['timezone_id' => 'id']],
+            [['daylight_state_id'], 'exist', 'skipOnError' => true, 'targetClass' => ListDaylightState::className(), 'targetAttribute' => ['daylight_state_id' => 'id']],
+            [['timezone_id'], 'exist', 'skipOnError' => true, 'targetClass' => ListTimezone::className(), 'targetAttribute' => ['timezone_id' => 'id']],
             [['from_month_id'], 'exist', 'skipOnError' => true, 'targetClass' => ListMonth::className(), 'targetAttribute' => ['from_month_id' => 'id']],
             [['from_day_id'], 'exist', 'skipOnError' => true, 'targetClass' => ListMonthDay::className(), 'targetAttribute' => ['from_day_id' => 'id']],
+            [['province_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeoProvinces::className(), 'targetAttribute' => ['province_id' => 'id']],
             [['to_month_id'], 'exist', 'skipOnError' => true, 'targetClass' => ListMonth::className(), 'targetAttribute' => ['to_month_id' => 'id']],
             [['to_day_id'], 'exist', 'skipOnError' => true, 'targetClass' => ListMonthDay::className(), 'targetAttribute' => ['to_day_id' => 'id']],
             [['mode_use_sip_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListModeUseSip::className(), 'targetAttribute' => ['mode_use_sip_id' => 'id']],
+            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeoCities::className(), 'targetAttribute' => ['city_id' => 'id']],
+            [['birthplace_province_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeoProvinces::className(), 'targetAttribute' => ['birthplace_province_id' => 'id']],
+            [['birthplace_city_id'], 'exist', 'skipOnError' => true, 'targetClass' => GeoCities::className(), 'targetAttribute' => ['birthplace_city_id' => 'id']],
+            [['marital_status_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListMaritalStatus::className(), 'targetAttribute' => ['marital_status_id' => 'id']],
+            [['military_service_status_id'], 'exist', 'skipOnError' => true, 'targetClass' => UsersListMilitaryServiceStatus::className(), 'targetAttribute' => ['military_service_status_id' => 'id']],
+            [['gender_id'], 'exist', 'skipOnError' => true, 'targetClass' => ListGenders::className(), 'targetAttribute' => ['gender_id' => 'id']],
         ];
     }
 
@@ -311,6 +321,14 @@ class Users extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getAccountingClients()
+    {
+        return $this->hasMany(AccountingClients::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getCalendars()
     {
         return $this->hasMany(Calendars::className(), ['user_id' => 'id']);
@@ -330,6 +348,14 @@ class Users extends \yii\db\ActiveRecord
     public function getCalendarsForInformations()
     {
         return $this->hasMany(CalendarsForInformation::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCalendarsImplementations()
+    {
+        return $this->hasMany(CalendarsImplementation::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -471,6 +497,22 @@ class Users extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getSysEvents()
+    {
+        return $this->hasMany(SysEvents::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSysLogs()
+    {
+        return $this->hasMany(SysLogs::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getTickets()
     {
         return $this->hasMany(Tickets::className(), ['sender_id' => 'id']);
@@ -498,70 +540,6 @@ class Users extends \yii\db\ActiveRecord
     public function getStatus()
     {
         return $this->hasOne(UsersListStatuses::className(), ['id' => 'status_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getGroup()
-    {
-        return $this->hasOne(UsersListGroups::className(), ['id' => 'group_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProvince()
-    {
-        return $this->hasOne(GeoProvinces::className(), ['id' => 'province_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCity()
-    {
-        return $this->hasOne(GeoCities::className(), ['id' => 'city_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getBirthplaceProvince()
-    {
-        return $this->hasOne(GeoProvinces::className(), ['id' => 'birthplace_province_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getBirthplaceCity()
-    {
-        return $this->hasOne(GeoCities::className(), ['id' => 'birthplace_city_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getMaritalStatus()
-    {
-        return $this->hasOne(UsersListMaritalStatus::className(), ['id' => 'marital_status_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getMilitaryServiceStatus()
-    {
-        return $this->hasOne(UsersListMilitaryServiceStatus::className(), ['id' => 'military_service_status_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getGender()
-    {
-        return $this->hasOne(ListGenders::className(), ['id' => 'gender_id']);
     }
 
     /**
@@ -665,7 +643,7 @@ class Users extends \yii\db\ActiveRecord
      */
     public function getCalendarType()
     {
-        return $this->hasOne(UsersListCalendarType::className(), ['id' => 'calendar_type_id']);
+        return $this->hasOne(ListCalendarType::className(), ['id' => 'calendar_type_id']);
     }
 
     /**
@@ -697,7 +675,7 @@ class Users extends \yii\db\ActiveRecord
      */
     public function getDaylightState()
     {
-        return $this->hasOne(UsersListDaylightState::className(), ['id' => 'daylight_state_id']);
+        return $this->hasOne(ListDaylightState::className(), ['id' => 'daylight_state_id']);
     }
 
     /**
@@ -705,7 +683,7 @@ class Users extends \yii\db\ActiveRecord
      */
     public function getTimezone()
     {
-        return $this->hasOne(UsersListTimezone::className(), ['id' => 'timezone_id']);
+        return $this->hasOne(ListTimezone::className(), ['id' => 'timezone_id']);
     }
 
     /**
@@ -722,6 +700,14 @@ class Users extends \yii\db\ActiveRecord
     public function getFromDay()
     {
         return $this->hasOne(ListMonthDay::className(), ['id' => 'from_day_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProvince()
+    {
+        return $this->hasOne(GeoProvinces::className(), ['id' => 'province_id']);
     }
 
     /**
@@ -746,6 +732,54 @@ class Users extends \yii\db\ActiveRecord
     public function getModeUseSip()
     {
         return $this->hasOne(UsersListModeUseSip::className(), ['id' => 'mode_use_sip_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCity()
+    {
+        return $this->hasOne(GeoCities::className(), ['id' => 'city_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBirthplaceProvince()
+    {
+        return $this->hasOne(GeoProvinces::className(), ['id' => 'birthplace_province_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBirthplaceCity()
+    {
+        return $this->hasOne(GeoCities::className(), ['id' => 'birthplace_city_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMaritalStatus()
+    {
+        return $this->hasOne(UsersListMaritalStatus::className(), ['id' => 'marital_status_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMilitaryServiceStatus()
+    {
+        return $this->hasOne(UsersListMilitaryServiceStatus::className(), ['id' => 'military_service_status_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGender()
+    {
+        return $this->hasOne(ListGenders::className(), ['id' => 'gender_id']);
     }
 
     /**
@@ -791,6 +825,14 @@ class Users extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getUsersGroups()
+    {
+        return $this->hasMany(UsersGroups::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getUsersHonors()
     {
         return $this->hasMany(UsersHonors::className(), ['user_id' => 'id']);
@@ -799,9 +841,33 @@ class Users extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getUsersListGroups()
+    {
+        return $this->hasMany(UsersListGroups::className(), ['admin_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersLoans()
+    {
+        return $this->hasMany(UsersLoans::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getUsersOrders()
     {
         return $this->hasMany(UsersOrders::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersPermissions()
+    {
+        return $this->hasMany(UsersPermissions::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -818,5 +884,13 @@ class Users extends \yii\db\ActiveRecord
     public function getUsersResumes()
     {
         return $this->hasMany(UsersResume::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersSettingsAdmins()
+    {
+        return $this->hasMany(UsersSettingsAdmins::className(), ['user_id' => 'id']);
     }
 }

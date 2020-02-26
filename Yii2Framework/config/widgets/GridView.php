@@ -9,7 +9,42 @@ class GridView extends \yii\grid\GridView {
 //    public $pager = ['options' => ['class' => 'pagination pagination-sm pull-right']];
     public $dataColumnClass = 'app\config\widgets\DataColumn';
     public $filterPosition  = self::FILTER_POS_HEADER;
+    
+    public $tableOptions = ['class' => 'table table-striped table-bordered m-0 mb-1'];
+    public $summaryOptions = ['class' => 'summary pull-right'];
+    public $pager = [
+        'options' => [
+            'class' => 'pagination pagination-sm pull-left',
+            'style' => 'margin: 0;margin-left: 2px;'
+        ],
+        'linkContainerOptions' => [
+            'class' => 'page-item'
+        ],
+        'linkOptions' => [
+            'class' => 'page-link'
+        ],
+        'disabledListItemSubTagOptions' => [
+            'class' => 'page-link disabled'
+        ]
+    ];
     public function init() {
+//        if ($this->filterModel) {
+//            $searchModel = $this->filterModel;
+//            $this->layout = '
+//                {items}
+//                <div class="pull-right" style="margin-left: 15px;">
+//                    <label class="m-0">تعداد نمایش: </label>
+//                    ' . Html::activeDropDownList($this->filterModel, 'perpage', [10 => 10, 20 => 20, 50 => 50, 100 => 100], [
+//                            'class' => 'form-control form-control-sm',
+//                            'style' => 'width: auto;display: inline-block;'
+//                    ]) . '
+//                </div>
+//                {summary}
+//                ' . Html::a('حذف', ['delete-all'], ['class' => 'btn btn-sm btn-danger pull-left deleteAll disabled', 'style' => 'margin: 0;margin-right: 5px;', 'data' => ['pjax' => 0]]) . '
+//                {pager}
+//                <div class="clearfix"></div>
+//            ';
+//        }
         foreach ($this->columns as &$column) {
             if (is_array($column) && isset($column['attribute']) && strpos($column['attribute'], 'id_') === 0 && !isset($column['value'])) {
                 $column['format'] = 'raw';

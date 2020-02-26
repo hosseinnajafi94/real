@@ -11,6 +11,8 @@ use Yii;
  * @property string $title
  *
  * @property OrganizationsPositions[] $organizationsPositions
+ * @property UsersEducations[] $usersEducations
+ * @property UsersFamilies[] $usersFamilies
  */
 class ListDegree extends \yii\db\ActiveRecord
 {
@@ -50,5 +52,21 @@ class ListDegree extends \yii\db\ActiveRecord
     public function getOrganizationsPositions()
     {
         return $this->hasMany(OrganizationsPositions::className(), ['degree_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersEducations()
+    {
+        return $this->hasMany(UsersEducations::className(), ['degree_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersFamilies()
+    {
+        return $this->hasMany(UsersFamilies::className(), ['degree_id' => 'id']);
     }
 }
