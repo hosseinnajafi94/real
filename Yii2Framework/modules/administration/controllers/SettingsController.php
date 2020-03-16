@@ -56,4 +56,32 @@ class SettingsController extends Controller {
             'list'  => $list
         ]);
     }
+    public function actionSecurity() {
+        $model         = Settings::findOne(1);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->refresh();
+        }
+        return $this->renderView($model);
+    }
+    public function actionDosip() {
+        $model         = Settings::findOne(1);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->refresh();
+        }
+        return $this->renderView($model);
+    }
+    public function actionGeoip() {
+        $model         = Settings::findOne(1);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->refresh();
+        }
+        return $this->renderView($model);
+    }
+    public function actionIpaccess() {
+        $model         = Settings::findOne(1);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->refresh();
+        }
+        return $this->renderView($model);
+    }
 }
